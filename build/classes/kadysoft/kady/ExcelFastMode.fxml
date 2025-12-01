@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXCheckbox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.web.WebView?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="895.0" prefWidth="1256.0" stylesheets="@cupertino-light.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.ExcelFastModeController">
+   <children>
+      <MFXButton buttonType="RAISED" depthLevel="LEVEL5" layoutX="1153.0" layoutY="81.0" onAction="#browseaction" rippleAnimateShadow="true" style="-fx-background-radius: 3em; -fx-font-weight: bold; -fx-background-color: #00b4d8;" text="Browse" />
+      <JFXTextField fx:id="excelfile" alignment="CENTER" editable="false" labelFloat="true" layoutX="48.0" layoutY="80.0" prefHeight="34.0" prefWidth="1037.0" promptText="Browse For Excel File ..." style="-fx-background-radius: 3em; -fx-font-weight: bold;" />
+      <ComboBox fx:id="model" layoutX="48.0" layoutY="326.0" onHidden="#modelhide" onShown="#modelshow" prefHeight="35.0" prefWidth="1037.0" promptText="Model ..." style="-fx-font-weight: bold; -fx-background-radius: 3em;" />
+      <MFXCheckbox fx:id="sign" alignment="CENTER" layoutX="48.0" layoutY="253.0" onAction="#signaction" prefHeight="23.0" prefWidth="146.0" style="-fx-font-weight: bold;" text="Sign Or Not" textExpand="true" />
+      <JFXTextArea fx:id="code" layoutX="299.0" layoutY="299.0" prefHeight="15.0" prefWidth="36.0" visible="false" />
+      <WebView fx:id="preview" layoutX="20.0" layoutY="392.0" prefHeight="429.0" prefWidth="1215.0" />
+      <JFXTextField fx:id="name" alignment="CENTER" labelFloat="true" layoutX="48.0" layoutY="156.0" prefHeight="34.0" prefWidth="1037.0" promptText="Recipe Name ..." style="-fx-background-radius: 3em; -fx-font-weight: bold;" />
+      <MFXButton buttonType="RAISED" depthLevel="LEVEL5" layoutX="590.0" layoutY="836.0" onAction="#convertaction" rippleAnimateShadow="true" style="-fx-background-radius: 3em; -fx-background-color: #00b4d8; -fx-font-weight: bold;" text="Convert" />
+   </children>
+</Pane>

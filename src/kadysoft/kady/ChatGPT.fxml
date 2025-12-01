@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="816.0" prefWidth="1227.0" stylesheets="@primer-dark.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.ChatGPTController">
+   <children>
+      <JFXTextArea fx:id="answer" layoutX="14.0" layoutY="26.0" prefHeight="689.0" prefWidth="1199.0" promptText="Answers will go here..." />
+      <JFXButton fx:id="browseBtn" layoutX="14.0" layoutY="780.0" onAction="#browseImage" text="Browse Image" />
+      <JFXButton fx:id="askbtn" layoutX="180.0" layoutY="780.0" onAction="#askbtnaction" text="Process" />
+      <JFXSpinner fx:id="loading" layoutX="280.0" layoutY="780.0" visible="false" />
+   </children>
+</AnchorPane>

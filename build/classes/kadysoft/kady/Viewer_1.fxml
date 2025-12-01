@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXRadioButton?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
+
+<AnchorPane id="AnchorPane" prefHeight="785.0" prefWidth="1531.0" stylesheets="@cupertino-light.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.ViewerController_1">
+   <children>
+      <TableView fx:id="table" layoutX="5.0" layoutY="221.0" onMouseClicked="#tableaction" prefHeight="508.0" prefWidth="1521.0" style="-fx-font-size: 15; -fx-font-weight: bold;" tableMenuButtonVisible="true" />
+      <Hyperlink fx:id="link" layoutX="239.0" layoutY="741.0" onAction="#linkaction" prefHeight="29.0" prefWidth="450.0" style="-fx-font-size: 15; -fx-font-weight: bold;" text="T &amp; C Garments" visible="false" />
+      <JFXRadioButton fx:id="date" layoutX="379.0" layoutY="28.0" prefHeight="21.0" prefWidth="82.0" selected="true" text="Date" visible="false">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </JFXRadioButton>
+      <Label layoutX="14.0" layoutY="745.0" text="Click Link To Open The Recipe" visible="false">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Label>
+      <JFXRadioButton fx:id="stage" layoutX="508.0" layoutY="28.0" prefHeight="21.0" prefWidth="93.0" text="Stage" visible="false">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </JFXRadioButton>
+      <JFXRadioButton fx:id="model" layoutX="638.0" layoutY="28.0" text="Model" visible="false">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </JFXRadioButton>
+      <JFXRadioButton fx:id="name" layoutX="766.0" layoutY="28.0" prefHeight="21.0" prefWidth="118.0" text="Name" visible="false">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </JFXRadioButton>
+      <JFXButton fx:id="getallbtn" buttonType="RAISED" layoutX="924.0" layoutY="21.0" onAction="#getallaction" prefHeight="37.0" prefWidth="93.0" style="-fx-background-radius: 3em; -fx-background-color: #ff0a54; -fx-text-fill: WHITE;" text="Get All" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+         <effect>
+            <DropShadow />
+         </effect>
+      </JFXButton>
+      <JFXButton fx:id="openrecipesfolder" buttonType="RAISED" layoutX="1008.0" layoutY="18.0" onAction="#openrecipesfolderaction" prefHeight="37.0" prefWidth="169.0" style="-fx-background-radius: 3em;" text="Open Recipes Folder" visible="false">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+         <effect>
+            <DropShadow />
+         </effect>
+      </JFXButton>
+      <JFXButton fx:id="editorprint" buttonType="RAISED" layoutX="1396.0" layoutY="17.0" onAction="#editorprintaction" prefHeight="37.0" prefWidth="101.0" style="-fx-background-radius: 5em; -fx-background-color: #ff0a54;">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+         <effect>
+            <DropShadow />
+         </effect>
+      </JFXButton>
+      <Label alignment="CENTER" layoutX="1053.0" layoutY="29.0" style="-fx-background-color: #ff0a54; -fx-background-radius: 3em; -fx-font-weight: bold; -fx-text-fill: white;" text="Created By Kadysoft Ltd, CEO : Ahmed Elkady" />
+      <ImageView fx:id="adsimage" fitHeight="120.0" fitWidth="1200.0" layoutX="307.0" layoutY="88.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <effect>
+            <DropShadow />
+         </effect>
+      </ImageView>
+      <Label fx:id="adslabel" layoutX="14.0" layoutY="133.0" prefHeight="30.0" prefWidth="290.0" style="-fx-font-weight: bold; -fx-font-size: 20; -fx-text-fill: white; -fx-background-color: #1e81b0; -fx-background-radius: 3em; -fx-font-family: algerian;" text="Kadysoft" visible="false">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Label>
+      <Rectangle fx:id="rectangle" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="120.0" layoutX="166.0" layoutY="88.0" stroke="BLACK" strokeType="INSIDE" width="1200.0" />
+      <WebView fx:id="marque" layoutX="244.0" layoutY="14.0" prefHeight="64.0" prefWidth="663.0" />
+      <JFXTextArea fx:id="coode" layoutX="95.0" layoutY="62.0" prefHeight="52.0" prefWidth="30.0" visible="false" />
+      <JFXButton fx:id="seepilot" buttonType="RAISED" layoutX="1429.0" layoutY="738.0" onAction="#seepilotaction" style="-fx-background-color: #ff0a54; -fx-font-weight: bold; -fx-background-radius: 3em; -fx-text-fill: white;" text="See Pilots">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></JFXButton>
+      <Label fx:id="tablee" layoutX="25.0" layoutY="746.0" onMouseClicked="#tableeaction" style="-fx-font-weight: bold;" text="Open As Table" underline="true">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Label>
+      <Label fx:id="image" layoutX="177.0" layoutY="746.0" onMouseClicked="#imageaction" style="-fx-font-weight: bold;" text="Open As Image" underline="true">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Label>
+   </children>
+</AnchorPane>

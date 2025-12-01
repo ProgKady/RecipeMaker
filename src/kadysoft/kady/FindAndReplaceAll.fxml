@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="754.0" prefWidth="1167.0" stylesheets="@cupertino-light.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.FindAndReplaceAllController">
+   <children>
+      <JFXTextArea fx:id="list" editable="false" layoutX="12.0" layoutY="12.0" onDragDropped="#dragdropaction" onDragOver="#dragoveraction" prefHeight="513.0" prefWidth="1143.0" style="-fx-font-weight: bold;" />
+      <Label layoutX="504.0" layoutY="263.0" style="-fx-font-weight: bold;" text="Drag And Drop Files Here" />
+      <Separator layoutX="14.0" layoutY="535.0" prefHeight="25.0" prefWidth="1143.0" />
+      <JFXButton fx:id="replaceall" buttonType="RAISED" layoutX="1056.0" layoutY="625.0" onAction="#replaceallaction" style="-fx-font-weight: bold; -fx-background-radius: 3em; -fx-background-color: #00b4d8;" text="Replace All" />
+      <JFXTextArea fx:id="rora" layoutX="945.0" layoutY="622.0" prefHeight="36.0" prefWidth="52.0" visible="false" />
+      <JFXTextArea fx:id="text" labelFloat="true" layoutX="28.0" layoutY="548.0" prefHeight="185.0" prefWidth="475.0" promptText="Write Text Here ..." style="-fx-font-weight: bold;" />
+      <JFXTextArea fx:id="replace" labelFloat="true" layoutX="565.0" layoutY="548.0" prefHeight="185.0" prefWidth="475.0" promptText="Write Replacement Text Here ..." style="-fx-font-weight: bold;" />
+   </children>
+</AnchorPane>

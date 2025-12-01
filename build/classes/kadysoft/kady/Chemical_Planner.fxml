@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXTabPane?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.web.WebView?>
+
+<AnchorPane id="AnchorPane" prefHeight="982.0" prefWidth="1496.0" stylesheets="@cupertino-light.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.Chemical_Planner_Controller">
+   <children>
+      <MenuBar layoutX="-3.0" layoutY="-2.0" prefHeight="42.0" prefWidth="1502.0" style="-fx-font-size: 15; -fx-font-weight: bold;" visible="false">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem fx:id="opennewrecipeadv" disable="true" mnemonicParsing="false" onAction="#opennewrecipeadvaction" text="Open a new recipe" visible="false" />
+                  <Menu fx:id="recentfiles" disable="true" mnemonicParsing="false" text="Recent files" />
+                  <MenuItem fx:id="savetodb" disable="true" mnemonicParsing="false" onAction="#savetodbaction" text="Save Data To DataBase" />
+                  <Menu fx:id="exporttomenu" disable="true" mnemonicParsing="false" text="Export To ...">
+                    <items>
+                      <MenuItem fx:id="exporttoexcel" mnemonicParsing="false" onAction="#exporttoexcelaction" text="Export to excel" />
+                        <MenuItem fx:id="exporttodb" mnemonicParsing="false" onAction="#exporttodbaction" text="Export To DB" />
+                    </items>
+                  </Menu>
+                  <MenuItem fx:id="displaydata" mnemonicParsing="false" onAction="#displaydataaction" text="Display Plans" />
+                  <MenuItem mnemonicParsing="false" onAction="#fullreportaction" text="Save chemical info to file" visible="false" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <JFXTabPane prefHeight="982.0" prefWidth="1499.0" stylesheets="@primer-dark.css">
+         <tabs>
+            <Tab text="Chemicals Planner">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Pane layoutX="6.0" layoutY="79.0" prefHeight="864.0" prefWidth="1484.0">
+                           <children>
+                              <WebView fx:id="webview" layoutX="898.0" layoutY="5.0" prefHeight="439.0" prefWidth="583.0" stylesheets="@primer-dark.css" />
+                              <TableView fx:id="table" editable="true" layoutX="3.0" layoutY="506.0" prefHeight="354.0" prefWidth="1130.0" style="-fx-font-weight: bold;" tableMenuButtonVisible="true" />
+                              <Pane fx:id="oldypane" layoutX="2.0" layoutY="3.0" prefHeight="809.0" prefWidth="1479.0" visible="false">
+                                 <children>
+                                    <Label layoutX="27.0" layoutY="14.0" style="-fx-font-weight: bold;" text="Month" />
+                                    <Label layoutX="176.0" layoutY="14.0" style="-fx-font-weight: bold;" text="Wash Name" />
+                                    <Label layoutX="447.0" layoutY="14.0" style="-fx-font-weight: bold;" text="PCS" />
+                                    <Label layoutX="517.0" layoutY="14.0" style="-fx-font-weight: bold;" text="Patch" />
+                                    <Label layoutX="590.0" layoutY="14.0" style="-fx-font-weight: bold;" text="Amounts" />
+                                    <Label layoutX="679.0" layoutY="14.0" style="-fx-font-weight: bold;" text="Units" />
+                                    <Label layoutX="809.0" layoutY="14.0" style="-fx-font-weight: bold;" text="Types" />
+                                    <Label layoutX="1054.0" layoutY="14.0" style="-fx-font-weight: bold;" text="Materials" />
+                                    <Label layoutX="1287.0" layoutY="14.0" style="-fx-font-weight: bold;" text="Total Amounts" />
+                                    <Label layoutX="354.0" layoutY="14.0" style="-fx-font-weight: bold;" text="Quantity" />
+                                 </children>
+                              </Pane>
+                              <HBox layoutX="3.0" layoutY="4.0" prefHeight="439.0" prefWidth="894.0">
+                                 <children>
+                                    <ListView fx:id="l1" prefHeight="758.0" prefWidth="130.0" />
+                                    <ListView fx:id="l2" prefHeight="758.0" prefWidth="130.0" />
+                                    <ListView fx:id="l3" onKeyReleased="#amountrell" prefHeight="756.0" prefWidth="130.0" />
+                                    <ListView fx:id="l4" prefHeight="755.0" prefWidth="130.0" />
+                                    <ListView fx:id="l5" prefHeight="756.0" prefWidth="130.0" />
+                                    <ListView fx:id="l6" prefHeight="758.0" prefWidth="130.0" />
+                                    <ListView fx:id="l7" prefHeight="758.0" prefWidth="130.0" />
+                                    <ListView fx:id="l8" prefHeight="756.0" prefWidth="130.0" />
+                                    <ListView fx:id="l9" onKeyReleased="#totrel" prefHeight="755.0" prefWidth="130.0" />
+                                    <ListView fx:id="l10" prefHeight="439.0" prefWidth="130.0" />
+                                    <ListView fx:id="l11" layoutX="647.0" layoutY="10.0" prefHeight="439.0" prefWidth="130.0" />
+                                    <ListView fx:id="l12" layoutX="822.0" layoutY="10.0" prefHeight="439.0" prefWidth="130.0" />
+                                 </children></HBox>
+                              <JFXTextArea fx:id="lili" layoutX="907.0" layoutY="155.0" prefHeight="13.0" prefWidth="51.0" visible="false" />
+                              <Label layoutX="23.0" layoutY="464.0" text="Model" />
+                              <Label layoutX="93.0" layoutY="454.0" text="Wash&#10;Name" />
+                              <Label layoutX="169.0" layoutY="464.0" text="Patch" />
+                              <Label layoutX="232.0" layoutY="464.0" text="Quantity" />
+                              <Label layoutX="318.0" layoutY="464.0" text="Units" />
+                              <Label layoutX="375.0" layoutY="464.0" text="Chemicals" />
+                              <Label layoutX="450.0" layoutY="454.0" text="Chemical&#10;Name" textAlignment="CENTER" />
+                              <Label layoutX="527.0" layoutY="454.0" text="Total&#10;Quantities" textAlignment="CENTER" />
+                              <Label layoutX="606.0" layoutY="464.0" text="Dilution" />
+                              <Label layoutX="694.0" layoutY="464.0" text="Price" />
+                              <Label layoutX="765.0" layoutY="454.0" text="Unit&#10;Price" />
+                              <JFXButton fx:id="adddbtn" buttonType="RAISED" layoutX="1364.0" layoutY="456.0" onAction="#adddbtnaction" prefHeight="36.0" prefWidth="72.0" style="-fx-background-color: #aacc00; -fx-background-radius: 3em; -fx-font-weight: bold;" text="Add" visible="false" />
+                              <JFXButton fx:id="deletebtn" buttonType="RAISED" layoutX="933.0" layoutY="456.0" onAction="#deletebtnaction" prefHeight="36.0" prefWidth="192.0" style="-fx-background-radius: 3em; -fx-font-weight: bold; -fx-background-color: #358f80;" text="Delete Selected Row (s)" />
+                              <JFXButton fx:id="exportbtn" buttonType="RAISED" layoutX="1144.0" layoutY="456.0" onAction="#exportbtnaction" prefHeight="36.0" prefWidth="194.0" style="-fx-background-radius: 3em; -fx-font-weight: bold; -fx-background-color: #358f80;" text="Export Selected To Excel" />
+                              <Label layoutX="842.0" layoutY="454.0" text="Total&#10;Price" />
+                              <ListView fx:id="recipelistall" layoutX="1141.0" layoutY="506.0" onDragDropped="#recipelistalldd" onDragOver="#recipelistalldo" prefHeight="180.0" prefWidth="340.0" />
+                              <JFXButton fx:id="planall" buttonType="RAISED" layoutX="1153.0" layoutY="812.0" onAction="#planallaction" prefHeight="36.0" prefWidth="88.0" style="-fx-background-color: #358f80; -fx-background-radius: 3em; -fx-font-weight: bold;" text="Plan All">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </JFXButton>
+                              <JFXButton fx:id="clearlist" buttonType="RAISED" layoutX="1379.0" layoutY="812.0" onAction="#clearlistaction" style="-fx-background-color: #358f80; -fx-background-radius: 3em; -fx-font-weight: bold;" text="Clear List">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </JFXButton>
+                              <JFXTextField fx:id="excelfile" layoutX="1144.0" layoutY="764.0" onMouseClicked="#excelfileaction" prefHeight="36.0" prefWidth="335.0" />
+                              <Label fx:id="count" layoutX="1197.0" layoutY="744.0" text="Items" />
+                              <JFXButton fx:id="delsel" buttonType="RAISED" layoutX="1270.0" layoutY="812.0" onAction="#delselaction" prefHeight="36.0" prefWidth="82.0" style="-fx-background-color: #358f80; -fx-background-radius: 3em; -fx-font-weight: bold;" text="Del Sel">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </JFXButton>
+                              <Label fx:id="count2" layoutX="1144.0" layoutY="744.0" text="0 Of" />
+                              <JFXCheckBox fx:id="skiperr" layoutX="1366.0" layoutY="743.0" selected="true" style="-fx-font-weight: bold;" text="Skip Errors" />
+                              <Label fx:id="count1" layoutX="1261.0" layoutY="744.0" text="Skipped" />
+                              <Label fx:id="count3" layoutX="1327.0" layoutY="744.0" text="0" />
+                              <JFXButton fx:id="fixchemicc" buttonType="RAISED" layoutX="1254.0" layoutY="693.0" onAction="#fixchemiccaction" style="-fx-background-color: #358f80; -fx-font-weight: bold; -fx-background-radius: 3em;" text="Fix Chemicals" />
+                           </children>
+                        </Pane>
+                        <JFXButton fx:id="getold" buttonType="RAISED" layoutX="1265.0" layoutY="24.0" onAction="#getoldaction" prefHeight="36.0" prefWidth="89.0" style="-fx-background-color: #623578; -fx-font-weight: bold; -fx-background-radius: 3em;" text="Get (Old)" visible="false" />
+                        <Pane fx:id="getnewpane" layoutX="20.0" layoutY="6.0" prefHeight="71.0" prefWidth="1457.0">
+                           <children>
+                              <JFXTextField fx:id="patch" alignment="CENTER" labelFloat="true" layoutX="885.0" layoutY="18.0" prefHeight="36.0" prefWidth="127.0" promptText="Machines" style="-fx-font-weight: bold; -fx-background-radius: 3em;" text="5" />
+                              <JFXTextField fx:id="mno" alignment="CENTER" labelFloat="true" layoutX="783.0" layoutY="18.0" prefHeight="36.0" prefWidth="79.0" promptText="M. No" style="-fx-font-weight: bold; -fx-background-radius: 3em;" text="120" visible="false" />
+                              <JFXTextField fx:id="quantity" alignment="CENTER" labelFloat="true" layoutX="655.0" layoutY="18.0" onKeyReleased="#qurel" prefHeight="36.0" prefWidth="108.0" promptText="Quantity" style="-fx-font-weight: bold; -fx-background-radius: 3em;" visible="false" />
+                              <ComboBox fx:id="model" layoutX="113.0" layoutY="18.0" onHidden="#readoutmodelaction" onShowing="#readmodelaction" prefHeight="36.0" prefWidth="208.0" promptText="Model ..." style="-fx-font-weight: bold; -fx-background-radius: 3em;" />
+                              <ComboBox fx:id="recipe" editable="true" layoutX="335.0" layoutY="18.0" onHidden="#readoutrecipeaction" onShowing="#readrecipeaction" prefHeight="36.0" prefWidth="332.0" promptText="Recipe ..." style="-fx-font-weight: bold; -fx-background-radius: 3em;" />
+                              <JFXTextField fx:id="date" alignment="CENTER" labelFloat="true" layoutX="14.0" layoutY="18.0" prefHeight="36.0" prefWidth="164.0" promptText="Date" style="-fx-font-weight: bold; -fx-background-radius: 3em;" visible="false" />
+                              <JFXButton fx:id="get" buttonType="RAISED" layoutX="1032.0" layoutY="18.0" onAction="#getaction" prefHeight="36.0" prefWidth="102.0" style="-fx-font-weight: bold; -fx-background-radius: 3em; -fx-background-color: #358f80; -fx-text-fill: black;" text="Plan" />
+                              <JFXButton fx:id="clearal" buttonType="RAISED" layoutX="1162.0" layoutY="18.0" onAction="#clearalaction" prefHeight="36.0" prefWidth="81.0" style="-fx-font-weight: bold; -fx-background-radius: 3em; -fx-background-color: #358f80; -fx-text-fill: black;" text="Clear" />
+                              <JFXButton fx:id="fixchemic" buttonType="RAISED" layoutX="1272.0" layoutY="18.0" onAction="#fixchemicaction" style="-fx-background-color: #358f80; -fx-font-weight: bold; -fx-background-radius: 3em;" text="Fix Chemicals" />
+                              <JFXTextField fx:id="monthtf" alignment="CENTER" labelFloat="true" layoutX="14.0" layoutY="18.0" prefHeight="36.0" prefWidth="82.0" promptText="Month" style="-fx-background-radius: 3EM; -fx-font-weight: bold;" text="1" />
+                              <Label layoutX="509.0" layoutY="26.0" text="Or" />
+                              <Hyperlink fx:id="browselink" layoutX="524.0" layoutY="22.0" onAction="#browselinkaction" text="Browse" />
+                              <JFXTextField fx:id="quantityyy" alignment="CENTER" labelFloat="true" layoutX="677.0" layoutY="18.0" onKeyReleased="#quantityyyrel" prefHeight="36.0" prefWidth="106.0" promptText="Quantity" style="-fx-font-weight: bold; -fx-background-radius: 3em;" text="600" />
+                              <JFXTextField fx:id="pcsss" alignment="CENTER" labelFloat="true" layoutX="795.0" layoutY="18.0" onKeyReleased="#pcsssrel" prefHeight="36.0" prefWidth="76.0" promptText="PCS" style="-fx-font-weight: bold; -fx-background-radius: 3em;" text="120" />
+                           </children>
+                        </Pane>
+                        <Pane fx:id="getoldpane" layoutX="19.0" layoutY="8.0" prefHeight="68.0" prefWidth="1079.0" visible="false">
+                           <children>
+                              <JFXTextField fx:id="mno1" alignment="CENTER" labelFloat="true" layoutX="800.0" layoutY="16.0" prefHeight="36.0" prefWidth="108.0" promptText="M. No" style="-fx-font-weight: bold; -fx-background-radius: 3em;" text="120" />
+                              <ComboBox fx:id="recipe1" layoutX="243.0" layoutY="16.0" onHidden="#readoutrecipeaction1" onShowing="#readrecipeaction1" prefHeight="36.0" prefWidth="335.0" promptText="Recipe ..." style="-fx-font-weight: bold; -fx-background-radius: 3em;" />
+                              <JFXTextField fx:id="quantity1" alignment="CENTER" labelFloat="true" layoutX="655.0" layoutY="16.0" onKeyReleased="#quantityrel" prefHeight="36.0" prefWidth="108.0" promptText="Quantity" style="-fx-font-weight: bold; -fx-background-radius: 3em;" />
+                              <JFXTextField fx:id="date1" alignment="CENTER" labelFloat="true" layoutX="21.0" layoutY="16.0" prefHeight="36.0" prefWidth="164.0" promptText="Date" style="-fx-font-weight: bold; -fx-background-radius: 3em;" />
+                              <JFXTextField fx:id="patch1" alignment="CENTER" disable="true" labelFloat="true" layoutX="949.0" layoutY="16.0" prefHeight="36.0" prefWidth="108.0" promptText="Patch" style="-fx-font-weight: bold; -fx-background-radius: 3em;" />
+                           </children>
+                        </Pane>
+                        <JFXButton fx:id="getnew" buttonType="RAISED" layoutX="1141.0" layoutY="24.0" onAction="#getnewaction" style="-fx-background-color: #1864e7; -fx-font-weight: bold; -fx-background-radius: 3em;" text="Get (New)" visible="false" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+         </tabs>
+      </JFXTabPane>
+   </children>
+</AnchorPane>

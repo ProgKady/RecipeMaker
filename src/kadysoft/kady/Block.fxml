@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="257.0" prefWidth="420.0" stylesheets="@cupertino-light.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.BlockController">
+   <children>
+      <ComboBox fx:id="user" layoutX="40.0" layoutY="70.0" onShown="#useraction" prefHeight="38.0" prefWidth="335.0" promptText="Choose One User ..." style="-fx-background-radius: 10em; -fx-font-weight: bold;" />
+      <MFXButton fx:id="blockbtn" buttonType="RAISED" depthLevel="LEVEL5" layoutX="178.0" layoutY="164.0" onAction="#blockbtnaction" rippleAnimateShadow="true" style="-fx-background-color: #00b4d8; -fx-font-weight: bold;" text="Block" />
+      <JFXTextArea fx:id="myarea" layoutX="-8.0" layoutY="135.0" prefHeight="39.0" prefWidth="157.0" visible="false" />
+   </children>
+</AnchorPane>

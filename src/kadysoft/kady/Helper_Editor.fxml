@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.web.WebView?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="875.0" prefWidth="1184.0" stylesheets="@cupertino-light.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.Helper_EditorController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <SplitPane dividerPositions="0.9382857142857143" orientation="VERTICAL" prefHeight="160.0" prefWidth="200.0">
+         <items>
+            <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+               <content>
+                  <WebView fx:id="codey" onKeyReleased="#codekeyaction" onMouseClicked="#codemouseaction" prefHeight="200.0" prefWidth="200.0" />
+               </content>
+            </ScrollPane>
+            <HBox alignment="CENTER_RIGHT" prefHeight="206.0" prefWidth="1184.0" spacing="40.0">
+               <children>
+                  <JFXTextField fx:id="find" prefHeight="36.0" prefWidth="0.0" visible="false" />
+                  <JFXTextArea fx:id="code" prefHeight="33.0" prefWidth="0.0" visible="false" />
+                  <Label fx:id="editedby" style="-fx-font-weight: bold;" text="Edited By" />
+                  <JFXCheckBox fx:id="signme" selected="true" style="-fx-font-weight: bold;" text="Sign Me" />
+                  <JFXCheckBox fx:id="fixche" selected="true" style="-fx-font-weight: bold;" text="Fix Chemicals" />
+                  <JFXButton buttonType="RAISED" onAction="#historyaction" prefHeight="36.0" prefWidth="114.0" style="-fx-background-color: #e9c46a; -fx-font-weight: bold;" text="View History" />
+                  <JFXButton fx:id="save" buttonType="RAISED" layoutX="1101.0" layoutY="19.0" onAction="#saveaction" prefHeight="36.0" prefWidth="73.0" style="-fx-background-color: #00b4d8; -fx-font-weight: bold;" text="Save" />
+               </children>
+               <padding>
+                  <Insets right="20.0" />
+               </padding>
+            </HBox>
+         </items>
+      </SplitPane>
+   </children>
+</GridPane>

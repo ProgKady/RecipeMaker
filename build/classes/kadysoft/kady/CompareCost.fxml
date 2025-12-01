@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXPasswordField?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
+
+<BorderPane stylesheets="@cupertino-light.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.CompareCostController">
+   <center>
+      <VBox prefHeight="914.0" prefWidth="1300.0" spacing="5.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <MFXButton fx:id="refresh" buttonType="RAISED" depthLevel="LEVEL5" disable="true" onAction="#refreshaction" style="-fx-background-color: #ec7063; -fx-background-radius: 3em; -fx-text-fill: white;" text="Refresh">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </MFXButton>
+                  <MFXButton fx:id="browse" buttonType="RAISED" depthLevel="LEVEL5" onAction="#browseaction" rippleAnimateShadow="true" style="-fx-background-color: #1e8449; -fx-background-radius: 3em; -fx-text-fill: white;" text="Browse">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </MFXButton>
+                  <MFXTextField fx:id="recipelink" alignment="CENTER" editable="false" floatMode="BORDER" floatingText="Link To Recipe" prefHeight="49.0" prefWidth="372.0" promptText="Link To Recipe">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </MFXTextField>
+                  <MFXButton fx:id="updatecostt" buttonType="RAISED" depthLevel="LEVEL5" disable="true" onAction="#updatecosttaction" prefHeight="34.0" prefWidth="129.0" style="-fx-background-color: #0a9396; -fx-font-weight: bold; -fx-background-radius: 3em;" text="Update Cost" />
+                  <Label fx:id="status" alignment="CENTER" text="Chemical Cost">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <MFXTextField fx:id="pcs" alignment="CENTER" floatMode="BORDER" floatingText="PCS" prefHeight="49.0" prefWidth="86.0" text="120">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </MFXTextField>
+                  <MFXButton fx:id="calculate" buttonType="RAISED" depthLevel="LEVEL5" disable="true" onAction="#calculateaction" style="-fx-background-color: #21618c; -fx-background-radius: 3em; -fx-text-fill: white;" text="Calculate">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </MFXButton>
+                  <Label fx:id="result" alignment="CENTER" text="Result">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <MFXTextField fx:id="recipelink1" alignment="CENTER" editable="false" floatMode="BORDER" floatingText="Link To Recipe" prefHeight="55.0" prefWidth="0.0" promptText="Link To Recipe" visible="false">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </MFXTextField>
+                  <MFXPasswordField fx:id="admintf" alignment="CENTER" caretVisible="false" floatMode="BORDER" floatingText="Permission" hideCharacter="K" onKeyReleased="#admintfaction" prefHeight="49.0" prefWidth="85.0" selectable="false" style="-fx-font-weight: bold; -fx-font-size: 13px;" visible="false" />
+               </children>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </HBox>
+            <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="859.0" prefWidth="1300.0">
+               <items>
+                  <ScrollPane fx:id="scrollbar" fitToHeight="true" fitToWidth="true" prefHeight="349.0" prefWidth="1226.0" style="-fx-background-color: white;">
+                     <content>
+                        <WebView fx:id="webview" prefHeight="345.0" prefWidth="1223.0" />
+                     </content>
+                  </ScrollPane>
+                  <ScrollPane fx:id="newscrollbar" fitToHeight="true" fitToWidth="true" prefHeight="340.0" prefWidth="1226.0" style="-fx-background-color: white;">
+                     <content>
+                        <WebView fx:id="newwebview" prefHeight="345.0" prefWidth="1223.0" />
+                     </content>
+                  </ScrollPane>
+               </items>
+            </SplitPane>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <MFXButton fx:id="calnew" buttonType="RAISED" depthLevel="LEVEL5" disable="true" onAction="#calnewaction" style="-fx-background-color: #e74c3c; -fx-background-radius: 3em; -fx-text-fill: white;" text="Calculate New">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </MFXButton>
+                  <Label fx:id="status2" alignment="CENTER" text="Chemical Cost">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="result12" alignment="CENTER" text="/">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="result13" alignment="CENTER" style="-fx-background-color: green;" text="PCS" underline="true">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="result121" alignment="CENTER" style="-fx-font-weight: bold;" text="=">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="result2" alignment="CENTER" text="Result">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <MFXButton fx:id="reporto" buttonType="RAISED" depthLevel="LEVEL5" onAction="#reportoaction" style="-fx-background-color: #117a65; -fx-background-radius: 3em; -fx-text-fill: white;" text="Report Original">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </MFXButton>
+                  <MFXButton fx:id="reporte" buttonType="RAISED" depthLevel="LEVEL5" onAction="#reporteaction" style="-fx-background-color: #117a65; -fx-background-radius: 3em; -fx-text-fill: white;" text="Report Edited">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </MFXButton>
+                  <MFXButton fx:id="reportall" buttonType="RAISED" depthLevel="LEVEL5" onAction="#reportallaction" style="-fx-background-color: #6c3483; -fx-background-radius: 3em; -fx-text-fill: white;" text="Report All">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </MFXButton>
+                  <MFXButton fx:id="addrow" buttonType="RAISED" depthLevel="LEVEL5" onAction="#addrowaction" prefHeight="31.0" prefWidth="92.0" style="-fx-background-color: #273746; -fx-background-radius: 3em; -fx-text-fill: white;" text="Add Row">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </MFXButton>
+                  <MFXButton fx:id="clearall" buttonType="RAISED" depthLevel="LEVEL5" onAction="#clearallaction" style="-fx-background-color: #ba4a00; -fx-background-radius: 3em; -fx-text-fill: white;" text="Clear All">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </MFXButton>
+                  <JFXTextArea fx:id="lili" prefHeight="49.0" prefWidth="0.0" visible="false" />
+                  <JFXTextArea fx:id="lili1" prefHeight="49.0" prefWidth="0.0" visible="false" />
+                  <JFXTextArea fx:id="lili2" prefHeight="49.0" prefWidth="0.0" visible="false" />
+                  <JFXTextArea fx:id="lili3" prefHeight="49.0" prefWidth="0.0" visible="false" />
+                  <JFXTextArea fx:id="lili4" prefHeight="49.0" prefWidth="0.0" visible="false" />
+               </children>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

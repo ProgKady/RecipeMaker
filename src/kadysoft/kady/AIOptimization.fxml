@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+
+<VBox xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.AIOptimizationController" spacing="10" style="-fx-padding: 10;">
+    <Label text="AI Recipe Optimization" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+    <HBox spacing="10">
+        <Label text="Garment Material:"/>
+        <ComboBox fx:id="materialComboBox" promptText="Select Material">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Cotton"/>
+                    <String fx:value="Wool"/>
+                    <String fx:value="Silk"/>
+                    <String fx:value="Polyester"/>
+                </FXCollections>
+            </items>
+        </ComboBox>
+    </HBox>
+    <HBox spacing="10">
+        <Label text="Stain Type:"/>
+        <ComboBox fx:id="stainComboBox" promptText="Select Stain">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="None"/>
+                    <String fx:value="Grease"/>
+                    <String fx:value="Wine"/>
+                    <String fx:value="Grass"/>
+                </FXCollections>
+            </items>
+        </ComboBox>
+    </HBox>
+    <HBox spacing="10">
+        <Label text="Eco-Friendly Preference:"/>
+        <ComboBox fx:id="ecoComboBox" promptText="Select Preference">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Standard"/>
+                    <String fx:value="Eco-Friendly"/>
+                </FXCollections>
+            </items>
+        </ComboBox>
+    </HBox>
+    <Button fx:id="optimizeButton" text="Get AI Suggestions" onAction="#getSuggestions"/>
+    <Label text="AI Suggestions:" style="-fx-font-weight: bold;"/>
+    <TextArea fx:id="suggestionsArea" editable="false" prefHeight="100"/>
+    <HBox spacing="10">
+        <Button fx:id="applyButton" text="Apply to Recipe" onAction="#applySuggestions" disable="true"/>
+        <Button fx:id="clearButton" text="Clear" onAction="#clearInputs"/>
+    </HBox>
+</VBox>

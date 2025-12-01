@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="914.0" prefWidth="1261.0" stylesheets="@cupertino-light.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.ReportsController">
+   <center>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <TableView fx:id="datatable" prefHeight="944.0" prefWidth="1261.0" style="-fx-font-size: 11; -fx-font-weight: bold; -fx-text-alignment: center;" tableMenuButtonVisible="true" />
+            <HBox alignment="CENTER_LEFT" prefHeight="79.0" prefWidth="1261.0" spacing="15.0">
+               <children>
+                  <JFXButton fx:id="timebtn" buttonType="RAISED" onAction="#timeaction" prefHeight="37.0" prefWidth="96.0" style="-fx-background-radius: 3em; -fx-background-color: #5a189a; -fx-text-fill: white;" text="Time">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXButton fx:id="costbtn" buttonType="RAISED" onAction="#costaction" prefHeight="37.0" prefWidth="96.0" style="-fx-background-radius: 3em; -fx-background-color: #5a189a; -fx-text-fill: white;" text="Cost">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXButton fx:id="processesbtn" buttonType="RAISED" onAction="#processesaction" prefHeight="37.0" prefWidth="96.0" style="-fx-background-radius: 3em; -fx-background-color: #5a189a; -fx-text-fill: white;" text="Processes">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </JFXButton>
+                  <Label style="-fx-font-weight: bold; -FX-FONT-SIZE: 20;" text="+" />
+                  <JFXButton fx:id="typesbtn" buttonType="RAISED" onAction="#typesaction" prefHeight="37.0" prefWidth="96.0" style="-fx-background-radius: 3em; -fx-background-color: #5a189a; -fx-text-fill: white;" text="Types">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </JFXButton>
+                  <Label style="-fx-font-weight: bold; -FX-FONT-SIZE: 20;" text="=" />
+                  <JFXButton fx:id="protypes" buttonType="RAISED" onAction="#protypesaction" prefHeight="37.0" prefWidth="96.0" style="-fx-background-radius: 3em; -fx-background-color: #ff7900; -fx-text-fill: white;" text="Pro_Types">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXButton fx:id="newstone" buttonType="RAISED" layoutX="383.0" layoutY="10.0" onAction="#newstoneaction" prefHeight="37.0" prefWidth="96.0" style="-fx-background-radius: 3em; -fx-background-color: #5a189a; -fx-text-fill: white;" text="Stone">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXButton fx:id="delete" buttonType="RAISED" onAction="#deleteaction" prefHeight="37.0" prefWidth="88.0" style="-fx-background-radius: 3em; -fx-background-color: #004b23; -fx-text-fill: white;" text="Export">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXButton fx:id="filterbtn2" buttonType="RAISED" onAction="#filterbtn2action" prefHeight="36.0" prefWidth="88.0" style="-fx-background-radius: 3em; -fx-background-color: #ad2831; -fx-text-fill: white;" text="Clear">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </JFXButton>
+               </children>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

@@ -1,0 +1,579 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXToggleButton?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
+
+<GridPane id="AnchorPane" alignment="CENTER" prefHeight="957.0" prefWidth="1589.0" style="-fx-font-family: 'Cairo SemiBold';" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.RecipeMakerController_1">
+   <children>
+      <BorderPane layoutY="-3.0" prefHeight="964.0" prefWidth="1589.0">
+         <top>
+            <MenuBar prefHeight="32.0" prefWidth="1313.0" style="-fx-font-size: 15; -fx-font-weight: bold; -fx-background-radius: 0; -fx-border-color: white;" stylesheets="@CSS.css" BorderPane.alignment="CENTER">
+              <menus>
+                <Menu fx:id="filemenu" mnemonicParsing="false" text="File">
+                  <items>
+                        <MenuItem fx:id="createnewrecipe" disable="true" mnemonicParsing="false" onAction="#createnewrecipeaction" text="✨📑 Create a new recipe" />
+                        <MenuItem fx:id="createfastmode" mnemonicParsing="false" onAction="#createfastmodeaction" text="🚀📑 Create a recipe (Fast Mode)" />
+                        <MenuItem fx:id="emptyrecipeone" mnemonicParsing="false" onAction="#emptyrecipeoneaction" text="Create an empty recipe" visible="false" />
+                        <MenuItem fx:id="openoldrecipe" mnemonicParsing="false" onAction="#openoldrecipeaction" text="Edit a recipe (Simple)" visible="false" />
+                        <MenuItem fx:id="editadv" mnemonicParsing="false" onAction="#editadvaction" text="Edit old Recipe (Developer Mode)" visible="false" />
+                        <MenuItem fx:id="editorprint" mnemonicParsing="false" onAction="#editorprintaction" text="🖨 Print a ricipe in editor" />
+                        <MenuItem fx:id="openrecipesfolder" mnemonicParsing="false" onAction="#openrecipesfolderaction" text="Open Recipes Folder" visible="false" />
+                        <MenuItem fx:id="copyarecipe" mnemonicParsing="false" onAction="#copyarecipeaction" text="📋📂 Copy a Recipe in the same path" />
+                        <MenuItem fx:id="copyarecipepath" mnemonicParsing="false" onAction="#copyarecipepathaction" text="📋🔀 Copy a recipe to another path" />
+                        <Menu mnemonicParsing="false" text="🔒 Encrypt Me">
+                          <items>
+                              <MenuItem fx:id="encryptarecipe" mnemonicParsing="false" onAction="#encryptarecipeaction" style="-fx-background-color: red;" text="Encrypt a recipe (Basic)" />
+                            <MenuItem mnemonicParsing="false" onAction="#encryptadvaction" text="Encrypt a recipe (One_By_One_Advanced)" />
+                              <MenuItem mnemonicParsing="false" onAction="#encryptoall" text="Encrypt recipes (All_By_One_Advanced)" />
+                          </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="🔑🔒 Decrypt Me">
+                          <items>
+                              <MenuItem fx:id="decryptarecipe" mnemonicParsing="false" onAction="#decryptarecipeaction" style="-fx-background-color: red;" text="Decrypt a recipe (Basic)" />
+                            <MenuItem fx:id="decryptadv" disable="true" mnemonicParsing="false" onAction="#decryptadvaction" text="Decrypt a recipe (One_By_One_Advanced)" />
+                              <MenuItem fx:id="decryptrecipeall" disable="true" mnemonicParsing="false" onAction="#decryptrecipeallaction" text="Decrypt recipes (All_By_One_Advanced)" />
+                          </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="📤 Export ...">
+                          <items>
+                            <MenuItem mnemonicParsing="false" onAction="#xlsxtopdfaction" style="-fx-background-color: red;" text="Excel To File (Not Licensed)." />
+                              <MenuItem mnemonicParsing="false" onAction="#htmltopdfaction" text="Excel To Image" />
+                              <MenuItem fx:id="htmltohta" disable="true" mnemonicParsing="false" onAction="#htmltohtaaction" text="HTML To HTA (KADINIO Method)" />
+                          </items>
+                        </Menu>
+                    <MenuItem fx:id="exit" mnemonicParsing="false" onAction="#exitaction" text="✖ Exit" />
+                  </items>
+                </Menu>
+                <Menu fx:id="editmenu" mnemonicParsing="false" style="-fx-background-color: red;" text="Edit" visible="false">
+                  <items>
+                        <MenuItem fx:id="selectall" mnemonicParsing="false" onAction="#selectallaction" text="Select All" />
+                        <MenuItem fx:id="undo" mnemonicParsing="false" onAction="#undoaction" text="Undo" />
+                        <MenuItem fx:id="redo" mnemonicParsing="false" onAction="#redoaction" text="Redo" />
+                        <MenuItem fx:id="cut" mnemonicParsing="false" onAction="#cutaction" text="Cut" />
+                        <MenuItem fx:id="copy" mnemonicParsing="false" onAction="#copyaction" text="Copy" />
+                        <MenuItem fx:id="paste" mnemonicParsing="false" onAction="#pasteaction" text="Paste" />
+                    <MenuItem fx:id="clearall" mnemonicParsing="false" onAction="#clearallaction" text="Clear All" />
+                        <MenuItem fx:id="deleterow" mnemonicParsing="false" onAction="#deleterowaction" text="Delete Row" visible="false" />
+                        <MenuItem fx:id="zoomin" mnemonicParsing="false" onAction="#zoominaction" text="Increase Recipe Scale (Zoom In)" />
+                        <MenuItem fx:id="zoomout" mnemonicParsing="false" onAction="#zoomoutaction" text="Decrease Recipe Scale (Zoom Out)" />
+                  </items>
+                </Menu>
+                  <Menu fx:id="viewmenu" mnemonicParsing="false" text="View">
+                     <items>
+                        <MenuItem fx:id="viewrecipes" mnemonicParsing="false" onAction="#viewrecipesaction" style="-fx-background-color: green;" text="View Production Recipes" />
+                        <MenuItem fx:id="viewpilot" mnemonicParsing="false" onAction="#viewpilotaction" text="Preview Recipes Outside" />
+                     </items>
+                  </Menu>
+                  <Menu fx:id="editrecipemenu" mnemonicParsing="false" text="Edit_Recipe">
+                     <items>
+                        <SeparatorMenuItem mnemonicParsing="false">
+                           <content>
+                              <JFXToggleButton fx:id="hohoho" onAction="#hohohoaction" text="Admin" />
+                           </content>
+                        </SeparatorMenuItem>
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="editedit" mnemonicParsing="false" onAction="#editeditaction" style="-fx-background-color: green;" text="Edit a recipe" />
+                        <MenuItem fx:id="editeditedit" disable="true" mnemonicParsing="false" onAction="#editediteditaction" text="Fast edit a recipe in Eagle" />
+                        <Menu mnemonicParsing="false" text="Edit a recipe" visible="false">
+                          <items>
+                            <MenuItem fx:id="saverecipe" disable="true" mnemonicParsing="false" onAction="#saverecipeaction" text="Save a recipe" visible="false" />
+                          </items>
+                        </Menu>
+                     </items>
+                  </Menu>
+                  <Menu fx:id="toolsmenu" mnemonicParsing="false" text="Tools">
+                    <items>
+                        <Menu mnemonicParsing="false" text="Convert Excel To System Recipes">
+                          <items>
+                              <Menu mnemonicParsing="false" text="Fast Mode">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" onAction="#excelfastmodeaction" text="Convert Excel To System Recipes" />
+                                    <MenuItem mnemonicParsing="false" onAction="#excelconvertmulaction" text="Convert Multiple (No Model, Stage and related data)" />
+                                 </items>
+                              </Menu>
+                              <Menu mnemonicParsing="false" text="Detailed Mode">
+                                 <items>
+                                    <MenuItem fx:id="exceltohtml" mnemonicParsing="false" onAction="#exceltohtmlaction" text="Convert Excel To System Recipes" />
+                                  <MenuItem fx:id="savetohtml" disable="true" mnemonicParsing="false" onAction="#savetohtmlaction" text="Save To System Recipes ..." />
+                                 </items>
+                              </Menu>
+                          </items>
+                        </Menu>
+                        <Menu fx:id="toexcelmenu" disable="true" mnemonicParsing="false" text="Export a recipe to Excel">
+                          <items>
+                              <MenuItem fx:id="exporttoexcel" mnemonicParsing="false" onAction="#exporttoexcelaction" text="Export a recipe to Excel (Method 1)" />
+                            <MenuItem fx:id="myexporttoexcel" mnemonicParsing="false" onAction="#myexporttoexcelaction" text="Export a recipe to Excel (Method 2)" />
+                              <MenuItem fx:id="aiartool" mnemonicParsing="false" onAction="#aiartoolaction" text="Export a recipe to Excel (Method 3)" />
+                              <MenuItem fx:id="kadysoftmethod" mnemonicParsing="false" onAction="#kadysoftmethodaction" text="Kadysoft special method (Method 4)" />
+                              <MenuItem mnemonicParsing="false" onAction="#httoexaction" text="KADINIO (Method 5) Multiple Files" />
+                          </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Working With Recipe">
+                          <items>
+                            <MenuItem fx:id="findandreplaceall" mnemonicParsing="false" onAction="#findandreplaceallaction" text="Find And Replace (All)" />
+                          </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Working With Excel">
+                          <items>
+                            <MenuItem fx:id="protect" mnemonicParsing="false" onAction="#protectaction" text="Protect sheet" />
+                              <Menu mnemonicParsing="false" text="Add or Remove Sheets">
+                                <items>
+                                  <MenuItem fx:id="addsheet" mnemonicParsing="false" onAction="#addsheetaction" text="Add new sheet" />
+                                    <MenuItem fx:id="removesheet" mnemonicParsing="false" onAction="#removesheetaction" text="Remove sheet" />
+                                </items>
+                              </Menu>
+                              <MenuItem fx:id="deleterows" mnemonicParsing="false" onAction="#deleterowsaction" text="Delete blank rows and columns" />
+                              <MenuItem mnemonicParsing="false" onAction="#xlsxtosvgaction" text="Convert XLSX to SVG" fx:id="xlsxtosvg" />
+                              <MenuItem fx:id="exceltoword" mnemonicParsing="false" onAction="#exceltowordaction" text="Excel to word" visible="false" />
+                              <MenuItem fx:id="exceltotext" mnemonicParsing="false" onAction="#exceltotextaction" text="Excel to text" />
+                              <MenuItem fx:id="pdftoexcel" disable="true" mnemonicParsing="false" onAction="#pdftoexcelaction" text="PDF to excel" />
+                          </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Signature" visible="false">
+                          <items>
+                              <MenuItem fx:id="signout" mnemonicParsing="false" onAction="#signoutaction" text="Sign a recipe" />
+                            <MenuItem mnemonicParsing="false" onAction="#removesignaction" text="Remove Signature" />
+                          </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Fix Chemicals">
+                          <items>
+                            <MenuItem mnemonicParsing="false" onAction="#fixoneaction" text="Fix One By One" />
+                              <MenuItem mnemonicParsing="false" onAction="#fixallaction" text="Fix All By One" />
+                          </items>
+                        </Menu>
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <Menu mnemonicParsing="false" text="Fix LOT Numbers">
+                           <items>
+                              <MenuItem mnemonicParsing="false" onAction="#fixoneeaction" text="Fix One By One" />
+                              <MenuItem mnemonicParsing="false" onAction="#fixalllaction" text="Fix All By One" />
+                           </items>
+                        </Menu>
+                        <MenuItem fx:id="addlogo" mnemonicParsing="false" onAction="#addlogoaction" text="Add Logo To Recipe" visible="false" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#fixdifinitionaction" text="Fix Chemicals Definition" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <SeparatorMenuItem mnemonicParsing="false" visible="false" />
+                        <MenuItem fx:id="mailerr" mnemonicParsing="false" onAction="#mailerraction" text="Create a Kadysoft Mailer" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="calculatetime" mnemonicParsing="false" onAction="#calculatetimeaction" text="Calculate Time" />
+                        <MenuItem fx:id="calcpilot" mnemonicParsing="false" onAction="#calcpilotaction" text="Calculate Time Pilots" />
+                        <MenuItem mnemonicParsing="false" onAction="#cal3shoots" text="Calculate Time 3 or 4 or 5 or 6 shots" />
+                      <MenuItem mnemonicParsing="false" onAction="#addtimeraction" text="Show Time" visible="false" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#caltimemultiply" style="-fx-background-color: green;" text="Calculate Time (Multiple)" visible="false" />
+                        <Menu mnemonicParsing="false" text="Development Time">
+                          <items>
+                              <MenuItem fx:id="calculatedev" mnemonicParsing="false" onAction="#calculatedevaction" text="Calculate Time (1-2)" />
+                              <MenuItem mnemonicParsing="false" onAction="#calculatedev3shots" text="Calculate Time 3 or 4 or 5 or 6 Shots" />
+                              <MenuItem mnemonicParsing="false" onAction="#caldevmulaction" text="Calculate Multiple (1-2) Shots" visible="false" />
+                              <MenuItem mnemonicParsing="false" onAction="#timedevreportaction" text="Time Report" visible="false" />
+                          </items>
+                        </Menu>
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <Menu mnemonicParsing="false" text="Calculate Cost">
+                          <items>
+                              <MenuItem fx:id="calcost" mnemonicParsing="false" onAction="#calcostaction" text="Calculate Cost" />
+                              <SeparatorMenuItem mnemonicParsing="false" />
+                            <MenuItem fx:id="comparecost" mnemonicParsing="false" onAction="#comparecostaction" text="Compare Cost" />
+                          </items>
+                        </Menu>
+                        <MenuItem mnemonicParsing="false" onAction="#calcostmultiply" style="-fx-background-color: green;" text="Calculate Cost (Multiple)" />
+                        <MenuItem fx:id="showcost" mnemonicParsing="false" onAction="#showcostaction" text="Show Cost" visible="false" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <Menu mnemonicParsing="false" text="Development Cost">
+                          <items>
+                            <MenuItem mnemonicParsing="false" onAction="#calcostac" text="Calculate Cost" />
+                              <MenuItem mnemonicParsing="false" onAction="#calcostmulac" text="Calculate Cost (Multiple)" />
+                              <MenuItem mnemonicParsing="false" onAction="#showcostdevac" text="Show Cost" visible="false" />
+                          </items>
+                        </Menu>
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="recetacal" mnemonicParsing="false" onAction="#recetacalaction" text="Coaster" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="recipeplanner" mnemonicParsing="false" onAction="#recipeplanneraction" text="Recipe Planner" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="recipeproc" mnemonicParsing="false" onAction="#recipeprocaction" text="Recipe Processes" />
+                        <MenuItem mnemonicParsing="false" onAction="#procmultiaction" style="-fx-background-color: green;" text="Recipe Processes (Multiple)" />
+                        <MenuItem fx:id="showrecipeproc" mnemonicParsing="false" onAction="#showrecipeprocaction" text="Show Recipes Processes" visible="false" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="washtype" mnemonicParsing="false" onAction="#washtypeaction" text="Get Recipe Washing Type" />
+                        <MenuItem mnemonicParsing="false" onAction="#typemultiaction" style="-fx-background-color: green;" text="Recipe Type (Multiple)" />
+                        <MenuItem fx:id="showwashtype" mnemonicParsing="false" onAction="#showwashtypeaction" text="Show Recipes Washing Types" visible="false" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#searchrecipeaction" text="Search Recipe" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#stonegetteraction" text="Stone Getter" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#recipecontentsearchaction" text="Recipe Content Search" />
+                        <MenuItem fx:id="chatgpt" mnemonicParsing="false" onAction="#chatgptaction" style="-fx-background-color: green;" text="Ask ChatGPT" visible="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#historyaction" text="Recipe Editing History" visible="false" />
+                    </items>
+                  </Menu>
+                  <Menu fx:id="reports" mnemonicParsing="false" text="Reports">
+                    <items>
+                        <MenuItem mnemonicParsing="false" style="-fx-background-color: red;" text="There are many reports here" />
+                        <MenuItem mnemonicParsing="false" style="-fx-background-color: red;" text="Every item has its method for reporting" />
+                        <MenuItem mnemonicParsing="false" style="-fx-background-color: red;" text="But here you can create full report for time, cost, processes, types and all." />
+                      <MenuItem fx:id="createrepo" mnemonicParsing="false" onAction="#createrepoaction" text="Create Report" />
+                    </items>
+                  </Menu>
+                  <Menu fx:id="addstepmenu" mnemonicParsing="false" text="Add Step">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Add Stage">
+                           <graphic>
+                              <HBox alignment="CENTER_LEFT" focusTraversable="true" prefHeight="100.0" prefWidth="200.0" spacing="25.0" stylesheets="@dracula_1.css">
+                                 <children>
+                                    <JFXTextField fx:id="stagefield" alignment="CENTER" promptText="Write Step" />
+                                    <JFXButton fx:id="stageadd" alignment="CENTER" buttonType="RAISED" maxWidth="60.0" minWidth="60.0" onAction="#stageaddaction" prefWidth="60.0" text="ADD" />
+                                 </children>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </HBox>
+                           </graphic>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" text="Add Model">
+                           <graphic>
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="25.0">
+                                 <children>
+                                    <JFXTextField fx:id="modelfield" alignment="CENTER" promptText="Write Step" />
+                                    <JFXButton fx:id="modeladd" buttonType="RAISED" maxWidth="60.0" minWidth="60.0" onAction="#modeladdaction" prefWidth="60.0" text="ADD" />
+                                 </children>
+                              </HBox>
+                           </graphic>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" text="Add Action">
+                           <graphic>
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="25.0">
+                                 <children>
+                                    <JFXTextField fx:id="actionfield" alignment="CENTER" promptText="Write Step" />
+                                    <JFXButton fx:id="actionadd" buttonType="RAISED" maxWidth="60.0" minWidth="60.0" onAction="#actionaddaction" prefWidth="60.0" text="ADD" />
+                                 </children>
+                              </HBox>
+                           </graphic>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" text="Add Unit">
+                           <graphic>
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="25.0">
+                                 <children>
+                                    <JFXTextField fx:id="unitfield" alignment="CENTER" promptText="Write Step" />
+                                    <JFXButton fx:id="unitadd" alignment="CENTER" buttonType="RAISED" maxWidth="60.0" minWidth="60.0" onAction="#unitaddaction" prefWidth="60.0" text="ADD" />
+                                 </children>
+                              </HBox>
+                           </graphic>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" text="Unspecified Action" visible="false">
+                           <graphic>
+                              <JFXTextArea fx:id="myarea" />
+                           </graphic>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" text="Add User">
+                           <graphic>
+                              <HBox alignment="CENTER_LEFT" focusTraversable="true" prefHeight="100.0" prefWidth="200.0" spacing="25.0" stylesheets="@dracula_1.css">
+                                 <children>
+                                    <JFXTextField fx:id="userfield" alignment="CENTER" promptText="Write Step" />
+                                    <JFXButton fx:id="useradd" alignment="CENTER" buttonType="RAISED" maxWidth="60.0" minWidth="60.0" onAction="#useraddaction" prefWidth="60.0" text="ADD" />
+                                 </children>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </HBox>
+                           </graphic>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" text="Add Mail">
+                           <graphic>
+                              <HBox alignment="CENTER_LEFT" focusTraversable="true" prefHeight="100.0" prefWidth="200.0" spacing="25.0" stylesheets="@dracula_1.css">
+                                 <children>
+                                    <JFXTextField fx:id="mailfield" alignment="CENTER" promptText="Write Step" />
+                                    <JFXButton fx:id="mailadd" alignment="CENTER" buttonType="RAISED" maxWidth="60.0" minWidth="60.0" onAction="#mailaddaction" prefWidth="60.0" text="ADD" />
+                                 </children>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </HBox>
+                           </graphic>
+                        </MenuItem>
+                    </items>
+                  </Menu>
+                <Menu fx:id="helpmenu" mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem fx:id="about" mnemonicParsing="false" onAction="#aboutaction" text="About" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <SeparatorMenuItem mnemonicParsing="false">
+                           <content>
+                              <JFXToggleButton fx:id="admon" onAction="#admonaction" text="Open Admin" />
+                           </content>
+                        </SeparatorMenuItem>
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="block" disable="true" mnemonicParsing="false" onAction="#blockuseraction" text="Block User" />
+                        <MenuItem fx:id="unblock" disable="true" mnemonicParsing="false" onAction="#unblockuseraction" text="Unblock User" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="logout" mnemonicParsing="false" onAction="#logoutaction" text="Log Out" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+         </top>
+         <center>
+            <Pane prefHeight="921.0" prefWidth="1589.0" BorderPane.alignment="CENTER">
+               <children>
+                  <JFXTextArea fx:id="textarea" disable="true" editable="false" labelFloat="true" layoutX="1018.0" layoutY="16.0" onKeyReleased="#areaaction" onMouseClicked="#areaclick" opacity="0.44" prefHeight="291.0" prefWidth="282.0" promptText="Recipe Code ..." style="-fx-background-color: white;" visible="false">
+                     <font>
+                        <Font name="System Bold" size="10.0" />
+                     </font>
+                  </JFXTextArea>
+                  <ComboBox fx:id="actionname" disable="true" layoutX="673.0" layoutY="39.0" onKeyReleased="#actionrel" onShowing="#actionsaction" prefHeight="37.0" prefWidth="181.0" promptText="Action Name" style="-fx-background-radius: 3em; -fx-font-size: 15; -fx-font-weight: bold;" visible="false" />
+                  <ComboBox fx:id="chemical" disable="true" editable="true" layoutX="549.0" layoutY="106.0" onKeyReleased="#chemicalrel" onShowing="#desaction" prefHeight="37.0" prefWidth="214.0" promptText="Chemical Des" style="-fx-font-size: 15; -fx-font-weight: bold;" visible="false" />
+                  <ComboBox fx:id="chemicalsign" disable="true" layoutX="795.0" layoutY="107.0" onHiding="#chemicalhide" onKeyReleased="#chemicalsignrel" onShowing="#chenameaction" prefHeight="37.0" prefWidth="225.0" promptText="Chemical Name" style="-fx-background-radius: 3em; -fx-font-size: 15; -fx-font-weight: bold;" visible="false" />
+                  <ComboBox fx:id="units" disable="true" layoutX="386.0" layoutY="105.0" onKeyReleased="#unitsrel" onShowing="#unitaction" prefHeight="37.0" prefWidth="131.0" promptText="Units" style="-fx-background-radius: 3em; -fx-font-size: 15; -fx-font-weight: bold;" visible="false" />
+                  <JFXCheckBox fx:id="control" alignment="CENTER" disable="true" layoutX="988.0" layoutY="46.0" onKeyReleased="#controlrel" prefHeight="23.0" prefWidth="118.0" style="-fx-background-radius: 3em;" text="Control" visible="false">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </JFXCheckBox>
+                  <JFXTextField fx:id="time" alignment="CENTER" disable="true" labelFloat="true" layoutX="878.0" layoutY="40.0" onKeyReleased="#timerel" prefHeight="37.0" prefWidth="93.0" promptText="Time ..." style="-fx-background-radius: 3em;" text="10" visible="false">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </JFXTextField>
+                  <JFXTextField fx:id="temprature" alignment="CENTER" disable="true" labelFloat="true" layoutX="1135.0" layoutY="39.0" onKeyReleased="#tempraturerel" prefHeight="37.0" prefWidth="110.0" promptText="Temprature ..." style="-fx-background-radius: 3em;" text="40" visible="false">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </JFXTextField>
+                  <JFXTextField fx:id="amount" alignment="CENTER" disable="true" labelFloat="true" layoutX="263.0" layoutY="106.0" onKeyReleased="#amountrel" prefHeight="37.0" prefWidth="86.0" promptText="Amount ..." style="-fx-background-radius: 3em;" text="50" visible="false">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </JFXTextField>
+                  <JFXTextField fx:id="liters" alignment="CENTER" disable="true" labelFloat="true" layoutX="21.0" layoutY="106.0" onKeyReleased="#litersrel" prefHeight="37.0" prefWidth="84.0" promptText="Liter's" style="-fx-background-radius: 3em;" text="700" visible="false">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </JFXTextField>
+                  <HBox fx:id="createpane" alignment="CENTER_LEFT" layoutX="1.0" layoutY="247.0" prefHeight="68.0" prefWidth="1270.0" spacing="30.0" stylesheets="@dracula.css" visible="false">
+                     <children>
+                        <JFXTextField fx:id="date" alignment="CENTER" labelFloat="true" onKeyReleased="#dateres" prefHeight="35.0" prefWidth="169.0" promptText="Date ..." style="-fx-background-radius: 3em;">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </JFXTextField>
+                        <JFXTextField fx:id="washname" alignment="CENTER" labelFloat="true" layoutX="10.0" layoutY="47.0" onKeyReleased="#washres" prefHeight="35.0" prefWidth="157.0" promptText="Wash Name ..." style="-fx-background-radius: 3em;">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </JFXTextField>
+                        <JFXTextField fx:id="kg" alignment="CENTER" labelFloat="true" layoutX="160.0" layoutY="47.0" onKeyReleased="#kgres" prefHeight="27.0" prefWidth="140.0" promptText="KG ..." style="-fx-background-radius: 3em;" text="80">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </JFXTextField>
+                        <JFXTextField fx:id="pcs" alignment="CENTER" labelFloat="true" layoutX="310.0" layoutY="47.0" onKeyReleased="#pcsres" prefHeight="27.0" prefWidth="140.0" promptText="PCS ..." style="-fx-background-radius: 3em;" text="120">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </JFXTextField>
+                        <JFXTextField fx:id="customer" alignment="CENTER" labelFloat="true" layoutX="460.0" layoutY="47.0" onKeyReleased="#customerres" prefHeight="35.0" prefWidth="171.0" promptText="Customer ..." style="-fx-background-radius: 3em;">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </JFXTextField>
+                        <JFXTextField fx:id="stylename" alignment="CENTER" labelFloat="true" layoutX="610.0" layoutY="47.0" onKeyReleased="#styleres" prefHeight="35.0" prefWidth="172.0" promptText="Style Name ..." style="-fx-background-radius: 3em;">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </JFXTextField>
+                        <JFXButton fx:id="createbtn" buttonType="RAISED" onAction="#createbtn" prefHeight="40.0" prefWidth="114.0" style="-fx-background-radius: 3em;" text="Create">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </JFXButton>
+                     </children>
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </HBox>
+                  <HBox fx:id="buttonspane" alignment="CENTER_LEFT" layoutX="1.0" layoutY="158.0" prefHeight="73.0" prefWidth="1270.0" spacing="30.0" stylesheets="@dracula.css" visible="false">
+                     <children>
+                        <JFXButton fx:id="addstep" buttonType="RAISED" onAction="#addstepaction" prefHeight="36.0" prefWidth="77.0" style="-fx-background-color: #24a0ed; -fx-background-radius: 3em;" text="Add">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </JFXButton>
+                        <JFXButton fx:id="editrecipe" buttonType="RAISED" disable="true" onAction="#editrecipeaction" prefHeight="36.0" prefWidth="113.0" style="-fx-background-radius: 3em;" text="Edit Recipe" visible="false">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </JFXButton>
+                        <JFXButton fx:id="saveme" buttonType="RAISED" layoutX="485.0" layoutY="29.0" onAction="#savemeaction" prefHeight="36.0" prefWidth="96.0" style="-fx-background-radius: 3em;" text="Save Me">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </JFXButton>
+                        <JFXButton fx:id="preview" buttonType="RAISED" disable="true" layoutX="580.0" layoutY="29.0" onAction="#previewaction" prefHeight="36.0" prefWidth="95.0" style="-fx-background-radius: 3em;" text="Preview" visible="false">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </JFXButton>
+                        <JFXButton fx:id="emptyrow" buttonType="RAISED" onAction="#emptyrowaction" style="-fx-background-radius: 3em;" text="Add Empty Row">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </JFXButton>
+                        <JFXTextField fx:id="notes" alignment="CENTER" labelFloat="true" prefHeight="37.0" prefWidth="245.0" promptText="Add Note Word ..." style="-fx-background-radius: 3em;">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </JFXTextField>
+                        <JFXButton fx:id="notesrow" buttonType="RAISED" onAction="#notesrowaction" prefHeight="35.0" prefWidth="136.0" style="-fx-background-radius: 3em;" text="Inside Notes">
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </JFXButton>
+                        <JFXButton fx:id="noty" buttonType="RAISED" onAction="#notyaction" prefHeight="37.0" prefWidth="137.0" style="-fx-background-radius: 3em;" text="Row Notes">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </JFXButton>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </HBox>
+                  <WebView fx:id="view" layoutX="1.0" layoutY="317.0" onKeyReleased="#viewre" prefHeight="645.0" prefWidth="1589.0" visible="false" />
+                  <JFXTextField fx:id="chemicallot" alignment="CENTER" disable="true" labelFloat="true" layoutX="1052.0" layoutY="107.0" onKeyReleased="#chemicallotrel" prefHeight="37.0" prefWidth="193.0" promptText="Chemical LOT" style="-fx-background-radius: 3em; -fx-font-size: 15; -fx-font-weight: bold;" visible="false" />
+                  <ComboBox fx:id="model" disable="true" layoutX="200.0" layoutY="39.0" onAction="#modelaction" onHidden="#hidingaction" onKeyReleased="#actionrel" onShowing="#modelsaction" prefHeight="37.0" prefWidth="149.0" promptText="Model" style="-fx-background-radius: 3em; -fx-font-size: 15; -fx-font-weight: bold;" visible="false" />
+                  <ComboBox fx:id="stage" layoutX="21.0" layoutY="40.0" onAction="#stageaction" onShowing="#stageactionnn" prefHeight="37.0" prefWidth="157.0" promptText="Stage" style="-fx-background-radius: 3em; -fx-font-size: 15; -fx-font-weight: bold;" visible="false" />
+                  <JFXCheckBox fx:id="nochemicals" alignment="CENTER" disable="true" layoutX="127.0" layoutY="113.0" prefHeight="21.0" prefWidth="111.0" style="-fx-background-radius: 3em;" text="No Chemicals" visible="false">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </JFXCheckBox>
+                  <JFXTextField fx:id="whiskercode" alignment="CENTER" labelFloat="true" layoutX="376.0" layoutY="39.0" onKeyReleased="#whiskeraction" prefHeight="25.0" prefWidth="107.0" promptText="Whisker" style="-fx-background-radius: 3em;" visible="false">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </JFXTextField>
+                  <JFXTextField fx:id="handcode" alignment="CENTER" labelFloat="true" layoutX="517.0" layoutY="39.0" onKeyReleased="#handaction" prefHeight="37.0" prefWidth="124.0" promptText="Hand" style="-fx-background-radius: 3em;" visible="false">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </JFXTextField>
+                  <TextArea fx:id="water" disable="true" editable="false" layoutX="1032.0" layoutY="275.0" opacity="0.22" prefHeight="28.0" prefWidth="40.0" visible="false">
+                     <font>
+                        <Font size="1.0" />
+                     </font>
+                  </TextArea>
+                  <TextArea fx:id="chemicals" disable="true" editable="false" layoutX="1245.0" layoutY="274.0" opacity="0.22" prefHeight="32.0" prefWidth="40.0" visible="false">
+                     <font>
+                        <Font size="1.0" />
+                     </font>
+                  </TextArea>
+                  <JFXTextArea fx:id="lili" layoutX="649.0" layoutY="373.0" prefHeight="526.0" prefWidth="657.0" visible="false" />
+                  <WebView fx:id="website" layoutX="-2.0" layoutY="5.0" prefHeight="912.0" prefWidth="1589.0" />
+                  <Pane layoutX="992.0" layoutY="19.0" prefHeight="540.0" prefWidth="586.0">
+                     <children>
+                        <ImageView fitHeight="118.0" fitWidth="147.0" layoutX="361.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@tandc_logo.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="362.0" fitWidth="517.0" layoutX="223.0" layoutY="168.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@kadysoft.png" />
+                           </image>
+                        </ImageView>
+                        <Label alignment="CENTER" layoutX="313.0" layoutY="176.0" prefHeight="21.0" prefWidth="183.0" style="-fx-background-color: #240046; -fx-background-radius: 3em; -fx-text-fill: white;" text="Powered By Kadysoft" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER" layoutX="383.0" layoutY="74.0" prefHeight="57.0" prefWidth="76.0" style="-fx-background-color: white; -fx-background-radius: 3em;" text="T &amp; C" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
+               </children>
+            </Pane>
+         </center>
+      </BorderPane>
+   </children>
+   <columnConstraints>
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+   </rowConstraints>
+   <stylesheets>
+      <URL value="@cupertino-light.css" />
+      <URL value="@CSS.css" />
+   </stylesheets>
+</GridPane>
