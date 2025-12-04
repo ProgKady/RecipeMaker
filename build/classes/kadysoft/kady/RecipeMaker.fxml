@@ -54,7 +54,12 @@
                         <MenuItem fx:id="openrecipesfolder" mnemonicParsing="false" onAction="#openrecipesfolderaction" text="Open Recipes Folder" visible="false" />
                         <MenuItem fx:id="copyarecipe" mnemonicParsing="false" onAction="#copyarecipeaction" text="Copy a Recipe" visible="false" />
                         <MenuItem fx:id="audit" mnemonicParsing="false" onAction="#auditaction" text="Show Audit" />
-                        <MenuItem mnemonicParsing="false" onAction="#historyaction" text="Recipe Editing History" />
+                        <Menu mnemonicParsing="false" text="Recipe Editing History">
+                          <items>
+                              <MenuItem mnemonicParsing="false" onAction="#historyaction" text="Recipe Editing History (Specific)" />
+                            <MenuItem mnemonicParsing="false" onAction="#historyaction2" text="Drag And Drop" />
+                          </items>
+                        </Menu>
                         <SeparatorMenuItem mnemonicParsing="false" />
                     <MenuItem fx:id="about" mnemonicParsing="false" onAction="#aboutaction" text="About" />
                         <MenuItem fx:id="logout" mnemonicParsing="false" onAction="#logoutaction" text="Log Out" />

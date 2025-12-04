@@ -59,6 +59,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -4480,27 +4482,112 @@ private void viewHistory() {
         historyyfileepathh=RecipeMakerController_1.historyFilePath;
         //System.out.println(historyyfileepathh);
         
-        try {
-            //String userpathh = System.getProperty("user.home");
-            File filor = new File (NewDir.file_dirrrr + "\\Editor\\kadysoft.html");
-            URL urly = filor.toURI().toURL();
-            String finalUrl = urly.toString() + "?t=" + System.currentTimeMillis();
-            codey.getEngine().setJavaScriptEnabled(true);   
-            codey.getEngine().reload();
-            codey.getEngine().load(finalUrl);
-            
-             // After the page loads, inject the Java clipboard bridge
-            codey.getEngine().getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
-            if (newState == Worker.State.SUCCEEDED) {
-                JSObject window = (JSObject) codey.getEngine().executeScript("window");
-                window.setMember("appClipboard", new ClipboardBridge());
+try {
+    final AppClipboard bridge = new AppClipboard();  // final عشان نستخدمه جوا الـ listener
+
+    File filor = new File(NewDir.file_dirrrr + "\\Editor\\kadysoft.html");
+    URL urly = filor.toURI().toURL();
+    final String finalUrl = urly.toString() + "?t=" + System.currentTimeMillis();
+
+    codey.getEngine().setJavaScriptEnabled(true);
+
+    codey.getEngine().getLoadWorker().stateProperty().addListener(
+        new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable,
+                                Worker.State oldState, Worker.State newState) {
+
+                if (newState == Worker.State.SUCCEEDED) {
+
+                    // ربط الجسر مع الـ JavaScript
+                    JSObject window = (JSObject) codey.getEngine().executeScript("window");
+                    window.setMember("appClipboard", bridge);
+
+                    // الكود الجافاسكريبت الصحيح والمضمون 100% على JavaFX 8
+                    String jsCopyFix = 
+                        "document.addEventListener('copy', function(e) {" +
+                        "    try {" +
+                        "        var sel = window.getSelection();" +
+                        "        if (!sel.rangeCount) return;" +
+                        "        var range = sel.getRangeAt(0);" +
+                        "        var ancestor = range.commonAncestorContainer;" +
+                        "        if (ancestor.nodeType !== 1) ancestor = ancestor.parentNode;" +
+                        "        var table = ancestor.closest ? ancestor.closest('table') : null;" +
+                        "        if (!table) return;" +
+                        "" +
+                        "        var cellsInRange = [];" +
+                        "        var minRow = Number.POSITIVE_INFINITY;" +
+                        "        var maxRow = -1;" +
+                        "        var minCol = Number.POSITIVE_INFINITY;" +
+                        "        var maxCol = -1;" +
+                        "" +
+                        "        for (var r = 0; r < table.rows.length; r++) {" +
+                        "            for (var c = 0; c < table.rows[r].cells.length; c++) {" +
+                        "                var cell = table.rows[r].cells[c];" +
+                        "" +
+                        "                var cellRect = cell.getBoundingClientRect();" +
+                        "                var rangeRect = range.getBoundingClientRect();" +
+                        "" +
+                        "                var intersects = !(rangeRect.right < cellRect.left || " +
+                        "                                   rangeRect.left > cellRect.right || " +
+                        "                                   rangeRect.bottom < cellRect.top || " +
+                        "                                   rangeRect.top > cellRect.bottom);" +
+                        "" +
+                        "                if (intersects || sel.containsNode(cell, true)) {" +
+                        "                    cellsInRange.push({row: r, col: c, cell: cell});" +
+                        "                    if (r < minRow) minRow = r;" +
+                        "                    if (r > maxRow) maxRow = r;" +
+                        "                    if (c < minCol) minCol = c;" +
+                        "                    if (c > maxCol) maxCol = c;" +
+                        "                }" +
+                        "            }" +
+                        "        }" +
+                        "" +
+                        "        if (minRow === Number.POSITIVE_INFINITY) return;" +
+                        "" +
+                        "        var result = '';" +
+                        "        for (var r = minRow; r <= maxRow; r++) {" +
+                        "            for (var c = minCol; c <= maxCol; c++) {" +
+                        "                var found = false;" +
+                        "                var text = '';" +
+                        "                for (var i = 0; i < cellsInRange.length; i++) {" +
+                        "                    if (cellsInRange[i].row === r && cellsInRange[i].col === c) {" +
+                        "                        text = (cellsInRange[i].cell.innerText || " +
+                        "                                cellsInRange[i].cell.textContent || '').trim();" +
+                        "                        found = true;" +
+                        "                        break;" +
+                        "                    }" +
+                        "                }" +
+                        "                result += text;" +
+                        "                if (c < maxCol) result += '\\t';" +
+                        "            }" +
+                        "            if (r < maxRow) result += '\\n';" +
+                        "        }" +
+                        "" +
+                        "        if (result.trim() !== '') {" +
+                        "            if (window.appClipboard && typeof window.appClipboard.setClipboardText === 'function') {" +
+                        "                window.appClipboard.setClipboardText(result);" +
+                        "                e.preventDefault();" +
+                        "                e.stopPropagation();" +
+                        "            }" +
+                        "        }" +
+                        "    } catch (err) {" +
+                        "        console.error('Copy Error:', err);" +
+                        "    }" +
+                        "}, true);";   // ← أهم حاجة: true = capture phase
+
+                    codey.getEngine().executeScript(jsCopyFix);
+                }
             }
         });
-            
-            
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(Helper_EditorController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+    codey.getEngine().load(finalUrl);
+
+} catch (MalformedURLException ex) {
+    Logger.getLogger(Helper_EditorController.class.getName()).log(Level.SEVERE, null, ex);
+}
+
+
         
         
         

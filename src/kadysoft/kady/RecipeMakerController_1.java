@@ -44669,76 +44669,74 @@ try {
 "<head>\n" +
 "    <meta charset=\"utf-8\" />\n" +
 "    <title></title>\n" +
-            
-            
-                
-             "<style>\n" +
+"<style>\n" +
 "        body {\n" +
 "            user-select: none;\n" +
 "            -webkit-user-select: none;\n" +
 "            -moz-user-select: none;\n" +
 "            -ms-user-select: none;\n" +
 "        }\n" +
-"    </style>"
-            
-          +"<script>\n" +
-"        document.addEventListener('dragstart', function(event) {\n" +
-"            event.preventDefault();\n" +
-"        });\n" +
+"</style>\n" +
 "\n" +
-"        document.addEventListener('drop', function(event) {\n" +
-"            event.preventDefault();\n" +
-"        });\n" +
+"<script>\n" +
+"document.addEventListener('dragstart', function(event) {\n" +
+"    event.preventDefault();\n" +
+"});\n" +
+"document.addEventListener('drop', function(event) {\n" +
+"    event.preventDefault();\n" +
+"});\n" +
+"document.addEventListener('contextmenu', function(event) {\n" +
+"    event.preventDefault();\n" +
+"});\n" +
+"</script>\n" +
 "\n" +
-"        document.addEventListener('contextmenu', function(event) {\n" +
-"            event.preventDefault();\n" +
-"        });\n" +
-"    </script>"  
-            
-            + "<script>\n" +
-"  \n" +
-"  window.addEventListener(`contextmenu`, (e) => {\n" +
+"<script>\n" +
+"window.addEventListener(`contextmenu`, (e) => {\n" +
 "    e.preventDefault();\n" +
 "});\n" +
-"  \n" +
-"  </script>"
-            + ""
-            + ""
-            + ""
-            + ""+          
-"    <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css\" />\n" +
-"    <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css\" />\n" +
-"    <link rel=\"stylesheet\" href=\"https://cdn.bookingtimes.com/Styles/bootstrap-dialog.min.css\" />\n" +
-"    <link rel=\"stylesheet\" href=\"https://cdn.bookingtimes.com/Styles/bootstrap-tour.min.css\" />\n" +
-"    <link href=\"https://cdn.bookingtimes.com/Common/LoadCSS.ashx?k=874288&amp;v=185.346\" rel=\"stylesheet\" type=\"text/css\">\n" +
-"    <link href=\"https://cdn.bookingtimes.com/Common/LoadCSS.ashx?k=874288&amp;v=185.346&amp;g=1\" rel=\"stylesheet\" type=\"text/css\">\n" +
-"    <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js\" type=\"text/javascript\"></script>\n" +
-"    <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js\" type=\"text/javascript\"></script>\n" +
-"    <script src=\"https://cdn.bookingtimes.com/Scripts/jquery.slicknav.min.js\" type=\"text/javascript\"></script>\n" +
-"    <script src=\"https://cdn.bookingtimes.com/Scripts/bootstrap-tour.min.js\" type=\"text/javascript\"></script>\n" +
-"    <script src=\"./Scripts/tiny_mce/tinymce.min.js\" type=\"text/javascript\"></script>\n" +
-"    <style>\n" +
-"        #menuContainer {\n" +
-"        background-color: black;\n" +
-"        }\n" +
-"    </style>\n" +
-"    <script>\n" +
-"        $(document).ready(function () {\n" +
-"            $(\".modal\").on('shown', function () {\n" +
-"                $(this).find(\"[autofocus]:first\").focus();\n" +
-"            });\n" +
-"            $('.modal').on('hidden.bs.modal', function () {\n" +
-"                imageSelected(0, 0);\n" +
-"            })\n" +
-"        });\n"
-            + ""
-            + ""
-            + "function setupCopyPasteBridge() {\n" +
+"</script>\n" +
+"\n" +
+"<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css\" />\n" +
+"<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css\" />\n" +
+"<link rel=\"stylesheet\" href=\"https://cdn.bookingtimes.com/Styles/bootstrap-dialog.min.css\" />\n" +
+"<link rel=\"stylesheet\" href=\"https://cdn.bookingtimes.com/Styles/bootstrap-tour.min.css\" />\n" +
+"<link href=\"https://cdn.bookingtimes.com/Common/LoadCSS.ashx?k=874288&amp;v=185.346\" rel=\"stylesheet\" type=\"text/css\">\n" +
+"<link href=\"https://cdn.bookingtimes.com/Common/LoadCSS.ashx?k=874288&amp;v=185.346&amp;g=1\" rel=\"stylesheet\" type=\"text/css\">\n" +
+"\n" +
+"<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js\" type=\"text/javascript\"></script>\n" +
+"<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js\" type=\"text/javascript\"></script>\n" +
+"<script src=\"https://cdn.bookingtimes.com/Scripts/jquery.slicknav.min.js\" type=\"text/javascript\"></script>\n" +
+"<script src=\"https://cdn.bookingtimes.com/Scripts/bootstrap-tour.min.js\" type=\"text/javascript\"></script>\n" +
+"\n" +
+"<script src=\"./Scripts/tiny_mce/tinymce.min.js\" type=\"text/javascript\"></script>\n" +
+"\n" +
+"<style>\n" +
+"#menuContainer {\n" +
+"    background-color: black;\n" +
+"}\n" +
+"</style>\n" +
+"\n" +
+"<script>\n" +
+"$(document).ready(function () {\n" +
+"    $(\".modal\").on('shown', function () {\n" +
+"        $(this).find(\"[autofocus]:first\").focus();\n" +
+"    });\n" +
+"    $('.modal').on('hidden.bs.modal', function () {\n" +
+"        imageSelected(0, 0);\n" +
+"    })\n" +
+"});\n" +
+"\n" +
+"\n" +
+"// ======================================\n" +
+"// COPY / PASTE BRIDGE\n" +
+"// ======================================\n" +
+"function setupCopyPasteBridge() {\n" +
+"\n" +
 "  // Custom Copy\n" +
 "  document.addEventListener('copy', function (e) {\n" +
 "    const content = tinyMCE.activeEditor.selection.getContent({ format: 'html' });\n" +
 "    if (typeof appClipboard !== 'undefined') {\n" +
-"      appClipboard.setClipboardText(content); // Java bridge\n" +
+"      appClipboard.setClipboardText(content);\n" +
 "      e.preventDefault();\n" +
 "    }\n" +
 "  });\n" +
@@ -44746,87 +44744,149 @@ try {
 "  // Custom Paste\n" +
 "  document.addEventListener('paste', function (e) {\n" +
 "    if (typeof appClipboard !== 'undefined') {\n" +
-"      const html = appClipboard.getClipboardText(); // Java bridge\n" +
+"      const html = appClipboard.getClipboardText();\n" +
 "      tinyMCE.activeEditor.execCommand('mceInsertContent', false, html);\n" +
 "      e.preventDefault();\n" +
 "    }\n" +
 "  });\n" +
-"}"
-            + ""
-            + "" +
-            
-         
-            
-            
-"        tinyMCE.init({\n" +
-"            mode: \"specific_textareas\",\n" +
-"            editor_selector: \"mceEditor\",\n" +
-"            cleanup: false,\n" +
-"			plugins: \"link,code,insertdatetime,preview,paste,table,visualblocks,fullscreen,image,emoticons,textcolor,colorpicker,lists,charmap,hr,print,autosave,charmap,codesample,colorpicker,fullpage,save,searchreplace,image,imagetools,help\",                         // Theme options - button# indicated the row# only\n" +
-"            menu: {\n" +
-"			    file: { title: 'File', items: 'print save |     autosave  charmap  codesample    | colorpicker fullpage searchreplace image imagetools' },\n" +
-"                edit: { title: 'Edit', items: 'undo redo  | cut copy paste pastetext selectall | searchreplace' },\n" +
-"                format: { title: 'Format', items: 'strikethrough superscript subscript | removeformat' },\n" +
-"                view: { title: 'View', items: 'visualblocks visualaid | preview fullscreen | code' },\n" +
-"                table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },\n" +
-"				about: { title: 'About', items: 'help' }\n" +
-"            },\n" +
-"            images_dataimg_filter: function (img) {\n" +
-"            return img.hasAttribute('internal-blob');\n" +
-"            },\n" +
-"            toolbar1: \"formatselect , fontsizeselect | bold italic underline |  outdent indent | bullist numlist | alignleft aligncenter alignright |  forecolor backcolor  |  inserttable tableprops deletetable | cell row column  |  table save print imagetools image noneditable fullpage fullscreen code autosave bbcode emoticons emotions | preview \",\n" +
-"            style_formats: [{ title: 'h1', block: 'h1' },\n" +
-"            { title: 'h2', block: 'h2' },\n" +
-"            { title: 'h3', block: 'h3' },\n" +
-"            { title: 'h4', block: 'h4' },\n" +
-"            { title: 'h5', block: 'h5' }],\n" +
-"            visualblocks_default_state: false,\n" +
-"            end_container_on_empty_block: true,\n" +
-"            resize: 'both',\n" +
-"            browser_spellcheck: true,\n" +
-"            paste_text_sticky: true,\n" +
-"            paste_data_images: true,\n" +
-"            inline_styles: true,\n" +
-"            schema: 'html5',\n" +
-"            valid_children: \"+body[style|meta],+a[*],+input[*],+a[div|p|span],+input[div|p|span]\",\n" +
-"            extended_valid_elements: \"div[*],iframe[*],,a[*],p[*],img[*],input[*],script[*],meta[*]\",\n" +
-"            allow_html_in_named_anchor: true,\n" +
-"            remove_script_host: false,\n" +
-"            convert_urls: false,\n" +
-"            branding: false,\n" +
-"            encoding: \"UTF-8\",\n" +
-"            block_formats: 'Paragraph=p;Heading 2=h2;Heading 3=h3;Heading 4=h4;Heading 5=h5;Heading 6=h6;Address=address;Pre=pre',\n" +
-"            theme_advanced_blockformats: 'p,address,pre,h1,h2,h3,h4,h5',\n" +
-"            theme_advanced_buttons1_add_before: \"h1,h2,h3,h4,h5,h6,separator\",\n" +
-"            theme_advanced_resizing: true,\n" +
-"            init_instance_callback: function () { if (typeof tinyMCE_Init == \"function\") { tinyMCE_Init(); } },\n"
-            + ""
-            + ""
-            + "setup: function (editor) {\n" +
-"                // Custom keyboard shortcut for coloring table cells\n" +
-"                editor.addShortcut('ctrl+shift+c', 'Change Table Cell Color', function() {\n" +
-"                    // Get the selected node in TinyMCE editor\n" +
-"                    var selectedNode = editor.selection.getNode();\n" +
+"}\n" +
 "\n" +
-"                    // Check if the selected node is a table cell (TD or TH)\n" +
-"                    if (selectedNode.nodeName === 'TD' || selectedNode.nodeName === 'TH' || selectedNode.nodeName === 'TR') {\n" +
-"                        // Change the background color of the selected cell\n" +
-"                        selectedNode.style.backgroundColor = 'yellow';\n" +
-"                    } else {\n" +
-"                        alert('Please select a table cell to change its color.');\n" +
-"                    }\n" +
-"                });}"
-           
-            
-            +
-            
+"</script>\n" +
+"\n" +
+"<script>\n" +
+"// =====================================================\n" +
+"// TINYMCE INIT\n" +
+"// =====================================================\n" +
+"tinyMCE.init({\n" +
+"    mode: \"specific_textareas\",\n" +
+"    editor_selector: \"mceEditor\",\n" +
+"    cleanup: false,\n" +
+"    plugins: \"link,code,insertdatetime,preview,paste,table,visualblocks,fullscreen,image,emoticons,textcolor,colorpicker,lists,charmap,hr,print,autosave,charmap,codesample,colorpicker,fullpage,save,searchreplace,image,imagetools,help\",\n" +
+"\n" +
+"    menu: {\n" +
+"        file: { title: 'File', items: 'print save | autosave charmap codesample | colorpicker fullpage searchreplace image imagetools' },\n" +
+"        edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext selectall | searchreplace' },\n" +
+"        format: { title: 'Format', items: 'strikethrough superscript subscript | removeformat' },\n" +
+"        view: { title: 'View', items: 'visualblocks visualaid | preview fullscreen | code' },\n" +
+"        table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },\n" +
+"        about: { title: 'About', items: 'help' }\n" +
+"    },\n" +
+"\n" +
+"    images_dataimg_filter: function (img) {\n" +
+"        return img.hasAttribute('internal-blob');\n" +
+"    },\n" +
+"\n" +
+"    toolbar1: \"formatselect , fontsizeselect | bold italic underline | outdent indent | bullist numlist | alignleft aligncenter alignright | forecolor backcolor | inserttable tableprops deletetable | cell row column | table save print imagetools image noneditable fullpage fullscreen code autosave bbcode emoticons emotions | preview \",\n" +
+"\n" +
+"    style_formats: [\n" +
+"        { title: 'h1', block: 'h1' },\n" +
+"        { title: 'h2', block: 'h2' },\n" +
+"        { title: 'h3', block: 'h3' },\n" +
+"        { title: 'h4', block: 'h4' },\n" +
+"        { title: 'h5', block: 'h5' }\n" +
+"    ],\n" +
+"\n" +
+"    visualblocks_default_state: false,\n" +
+"    end_container_on_empty_block: true,\n" +
+"    resize: 'both',\n" +
+"    browser_spellcheck: true,\n" +
+"    paste_text_sticky: true,\n" +
+"    paste_data_images: true,\n" +
+"    inline_styles: true,\n" +
+"    schema: 'html5',\n" +
+"\n" +
+"    valid_children: \"+body[style|meta],+a[*],+input[*],+a[div|p|span],+input[div|p|span]\",\n" +
+"    extended_valid_elements: \"div[*],iframe[*],a[*],p[*],img[*],input[*],script[*],meta[*]\",\n" +
+"    allow_html_in_named_anchor: true,\n" +
+"    remove_script_host: false,\n" +
+"    convert_urls: false,\n" +
+"    branding: false,\n" +
+"    encoding: \"UTF-8\",\n" +
+"\n" +
+"    block_formats: 'Paragraph=p;Heading 2=h2;Heading 3=h3;Heading 4=h4;Heading 5=h5;Heading 6=h6;Address=address;Pre=pre',\n" +
+"\n" +
+"    init_instance_callback: function () {\n" +
+"        if (typeof tinyMCE_Init == \"function\") { tinyMCE_Init(); }\n" +
+"    },\n" +
+"\n" +
+"    setup: function (editor) {\n" +
+"\n" +
+"        setupCopyPasteBridge();\n" +
+"\n" +
+"        // ===============================\n" +
+"        // إزالة p داخل الجدول\n" +
+"        // ===============================\n" +
+"        editor.on(\"BeforeSetContent\", function (e) {\n" +
+"            if (e.content && e.content.includes(\"<tr\")) {\n" +
+"                e.content = e.content.replace(/<p>/g, \"\").replace(/<\\/p>/g, \"\");\n" +
+"            }\n" +
 "        });\n" +
-"    </script>\n" +
+"\n" +
+"\n" +
+"        // ============================================================\n" +
+"        // 🔥🔥 FORMAT PAINTER (copy/paste formatting like Excel)\n" +
+"        // ============================================================\n" +
+"        let copiedFormat = null;\n" +
+"\n" +
+"        // COPY format: Ctrl + Shift + F\n" +
+"        editor.addShortcut('ctrl+shift+f', 'Copy Cell Format', function () {\n" +
+"            let cell = editor.selection.getNode();\n" +
+"            if (cell.nodeName !== \"TD\" && cell.nodeName !== \"TH\") {\n" +
+"                alert(\"Please select a table cell to copy formatting.\");\n" +
+"                return;\n" +
+"            }\n" +
+"            copiedFormat = cell.getAttribute(\"style\");\n" +
+"            alert(\"Format Copied ✔\");\n" +
+"        });\n" +
+"\n" +
+"        // PASTE format: Ctrl + Shift + V\n" +
+"        editor.addShortcut('ctrl+shift+v', 'Paste Cell Format', function () {\n" +
+"            if (!copiedFormat) {\n" +
+"                alert(\"No format copied yet.\");\n" +
+"                return;\n" +
+"            }\n" +
+"\n" +
+"            let selectedCells = editor.selection.getSelectedBlocks();\n" +
+"\n" +
+"            if (selectedCells.length === 0) {\n" +
+"                let node = editor.selection.getNode();\n" +
+"                if (node.nodeName === \"TD\" || node.nodeName === \"TH\") {\n" +
+"                    selectedCells = [node];\n" +
+"                }\n" +
+"            }\n" +
+"\n" +
+"            selectedCells.forEach(c => {\n" +
+"                if (c.nodeName === \"TD\" || c.nodeName === \"TH\") {\n" +
+"                    c.setAttribute(\"style\", copiedFormat);\n" +
+"                }\n" +
+"            });\n" +
+"\n" +
+"            alert(\"Format Applied ✔\");\n" +
+"        });\n" +
+"\n" +
+"\n" +
+"        // ============================================================\n" +
+"        // تلوين الخلية (Ctrl + Shift + C)\n" +
+"        // ============================================================\n" +
+"        editor.addShortcut('ctrl+shift+c', 'Change Table Cell Color', function() {\n" +
+"            var selectedNode = editor.selection.getNode();\n" +
+"            if (selectedNode.nodeName === 'TD' || selectedNode.nodeName === 'TH' || selectedNode.nodeName === 'TR') {\n" +
+"                selectedNode.style.backgroundColor = 'yellow';\n" +
+"            } else {\n" +
+"                alert('Please select a table cell to change its color.');\n" +
+"            }\n" +
+"        });\n" +
+"\n" +
+"    }\n" +
+"});\n" +
+"</script>\n" +
+"\n" +
 "</head>\n" +
+"\n" +
 "<body>\n" +
 "<center>\n" +
-"        <div class=\"col-sm-9\">\n" +
-"        <textarea rows=\"2\" cols=\"20\" id=\"txtBody\" class=\"mceEditor\" autocomplete=\"off\" style=\"height: 800px; width: 100%;\" aria-hidden=\"true\">\n" +
+"    <div class=\"col-sm-9\">\n" +
+"        <textarea rows=\"2\" cols=\"20\" id=\"txtBody\" class=\"mceEditor\" autocomplete=\"off\" style=\"height: 800px; width: 100%;\" aria-hidden=\"true\">"+
 "			\n" +
 "			\n" +
 "			");
@@ -44918,9 +44978,7 @@ try {
      
     pw.append("			\n" +
 "			\n" +
-"			</textarea>\n" +
-"\n" +
-"        </div>\n" +
+"</textarea>\n" +
 "    </div>\n" +
 "</center>\n" +
 "</body>\n" +

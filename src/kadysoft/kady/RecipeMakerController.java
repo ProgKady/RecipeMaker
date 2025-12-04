@@ -1791,10 +1791,22 @@ public class RecipeMakerController   <T extends Comparable<T>> implements Initia
   
   
   
-  
-  
-  
-  
+  @FXML
+  void historyaction2(ActionEvent event) throws IOException  {
+      
+      
+    Stage kady = new Stage();
+    Parent root = FXMLLoader.<Parent>load(getClass().getResource("HistoryChecker.fxml"));
+    Scene scene = new Scene(root);
+    kady.setTitle("History Checker");
+    kady.centerOnScreen();
+    kady.setResizable(false);
+    kady.centerOnScreen();
+    kady.setScene(scene);
+    kady.show();
+      
+      
+  }
   
   
   
