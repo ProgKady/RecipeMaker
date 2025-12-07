@@ -437,6 +437,15 @@ public class RecipeMakerController_1  <T extends Comparable<T>> implements Initi
       public static Map<String, String> nameStatusMap = new HashMap<>();
   
       
+    @FXML
+    void fuzzymatch(ActionEvent event) throws IOException, ClassNotFoundException {
+
+        FuzzyReplaceApp fra=new FuzzyReplaceApp();
+        fra.start(new Stage());
+        
+    }
+      
+      
       
        @FXML
     void stonegetteraction(ActionEvent event) throws IOException{

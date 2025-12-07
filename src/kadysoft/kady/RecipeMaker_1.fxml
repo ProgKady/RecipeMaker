@@ -231,6 +231,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#recipecontentsearchaction" text="Recipe Content Search" />
                         <MenuItem fx:id="chatgpt" mnemonicParsing="false" onAction="#chatgptaction" style="-fx-background-color: green;" text="Ask ChatGPT" visible="false" />
                         <MenuItem mnemonicParsing="false" onAction="#historyaction" text="Recipe Editing History" visible="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#fuzzymatch" text="Correct Recipes Names" />
                     </items>
                   </Menu>
                   <Menu fx:id="reports" mnemonicParsing="false" text="Reports">
