@@ -11,6 +11,12 @@ import com.github.difflib.DiffUtils;
 import com.github.difflib.patch.Patch;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
@@ -23,9 +29,13 @@ import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
+import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -53,6 +63,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -95,6 +106,7 @@ import javafx.util.Duration;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
+import javax.imageio.ImageIO;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -704,7 +716,7 @@ public class SaverController implements Initializable {
     
     
     @FXML
-    void saveaction(ActionEvent event) throws FileNotFoundException, IOException {
+    void saveaction(ActionEvent event) throws FileNotFoundException, IOException, WriterException {
         
         
       
@@ -4695,10 +4707,257 @@ if (!changes.isEmpty()) {
 code.clear();
     
     
+
+
+
+ // تنظيف الكود القديم
+code.clear();
+
+// قراءة الملف وفك التشفير
+InputStream inputinstream = new FileInputStream(lonk.getText());
+BufferedReader bi = new BufferedReader(new InputStreamReader(inputinstream, "UTF-8"));
+String lo;
+while ((lo = bi.readLine()) != null) {
+    code.appendText("\n" + lo
+            .replace("ﬦ", "A").replace("ﬧ", "B").replace("ﬨ", "C").replace("﬩", "D").replace("שׁ", "E")
+            .replace("שׂ", "F").replace("שּׁ", "G").replace("שּׂ", "H").replace("אַ", "I").replace("אָ", "J")
+            .replace("אּ", "K").replace("בּ", "L").replace("גּ", "M").replace("דּ", "N").replace("הּ", "O")
+            .replace("וּ", "P").replace("זּ", "Q").replace("טּ", "R").replace("יּ", "S").replace("ךּ", "T")
+            .replace("כּ", "U").replace("לּ", "V").replace("מּ", "W").replace("נּ", "X").replace("סּ", "Y")
+            .replace("ףּ", "Z").replace("פּ", "0").replace("צּ", "1").replace("קּ", "2").replace("רּ", "3")
+            .replace("שּ", "4").replace("תּ", "5").replace("וֹ", "6").replace("בֿ", "7").replace("כֿ", "8")
+            .replace("פֿ", "9").replace("&NBSP;", ""));
+}
+bi.close();
+
+// كتابة الملف بعد فك التشفير
+String gf = code.getText();
+try (PrintWriter pwe = new PrintWriter(new OutputStreamWriter(new FileOutputStream(lonk.getText()), "UTF-8"))) {
+    pwe.println(gf);
+}
+code.clear();
+
+// إعداد بيانات QR
+Date d = new Date();
+SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+String dateString = sdf.format(d);
+
+String programmerName = "Ahmed Elkady.";
+String companyName = "Kadysoft Ltd.";
+String factoryName = "T&C Garments.";
+String recipeName = filenammm + ".";
+String clientName = modeloo + ".";
+int qty = Integer.parseInt(pecoco);
+String lastEditorName = lonk1.getText() + ".";
+String date = dateString + ".";
+String repolink = "https://progkady.github.io/RecipeBrowser/";
+double pcsCost = onegar;
+
+String qrText = "★ Recipe Details ★\n" +
+        "-------------------------\n" +
+        "• Programmer : " + programmerName + "\n" +
+        "• Developer : " + companyName + "\n" +
+        "• Factory : " + factoryName + "\n" +
+        "• Recipe : " + recipeName + "\n" +
+        "• Customer : " + clientName + "\n" +
+        "• Quantity : " + qty + "\n" +
+        "• Editor Name : " + lastEditorName + "\n" +
+        "• Last Update : " + date + "\n" +
+        "• Pcs Cost : " + pcsCost + " $\n\n" +
+        "• Recipes Link : " + repolink + "\n" +
+        "Thanks For Using Receta From Kadysoft Ltd. ❤";
+
+// إنشاء QR بحجم كبير وواضح
+int qrSize = 250; // حجم QR بالبكسل
+BufferedImage qrImage = createPrintableQR(qrText, qrSize);
+String qrBase64 = imageToBase64Png(qrImage);
+
+// قراءة HTML الأصلي
+String htmlContent = readFile(lonk.getText());
+Document doc = Jsoup.parse(htmlContent);
+doc.outputSettings().syntax(Document.OutputSettings.Syntax.html);
+doc.outputSettings().charset("UTF-8");
+
+Element table = doc.select("table#EXTABLE").first();
+if (table == null) {
+    System.out.println("خطأ: الجدول #EXTABLE مش موجود!");
+    return;
+}
+
+Elements rows = table.select("tbody > tr");
+int mergeRows = Math.min(7, rows.size()); // دمج أول 8 صفوف
+int qrColumnIndex = 8; // العمود رقم 9
+
+Element firstRow = rows.get(0);
+Elements cells = firstRow.select("td");
+if (cells.size() <= qrColumnIndex) {
+    System.out.println("العمود رقم 9 مش موجود في الصف الأول!");
+    return;
+}
+
+// إدراج QR في العمود 9 مع CSS مناسب للطباعة
+Element qrCell = cells.get(qrColumnIndex);
+qrCell.attr("rowspan", String.valueOf(mergeRows))
+      .attr("style", "border: 3px double #000; padding: 10px; background: #ffffff; " +
+                     "text-align: center; vertical-align: middle;")
+      .html(
+        "<img src=\"data:image/png;base64," + qrBase64 + "\" " +
+        "alt=\"QR CODE, POWERED BY KADYSOFT LTD.\" " +
+        "style=\"width:" + qrSize + "px !important; height:" + qrSize + "px !important; " +
+        "max-width:none !important; max-height:none !important; border:10px solid white; " +
+        "box-shadow:0 0 0 4pt black;\"/>" +
+        "<br><br>" +
+        "<div style=\"font-weight: bold; font-size: 16pt; color: black; margin-top: 10px;\">" +
+        "Scan Me Now</div>"
+      );
+
+// إزالة الخلية من الصفوف الأخرى
+for (int i = 1; i < mergeRows; i++) {
+    Element row = rows.get(i);
+    Elements rowCells = row.select("td");
+    if (rowCells.size() > qrColumnIndex) {
+        rowCells.get(qrColumnIndex).remove();
+    }
+}
+
+// حفظ HTML بعد دمج QR
+writeFile(lonk.getText(), doc.outerHtml());
+code.clear();
+
+// إعادة تشفير الملف
+InputStream inputinstreamn = new FileInputStream(lonk.getText());
+BufferedReader bin = new BufferedReader(new InputStreamReader(inputinstreamn, "UTF-8"));
+String lon;
+while ((lon = bin.readLine()) != null) {
+    if (lon.contains("data:image") || lon.contains("base64,")) {
+        code.appendText("\n" + lon);
+        continue;
+    }
+    String converted = lon
+            .replace("A","ﬦ").replace("B","ﬧ").replace("C","ﬨ").replace("D","﬩").replace("E","שׁ")
+            .replace("F","שׂ").replace("G","שּׁ").replace("H","שּׂ").replace("I","אַ").replace("J","אָ")
+            .replace("K","אּ").replace("L","בּ").replace("M","גּ").replace("N","דּ").replace("O","הּ")
+            .replace("P","וּ").replace("Q","זּ").replace("R","טּ").replace("S","יּ").replace("T","ךּ")
+            .replace("U","כּ").replace("V","לּ").replace("W","מּ").replace("X","נּ").replace("Y","סּ")
+            .replace("Z","ףּ")
+            .replace("0","פּ").replace("1","צּ").replace("2","קּ").replace("3","רּ").replace("4","שּ")
+            .replace("5","תּ").replace("6","וֹ").replace("7","בֿ").replace("8","כֿ").replace("9","פֿ")
+            .replace("a","ﬦ").replace("b","ﬧ").replace("c","ﬨ").replace("d","﬩").replace("e","שׁ")
+            .replace("f","שׂ").replace("g","שּׁ").replace("h","שּׂ").replace("i","אַ").replace("j","אָ")
+            .replace("k","אּ").replace("l","בּ").replace("m","גּ").replace("n","דּ").replace("o","הּ")
+            .replace("p","וּ").replace("q","זּ").replace("r","טּ").replace("s","יּ").replace("t","ךּ")
+            .replace("u","כּ").replace("v","לּ").replace("w","מּ").replace("x","נּ").replace("y","סּ")
+            .replace("z","ףּ");
+    code.appendText("\n" + converted);
+}
+bin.close();
+
+try (PrintWriter pwn = new PrintWriter(new OutputStreamWriter(new FileOutputStream(lonk.getText()), "UTF-8"))) {
+    pwn.println(code.getText());
+}
+code.clear();
+
+    
+    
+    //Encrypt Here.............
+       
+       
+    try {
+            // المسار المطلوب تنفيذه فيه أوامر Git
+            String repoPath = "X:\\Recipe_System\\Recipes";
+
+            // تشغيل الأوامر بالترتيب
+            runCommand("git add .", repoPath);
+            runCommand("git commit -m \"Update some data\"", repoPath);
+            runCommand("git push", repoPath);
+
+            
+            
+        Notifications noti = Notifications.create();
+        noti.title("Successful");
+        noti.text("✔ Git operations completed successfully!");
+        noti.position(Pos.CENTER);
+        noti.show();
+            
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+
    
 /////////////////////////////////llllllllllllllllllll/////////////////////////////////////////////
     }
     
+    
+    
+    private static void runCommand(String command, String workingDir) throws Exception {
+        ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", command);
+        builder.directory(new java.io.File(workingDir));
+        builder.redirectErrorStream(true);
+
+        Process process = builder.start();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+        String line;
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line);
+        }
+
+        process.waitFor();
+    }
+    
+    
+    // دالة إنشاء QR مثالي للطباعة (أبيض وأسود + إطار أنيق)
+    private static BufferedImage createPrintableQR(String text, int size) throws WriterException {
+        Map<EncodeHintType, Object> hints = new HashMap<>();
+        hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H); // أعلى تصحيح خطأ
+        hints.put(EncodeHintType.MARGIN, 4); // هامش كبير للطباعة
+        BitMatrix matrix = new MultiFormatWriter().encode(text, BarcodeFormat.QR_CODE, size, size, hints);
+        int width = matrix.getWidth();
+        int height = matrix.getHeight();
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY);
+        Graphics2D g = image.createGraphics();
+        // خلفية بيضاء نقية
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, width, height);
+        // نقاط QR سوداء قوية
+        g.setColor(Color.BLACK);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (matrix.get(x, y)) {
+                    g.fillRect(x, y, 1, 1);
+                }
+            }
+        }
+        g.dispose();
+        return image;
+    }
+    // تحويل الصورة إلى Base64
+    private static String imageToBase64Png(BufferedImage image) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(image, "PNG", baos);
+        return Base64.getEncoder().encodeToString(baos.toByteArray());
+    }
+    // قراءة ملف (Java 8)
+    private static String readFile(String path) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+        String line;
+        while ((line = br.readLine()) != null) {
+            sb.append(line).append("\n");
+        }
+        br.close();
+        return sb.toString();
+    }
+    // كتابة ملف (Java 8)
+    private static void writeFile(String path, String content) throws IOException {
+        PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"));
+        pw.print(content);
+        pw.close();
+        pw.close();
+    }
     
     
       

@@ -4374,11 +4374,49 @@ code.clear();
     //Encrypt Here.............
        
        
+    try {
+            // المسار المطلوب تنفيذه فيه أوامر Git
+            String repoPath = "X:\\Recipe_System\\Recipes";
+
+            // تشغيل الأوامر بالترتيب
+            runCommand("git add .", repoPath);
+            runCommand("git commit -m \"Update some data\"", repoPath);
+            runCommand("git push", repoPath);
+
+            
+            
+        Notifications noti = Notifications.create();
+        noti.title("Successful");
+        noti.text("✔ Git operations completed successfully!");
+        noti.position(Pos.CENTER);
+        noti.show();
+            
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
        
        
     }
 
  
+    
+    private static void runCommand(String command, String workingDir) throws Exception {
+        ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", command);
+        builder.directory(new java.io.File(workingDir));
+        builder.redirectErrorStream(true);
+
+        Process process = builder.start();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+        String line;
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line);
+        }
+
+        process.waitFor();
+    }
     
     
     // دالة إنشاء QR مثالي للطباعة (أبيض وأسود + إطار أنيق)
