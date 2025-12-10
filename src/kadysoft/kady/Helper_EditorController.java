@@ -70,6 +70,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
@@ -2663,7 +2664,7 @@ else {}
           
           //For mailing by the old method just uncomment codes and comment current method then go straight. 
           
-          String[] mailToId={"kemal.duman@tcgarments.com","muhammet.eraslan@tcgarments.com","eyup.karakoyun@tcgarments.com","ahmed.nassif@tcgarments.com","hany.emeira@tcgarments.com","chemical.store@tcgarments.com","rainforest.tc@tcgarments.com","ahmed.elkady@tcgarments.com"};
+          String[] mailToId={"kemal.duman@tcgarments.com","muhammet.eraslan@tcgarments.com","eyup.karakoyun@tcgarments.com","ahmed.nassif@tcgarments.com","hany.emeira@tcgarments.com"/*,"chemical.store@tcgarments.com"*/,"rainforest.tc@tcgarments.com","ahmed.elkady@tcgarments.com"};
           for(int i=0;i<mailToId.length;i++){
            message.addRecipients(Message.RecipientType.TO, mailToId[i]);
           }
@@ -3530,7 +3531,7 @@ roraa = doctp.toString();
           
           //For mailing by the old method just uncomment codes and comment current method then go straight. 
           
-          String[] mailToId={"kemal.duman@tcgarments.com","muhammet.eraslan@tcgarments.com","eyup.karakoyun@tcgarments.com","ahmed.nassif@tcgarments.com","hany.emeira@tcgarments.com","chemical.store@tcgarments.com","rainforest.tc@tcgarments.com","ahmed.elkady@tcgarments.com"};
+          String[] mailToId={"kemal.duman@tcgarments.com","muhammet.eraslan@tcgarments.com","eyup.karakoyun@tcgarments.com","ahmed.nassif@tcgarments.com","hany.emeira@tcgarments.com"/*,"chemical.store@tcgarments.com"*/,"rainforest.tc@tcgarments.com","ahmed.elkady@tcgarments.com"};
           for(int i=0;i<mailToId.length;i++){
            message.addRecipients(Message.RecipientType.TO, mailToId[i]);
           }
@@ -4219,6 +4220,12 @@ code.clear();
 //    System.out.println(gffft+"hello");
     
     
+
+Platform.runLater( () -> {
+        
+        
+try {
+
     
        //////////////////////////////////////////End Save//////////////////////////////////////// 
        
@@ -4296,32 +4303,76 @@ if (table == null) {
     return;
 }
 
+
+//Elements rows = table.select("tbody > tr");
+//int mergeRows = Math.min(7, rows.size()); // دمج أول 8 صفوف
+//int qrColumnIndex = 8; // العمود رقم 9
+//
+//Element firstRow = rows.get(0);
+//Elements cells = firstRow.select("td");
+//if (cells.size() <= qrColumnIndex) {
+//    System.out.println("العمود رقم 9 مش موجود في الصف الأول!");
+//    return;
+//}
+//
+//// إدراج QR في العمود 9 مع CSS مناسب للطباعة
+//Element qrCell = cells.get(qrColumnIndex);
+//qrCell.attr("rowspan", String.valueOf(mergeRows))
+//      .attr("style", "border: 3px double #000; padding: 10px; background: #ffffff; " +
+//                     "text-align: center; vertical-align: middle;")
+//      .html(
+//        "<img src=\"data:image/png;base64," + qrBase64 + "\" " +
+//        "alt=\"QR CODE, POWERED BY KADYSOFT LTD.\" " +
+//        "style=\"width:" + qrSize + "px !important; height:" + qrSize + "px !important; " +
+//        "max-width:none !important; max-height:none !important; border:10px solid white; " +
+//        "box-shadow:0 0 0 4pt black;\"/>" +
+//        "<br><br>" +
+//        "<div style=\"font-weight: bold; font-size: 16pt; color: black; margin-top: 10px;\">" +
+//        "Scan Me Now</div>"
+//      );
+
+
+
+// --- الحصول على الصفوف ---
 Elements rows = table.select("tbody > tr");
-int mergeRows = Math.min(7, rows.size()); // دمج أول 8 صفوف
+int mergeRows = Math.min(7, rows.size()); // دمج 7 صفوف
 int qrColumnIndex = 8; // العمود رقم 9
 
+// --- الصف الأول ---
 Element firstRow = rows.get(0);
 Elements cells = firstRow.select("td");
+
 if (cells.size() <= qrColumnIndex) {
     System.out.println("العمود رقم 9 مش موجود في الصف الأول!");
     return;
 }
 
-// إدراج QR في العمود 9 مع CSS مناسب للطباعة
+// --- خلية QR Code ---
 Element qrCell = cells.get(qrColumnIndex);
-qrCell.attr("rowspan", String.valueOf(mergeRows))
-      .attr("style", "border: 3px double #000; padding: 10px; background: #ffffff; " +
-                     "text-align: center; vertical-align: middle;")
-      .html(
+
+// --- (1) فحص وجود QR CODE قديم ---
+Element oldQrImg = qrCell.selectFirst("img[src^=data:image]");
+
+// --- (2) HTML الخاص بالـ QR الجديد ---
+String qrHtml =
         "<img src=\"data:image/png;base64," + qrBase64 + "\" " +
         "alt=\"QR CODE, POWERED BY KADYSOFT LTD.\" " +
         "style=\"width:" + qrSize + "px !important; height:" + qrSize + "px !important; " +
         "max-width:none !important; max-height:none !important; border:10px solid white; " +
-        "box-shadow:0 0 0 4pt black;\"/>" +
-        "<br><br>" +
-        "<div style=\"font-weight: bold; font-size: 16pt; color: black; margin-top: 10px;\">" +
-        "Scan Me Now</div>"
-      );
+        "box-shadow:0 0 0 4pt black;\"/>";
+
+// --- (3) استبدال QR الموجود لو موجود ---
+if (oldQrImg != null) {
+    // يستبدل الـ HTML فقط بدون تغيير الـ rowspan أو الستايل
+    qrCell.html(qrHtml);
+} else {
+    // --- (4) إضافة QR جديد لو مفيش ---
+    qrCell.attr("rowspan", String.valueOf(mergeRows))
+          .attr("style", "border: 3px double #000; padding: 10px; background: #ffffff; " +
+                         "text-align: center; vertical-align: middle;")
+          .html(qrHtml);
+}
+
 
 // إزالة الخلية من الصفوف الأخرى
 for (int i = 1; i < mergeRows; i++) {
@@ -4396,6 +4447,15 @@ code.clear();
             e.printStackTrace();
         }
     
+       
+}
+
+catch (Exception r) {
+    
+}
+    
+    
+    });
        
        
     }
