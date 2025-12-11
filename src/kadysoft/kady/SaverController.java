@@ -4754,7 +4754,9 @@ String clientName = modeloo + ".";
 int qty = Integer.parseInt(pecoco);
 String lastEditorName = lonk1.getText() + ".";
 String date = dateString + ".";
-String repolink = "https://progkady.github.io/RecipeBrowser/";
+//String repolink = "https://progkady.github.io/RecipeBrowser/";
+String repolink = "https://progkady.github.io/RecipesStore/";
+
 double pcsCost = onegar;
 
 String qrText = "★ Recipe Details ★\n" +
