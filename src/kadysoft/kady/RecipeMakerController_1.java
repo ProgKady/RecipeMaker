@@ -39800,6 +39800,11 @@ buf.close();
       //////////////////////////////////////////////End////////////////////////////////////////////////////
       
       
+      Git.gitCommands();
+      
+      
+      
+      
   }
   
   
@@ -40078,6 +40083,9 @@ buf.close();
    //   desktopp.open(new File (pathy));
     
         
+   Git.gitCommands();
+   
+   
         
   }
   
@@ -40337,7 +40345,7 @@ buf.close();
     lili.clear();
 
           
-       
+       Git.gitCommands();
         
         
     }
@@ -40421,6 +40429,9 @@ buf.close();
     noti.position(Pos.CENTER);
     noti.showInformation();
     lili.clear();
+    
+    
+    Git.gitCommands();
         
         
     }

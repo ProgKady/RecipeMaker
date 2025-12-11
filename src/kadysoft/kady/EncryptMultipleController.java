@@ -166,6 +166,10 @@ public class EncryptMultipleController implements Initializable {
         text.setVisible(true);
             
         
+        Git.gitCommands();
+        
+        
+        
     }
     
     

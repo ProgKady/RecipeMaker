@@ -130,6 +130,10 @@ public class DecryptController implements Initializable {
       
       Stage jk = (Stage)this.area.getScene().getWindow();
       jk.close();
+      
+      Git.gitCommands();
+      
+      
         
     }
     

@@ -137,6 +137,11 @@ public class DecryptMultipleController implements Initializable {
         
       list.clear(); 
       text.setVisible(true);
+      
+      
+      
+      Git.gitCommands();
+      
         
     }
     

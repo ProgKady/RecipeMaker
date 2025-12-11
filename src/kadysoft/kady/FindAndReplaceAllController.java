@@ -198,6 +198,12 @@ public class FindAndReplaceAllController implements Initializable {
             
             
         }
+        
+        
+        
+        
+        Git.gitCommands();
+        
             
         
     }

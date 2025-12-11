@@ -2380,7 +2380,7 @@ else {
 }
     
     
-    
+    Git.gitCommands();
      
         
     }

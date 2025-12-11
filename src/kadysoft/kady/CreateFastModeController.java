@@ -749,7 +749,7 @@ else {}
         }
         
         
-        
+        Git.gitCommands();
         
         
         

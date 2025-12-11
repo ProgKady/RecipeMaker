@@ -295,7 +295,14 @@ public class FixMultipleDefinitionController implements Initializable {
       noti.position(Pos.CENTER);
       noti.showInformation();     
         }
-        list.clear();  
+        list.clear(); 
+        
+        
+        Git.gitCommands();
+        
+        
+        
+        
     } 
     @FXML
     void dragdropaction(DragEvent event) {

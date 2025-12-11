@@ -1237,7 +1237,7 @@ public class SaverController_1 implements Initializable {
       }
         
         
-        
+        Git.gitCommands();
          
     }
     

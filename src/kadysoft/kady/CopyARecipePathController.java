@@ -328,6 +328,8 @@ public class CopyARecipePathController implements Initializable {
         jk.close();
         
       
+        Git.gitCommands();
+        
         
     }
     

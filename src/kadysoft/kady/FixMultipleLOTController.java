@@ -257,7 +257,7 @@ buf.close();
     
         list.clear();
         
-        
+        Git.gitCommands();
         
         
     }

@@ -289,6 +289,8 @@ public class CopyARecipeController implements Initializable {
         Stage jk = (Stage)this.src.getScene().getWindow();
         jk.close();
         
+        
+        Git.gitCommands();
       
         
     }
