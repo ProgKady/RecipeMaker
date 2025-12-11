@@ -1,296 +1,268 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kadysoft</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #5d5fef;
-            --light: #f8f9ff;
-            --text: #2d3748;
-        }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body {
-            font-family: 'Cairo', 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #f0f2ff 0%, #f8f9ff 100%);
-            color: var(--text);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        header {
-            background: white;
-            padding: 18px 20px;
-            box-shadow: 0 4px 20px rgba(93,95,239,0.12);
-            font-size: 1.4em;
-            font-weight: 800;
-            color: var(--primary);
-            text-align: center;
-            position: relative;
-        }
-        /* أيقونات الفيسبوك والواتساب على اليمين فوق */
-        .header-social {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        .header-social a {
-            margin: 0 10px;
-            color: var(--primary);
-            font-size: 1.8em;
-            transition: 0.3s;
-        }
-        .header-social a:hover { transform: scale(1.3); }
+<meta charset="UTF-8">
+<title>TC Garments</title>
+<meta name="theme-color" content="#ffffff">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/hrrr_180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Cairo',sans-serif;
+  background:#f5f7fa;
+  color:#1a1a1a;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content: center;
+  align-items:center;
+  overflow:hidden;
+  position:relative;
+  padding:10px 8px;
+}
 
-        .tab-bar {
-            display: flex;
-            background: white;
-            border-bottom: 1px solid #eee;
-        }
-        .tab-btn {
-            flex: 1;
-            padding: 16px;
-            text-align: center;
-            font-weight: 600;
-            color: #666;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .tab-btn.active {
-            color: var(--primary);
-            border-bottom: 4px solid var(--primary);
-        }
-        .tab-content {
-            flex: 1;
-            overflow-y: auto;
-            display: none;
-        }
-        .tab-content.active { display: block; }
+/* خلفية الأنيميشن خفيفة وأنيقة */
+.bg{position:fixed;inset:0;background:transparent;pointer-events:none;z-index:0}
+.dot{
+  position:absolute;
+  width:5px;height:5px;
+  background:#ff3366;
+  border-radius:50%;
+  box-shadow:0 0 12px rgba(255,51,102,0.6);
+  animation:float 14s infinite linear;
+}
+@keyframes float{
+  0%{transform:translateY(100vh) scale(0);}
+  100%{transform:translateY(-100px) scale(1);}
+}
 
-        /* زر الرجوع على الشمال فوق */
-        .back-btn {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.6em;
-            color: var(--primary);
-            cursor: pointer;
-            display: none;
-            z-index: 10;
-        }
+/* اللوجو الآن مربع بزوايا منحنية (مش دايرة) */
+.logo{
+  width:100px;
+  height:100px;
+  border-radius:24px; /* زوايا منحنية حلوة */
+  object-fit:cover;
+  border:4px solid #ff3366;
+  box-shadow:0 0 25px rgba(255,51,102,0.4);
+  margin-bottom:12px;
+  z-index:10;
+  animation:pulse 4s infinite;
+}
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 25px rgba(255,51,102,0.4);}
+  50%{box-shadow:0 0 50px rgba(255,51,102,0.7);}
+}
 
-        .breadcrumbs { padding: 12px 20px; background: white; font-size: 0.95em; color: #666;
-                       border-bottom: 1px solid #eee; white-space: nowrap; overflow-x: auto; }
-        .breadcrumbs span { color: var(--primary); font-weight: 600; cursor: pointer; }
-        .content { flex: 1; overflow-y: auto; padding: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 18px; }
-        .item {
-            background: white; border-radius: 16px; padding: 20px 16px; text-align: center;
-            box-shadow: 0 8px 25px rgba(93,95,239,0.1); transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-            cursor: pointer; user-select: none;
-        }
-        .item:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(93,95,239,0.2); }
-        .item i { font-size: 2.8em; margin-bottom: 12px; color: var(--primary); }
-        .item.folder i { color: #ffa502; }
-        .item span { display: block; font-weight: 600; font-size: 1em; word-break: break-word; }
+.card{
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(20px);
+  padding:22px 18px;
+  border-radius:20px;
+  width:90%;
+  max-width:310px;
+  text-align:center;
+  border:1px solid rgba(255,51,102,0.25);
+  box-shadow:0 10px 35px rgba(0,0,0,0.08);
+  z-index:10;
+  margin-bottom:15px;
+}
 
-        #preview { position: fixed; top:0; left:0; right:0; bottom:0; background: white; z-index: 100;
-                   display: none; animation: slideIn 0.4s ease; }
-        #preview iframe { width: 100%; height: calc(100% - 60px); border: none; }
-        .preview-header { height: 60px; background: var(--primary); color: white;
-                          display: flex; align-items: center; justify-content: space-between;
-                          padding: 0 20px; font-size: 1.2em; font-weight: bold; }
-        .close-preview { font-size: 1.8em; cursor: pointer; }
+h2{
+  color:#e91e63;
+  font-size:21px;
+  margin-bottom:12px;
+  text-shadow:0 2px 8px rgba(233,30,99,0.15);
+}
 
-        /* تبويب إضافة الصورة */
-        .add-container { padding: 30px 20px; max-width: 420px; margin: 0 auto; }
-        .add-card {
-            background: white;
-            border-radius: 20px;
-            padding: 30px 25px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(93,95,239,0.15);
-        }
-        .add-card h2 { color: var(--primary); margin-bottom: 25px; font-size: 1.5em; }
-        .input-group { margin-bottom: 20px; position: relative; }
-        .input-group input {
-            width: 100%; padding: 16px; border: 2px solid #e0e4ff;
-            border-radius: 12px; font-size: 1.1em; outline: none; transition: 0.3s;
-        }
-        .input-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(93,95,239,0.1); }
-        .input-group label {
-            position: absolute; top: -10px; right: 15px; background: white;
-            padding: 0 8px; font-size: 0.9em; color: var(--primary);
-        }
-        .submit-btn {
-            background: var(--primary); color: white; border: none; width: 100%;
-            padding: 16px; border-radius: 12px; font-size: 1.2em; font-weight: 600;
-            cursor: pointer; transition: 0.3s;
-        }
-        .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(93,95,239,0.3); }
-        #status { margin-top: 20px; font-weight: bold; font-size: 1.1em; }
+input{
+  width:100%;
+  padding:11px 15px;
+  margin:7px 0;
+  background:#ffffff;
+  border:2px solid #e0e0e0;
+  border-radius:50px;
+  color:#333;
+  font-size:15px;
+  outline:none;
+  transition:all .3s;
+}
+input:focus{
+  border:2px solid #ff3366;
+  box-shadow:0 0 20px rgba(255,51,102,0.25);
+}
+input::placeholder{color:#999}
 
-        /* الفوتر بخط أصغر وأنيق */
-        footer {
-            background: white;
-            padding: 12px;
-            text-align: center;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
-            font-size: 0.85em;
-            color: #666;
-            user-select: none;
-        }
-        footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
-        footer a:hover { text-decoration: underline; }
+button{
+  width:100%;
+  padding:12px;
+  background:linear-gradient(145deg,#ff3366,#e91e63);
+  color:white;
+  border:none;
+  border-radius:50px;
+  font-size:16px;
+  font-weight:900;
+  cursor:pointer;
+  margin-top:10px;
+  box-shadow:0 8px 25px rgba(255,51,102,0.35);
+  transition:all .3s;
+}
+button:hover:not(:disabled){
+  transform:translateY(-4px);
+  box-shadow:0 15px 40px rgba(255,51,102,0.5);
+}
+button:disabled{
+  background:#ccc;
+  box-shadow:none;
+  cursor:not-allowed;
+}
 
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-    </style>
+p#status{
+  margin-top:10px;
+  color:#e91e63;
+  font-weight:bold;
+  min-height:20px;
+  font-size:14px;
+}
+
+footer{
+  color:#777;
+  font-size:12px;
+  text-align:center;
+  z-index:10;
+  width:100%;
+  padding:0 10px;
+  position:fixed;
+  bottom:10px;
+  left:0;
+}
+.footer-link{color:#e91e63;text-decoration:none;font-weight:bold}
+.support-btn{
+  background:#25d366;
+  color:white;
+  padding:7px 18px;
+  border-radius:25px;
+  text-decoration:none;
+  margin-top:6px;
+  display:inline-block;
+  font-size:13px;
+}
+
+/* تكييف للشاشات الصغيرة */
+@media (max-height: 680px), (max-width: 360px) {
+  .logo{width:85px;height:85px;border-radius:20px;margin-bottom:8px;}
+  .card{padding:18px 15px;max-width:280px;border-radius:16px;margin-bottom:10px;}
+  h2{font-size:19px;margin-bottom:10px;}
+  input{padding:10px 12px;font-size:14px;margin:6px 0;}
+  button{padding:11px;font-size:15px;margin-top:8px;}
+  footer{bottom:5px;font-size:11px;}
+  .support-btn{padding:6px 15px;}
+}
+</style>
 </head>
-<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+<body>
+<div class="bg" id="bg"></div>
 
-<header>
-    Kadysoft - RECETA
-    <!-- فيسبوك وواتساب على اليمين فوق -->
-    <div class="header-social">
-        <a href="https://facebook.com/kadinioo" target="_blank"><i class="fab fa-facebook"></i></a>
-        <a href="https://wa.me/+201555266002" target="_blank"><i class="fab fa-whatsapp"></i></a>
-    </div>
-</header>
+<!-- اللوجو مربع منحني الزوايا -->
+<img src="hrrr.png" alt="Logo" class="logo">
 
-<div class="tab-bar">
-    <div class="tab-btn active" onclick="openTab('recipes')">RECIPES</div>
-    <div class="tab-btn" onclick="openTab('add')">SEND MODIFICATION</div>
+<div class="card">
+  <h2>تسجيل الدخول</h2>
+  <input type="text" id="name" placeholder="الاسم الكامل">
+  <input type="text" id="code" placeholder="الكود الخاص">
+  <button id="registerBtn">دخول</button>
+  <p id="status"></p>
 </div>
 
-<!-- تبويب الوصفات -->
-<div id="recipes" class="tab-content active">
-    <i class="fas fa-arrow-right back-btn" id="backBtn"></i>
-    <div class="breadcrumbs" id="breadcrumbs">RECIPES</div>
-    <div class="content">
-        <div class="grid" id="grid"></div>
-    </div>
-    <div id="preview">
-        <div class="preview-header">
-            <span id="fileName">عرض الريسيبي</span>
-            <i class="fas fa-times close-preview" id="closePreview"></i>
-        </div>
-        <iframe id="iframe"></iframe>
-    </div>
-</div>
-
-<!-- تبويب إضافة الصورة -->
-<div id="add" class="tab-content">
-    <div class="add-container">
-        <div class="add-card">
-            <h2>اضافة صورة للريسيبي</h2>
-            <div class="input-group">
-                <input type="text" id="userName" required>
-                <label>الاسم</label>
-            </div>
-            <div class="input-group">
-                <input type="file" id="imageFile" accept="image/*" required>
-                <label>اختر الصورة</label>
-            </div>
-            <button class="submit-btn" onclick="submitForm()">أرسل الريسيبي</button>
-            <div id="status"></div>
-        </div>
-    </div>
-</div>
-
-<!-- الفوتر بخط أصغر -->
 <footer>
-    © 2026 <a href="#" onclick="openExternalLink('https://facebook.com/kadinioo')">Ahmed Elkady - Kadysoft Ltd.</a><br>
-    <a href="#" onclick="openExternalLink('https://wa.me/201555266002')">الدعم الفني عبر واتساب</a>
+  © 2026 <a href="#" onclick="openExternalLink('https://facebook.com/kadinioo')" class="footer-link">Ahmed Elkady - Kadysoft Ltd.</a><br>
+  <a href="#" onclick="openExternalLink('https://wa.me/201555266002')" class="support-btn">الدعم الفني (واتساب)</a>
 </footer>
 
 <script>
-// تبديل التبويبات
-function openTab(tab) {
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(tab).classList.add('active');
-    event.target.classList.add('active');
-}
-
-/* ================== كود الوصفات الأصلي (بدون أي تغيير) ================== */
-const owner = 'ProgKady', repo = 'Recipes', branch = 'master';
-const api = `https://api.github.com/repos/${owner}/${repo}/contents`;
-const raw = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}`;
-let history = [''];
-const grid = document.getElementById('grid'), breadcrumbs = document.getElementById('breadcrumbs'),
-    backBtn = document.getElementById('backBtn'), preview = document.getElementById('preview'),
-    iframe = document.getElementById('iframe'), fileName = document.getElementById('fileName'),
-    closePreview = document.getElementById('closePreview');
-
-function decodeKS(t){return t.replace(/פֿ/g,"9").replace(/כֿ/g,"8").replace(/בֿ/g,"7").replace(/וֹ/g,"6").replace(/תּ/g,"5").replace(/שּ/g,"4").replace(/רּ/g,"3").replace(/קּ/g,"2").replace(/צּ/g,"1").replace(/פּ/g,"0").replace(/ףּ/g,"Z").replace(/סּ/g,"Y").replace(/נּ/g,"X").replace(/מּ/g,"W").replace(/לּ/g,"V").replace(/כּ/g,"U").replace(/ךּ/g,"T").replace(/יּ/g,"S").replace(/טּ/g,"R").replace(/זּ/g,"Q").replace(/וּ/g,"P").replace(/הּ/g,"O").replace(/דּ/g,"N").replace(/גּ/g,"M").replace(/בּ/g,"L").replace(/אּ/g,"K").replace(/אָ/g,"J").replace(/אַ/g,"I").replace(/שּׂ/g,"H").replace(/שּׁ/g,"G").replace(/שׂ/g,"F").replace(/שׁ/g,"E").replace(/﬩/g,"D").replace(/ﬨ/g,"C").replace(/ﬧ/g,"B").replace(/ﬦ/g,"A").replace(/&NBSP;/gi,"").replace(/[\u200B-\u200D\uFEFF]/g,"");}
-
-async function loadPath(p=''){const r=await fetch(`${api}/${p}?ref=${branch}`);let i=await r.json();i.sort((a,b)=>b.type==='dir'?-1:1);grid.innerHTML='';i.forEach(m=>{let d=document.createElement('div');d.className='item '+m.type;d.innerHTML=`<i class="fas ${m.type==='dir'?'fa-folder':'fa-file-code'}"></i><span>${m.name.replace('.ks','')}</span>`;d.onclick=()=>{if(m.type==='dir'){history.push(m.path);updateBreadcrumbs();loadPath(m.path);backBtn.style.display='block'}else if(m.name.endsWith('.ks'))openPreview(m)};grid.appendChild(d)})}
-function updateBreadcrumbs(){let p=history[history.length-1].split('/').filter(x=>x);let h='Recipes',c='';p.forEach(x=>{c+=(c?'/':'')+x;h+=` <i class="fas fa-chevron-left"></i> <span onclick="goTo('${c}')">${x}</span>`});breadcrumbs.innerHTML=h}
-function goTo(p){let i=history.findIndex(x=>x===p);history=history.slice(0,i+1);loadPath(p);backBtn.style.display=history.length>1?'block':'none';updateBreadcrumbs()}
-backBtn.onclick=()=>{if(history.length>1){history.pop();loadPath(history[history.length-1]);updateBreadcrumbs();if(history.length===1)backBtn.style.display='none'}}
-async function openPreview(item){
-    fileName.textContent=item.name;
-    preview.style.display='block';
-    iframe.srcdoc=`<h3 style='text-align:center;padding:80px;color:#999'>جارٍ التحميل...</h3>`;
-    try{
-        let r=await fetch(`${raw}/${item.path}`);
-        let c=await r.text();
-        let decoded=decodeKS(c);
-        iframe.srcdoc=`
-        <html>
-          <head>
-            <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes, minimum-scale=0.1, maximum-scale=5">
-            <style>body{margin:0;padding:0;overflow:auto;}</style>
-          </head>
-          <body>${decoded}</body>
-        </html>`;
-        setTimeout(()=>{try{let d=iframe.contentDocument;let s=d.createElement("style");s.innerHTML=`*{user-select:none !important}body{-webkit-touch-callout:none !important}`;d.head.appendChild(s);["contextmenu","copy","cut","paste","selectstart","dragstart"].forEach(ev=>d.addEventListener(ev,e=>e.preventDefault()))}catch(e){}},300)
-    }catch(e){
-        iframe.srcdoc='<h3 style="color:red;text-align:center;padding:100px">فشل تحميل الملف</h3>'
-    }
-}
-closePreview.onclick=()=>{preview.style.display='none'}
-loadPath();updateBreadcrumbs();
-
-/* ================== رفع الصور + جوجل شيت ================== */
-async function submitForm() {
-    const name = document.getElementById('userName').value.trim();
-    const file = document.getElementById('imageFile').files[0];
-    const status = document.getElementById('status');
-    if (!name || !file) { status.innerHTML = '<span style="color:#e74c3c">املأ كل الحقول</span>'; return; }
-
-    status.innerHTML = '<span style="color:#3498db">تم الارسال بنجاح ...</span>';
-    const fd = new FormData(); fd.append('file', file);
-
-    try {
-        const up = await fetch('https://tmpfiles.org/api/v1/upload', { method: 'POST', body: fd });
-        const res = await up.json();
-        const directLink = res.data.url.replace('/dl/', '/');
-
-        const payload = { date: new Date().toLocaleString('ar-EG'), name, link: directLink };
-
-        const webApp = 'https://script.google.com/macros/s/AKfycbzQEkfCOI_TLnHAzt9HMeQz4AH0CPJrleQA5NK-93S_ByZSFW16G-ngcW360rVbX-Yngg/exec';
-
-        const sheet = await fetch(webApp, { method: 'POST', body: JSON.stringify(payload) });
-        if (sheet.ok) {
-            status.innerHTML = '<span style="color:#2ecc71">تم الإرسال بنجاح!</span>';
-            document.getElementById('userName').value = '';
-            document.getElementById('imageFile').value = '';
-        } else status.innerHTML = '<span style="color:#e74c3c">فشل الإرسال للشيت</span>';
-    } catch (e) {
-        //status.innerHTML = `<span style="color:#e74c3c">خطأ: ${e.message}</span>`;
-    }
-}
-
 function openExternalLink(url) {
-    window.location.href = "intent://" + url.replace(/^https?:\/\//, '') + "#Intent;package=com.android.chrome;scheme=https;end;";
+  window.location.href = "intent://" + url.replace(/^https?:\/\//, '') + "#Intent;package=com.android.chrome;scheme=https;end;";
 }
+</script>
+
+<script>
+// أنيميشن النقاط المتحركة في الخلفية
+setInterval(()=>{
+  const d=document.createElement('div');
+  d.classList.add('dot');
+  d.style.left=Math.random()*100+'vw';
+  d.style.animationDuration=(Math.random()*8+10)+'s';
+  document.getElementById('bg').appendChild(d);
+  setTimeout(()=>d.remove(),20000);
+},350);
+</script>
+
+<script>
+const API_URL = "https://corsproxy.io/?" + encodeURIComponent("https://script.google.com/macros/s/AKfycbx8DmT2qd0Et1Ny21Q4Bzk0ylvNjfmb_YoPZDeqJ__HP0TDAcacG2ZgDKsJqKQpIr10/exec");
+const nameInput = document.getElementById("name");
+const codeInput = document.getElementById("code");
+const btn = document.getElementById("registerBtn");
+const status = document.getElementById("status");
+
+window.addEventListener("DOMContentLoaded", () => {
+  const savedName = localStorage.getItem("name");
+  const savedCode = localStorage.getItem("code");
+  if (savedName && savedCode) {
+    nameInput.value = savedName;
+    codeInput.value = savedCode;
+    checkStatus(savedName, savedCode);
+  }
+});
+
+btn.addEventListener("click", async () => {
+  const name = nameInput.value.trim();
+  const code = codeInput.value.trim();
+  if (!name || !code) { alert("من فضلك أدخل الاسم والكود أولاً."); return; }
+  btn.disabled = true;
+  status.textContent = "جارٍ التحقق...";
+  try {
+    const res = await fetch(`${API_URL}?action=register&name=${encodeURIComponent(name)}&code=${encodeURIComponent(code)}`);
+    const data = await res.json();
+    localStorage.setItem("name", name);
+    localStorage.setItem("code", code);
+    handleStatus(data.status);
+  } catch (err) {
+    status.textContent = "فشل الاتصال.";
+    btn.disabled = false;
+  }
+});
+
+async function checkStatus(name, code) {
+  status.textContent = "جارٍ التحقق...";
+  disableInputs();
+  try {
+    const res = await fetch(`${API_URL}?action=check&name=${encodeURIComponent(name)}&code=${encodeURIComponent(code)}`);
+    const data = await res.json();
+    handleStatus(data.status);
+  } catch (err) {
+    status.textContent = "فشل الاتصال.";
+    enableInputs();
+  }
+}
+
+function handleStatus(state) {
+  switch (state) {
+    case "نعم": status.textContent = "تمت الموافقة! جاري التحويل..."; setTimeout(() => location.href = "index2.html", 1200); break;
+    case "لا": status.textContent = "تم رفض الطلب."; localStorage.clear(); enableInputs(); break;
+    case "لسه": status.textContent = "في انتظار الموافقة..."; disableInputs(); break;
+    default: status.textContent = "حالة غير معروفة."; localStorage.clear(); enableInputs(); break;
+  }
+}
+
+function disableInputs() { nameInput.disabled = codeInput.disabled = btn.disabled = true; }
+function enableInputs() { nameInput.disabled = codeInput.disabled = btn.disabled = false; }
+</script>
+
+<script>
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
 </script>
 </body>
 </html>

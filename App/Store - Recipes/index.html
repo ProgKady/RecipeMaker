@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=3,user-scalable=yes" />
+  <title>متجر التطبيق — TC Wasel</title>
+
+  <!-- Cairo font -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0f0b0b;
+      --card:#140909;
+      --accent:#b30021;
+      --accent-2:#ff2b2b;
+      --glow: rgba(179,0,33,0.18);
+      --muted:#bfb6b6;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html, body{height:100%; font-family:"Cairo",sans-serif; background:var(--bg); color:#fff;}
+    body{display:flex; flex-direction:column;}
+
+    /* ---------- HERO ---------- */
+    .hero{
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      padding:16px; gap:14px; flex-shrink:0;
+      background:linear-gradient(180deg,#070406 0%, #120607 50%, #1a0708 100%);
+      width:100%;
+    }
+    .hero-left { display:flex; flex-direction:column; align-items:center; gap:12px; max-width:360px; text-align:center;}
+    .app-badge{display:flex; flex-direction:column; align-items:center; gap:12px;}
+    .app-logo{width:90px;height:90px;border-radius:20px; object-fit:cover; box-shadow:0 0 15px rgba(255,0,0,0.4); transition: transform .3s ease;}
+    .app-logo:hover{transform:scale(1.05); box-shadow:0 0 25px rgba(255,0,0,0.7);}
+    .app-name{font-size:22px; font-weight:800;}
+    .app-sub{color:var(--muted); font-size:13px; line-height:1.5;}
+
+    .cta-row{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:8px;}
+    .btn {background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#fff; border:none; padding:8px 14px; border-radius:12px; cursor:pointer; font-weight:700; transition:transform .18s ease;}
+    .btn:hover{transform:translateY(-3px);}
+    .btn.secondary{background:linear-gradient(90deg,#444,#222);}
+    
+    /* ---------- CONTENT ---------- */
+    main.content{display:flex; flex-direction:column; align-items:center; flex-grow:1; padding:12px; gap:12px; width:100%;}
+    .card{background:var(--card); padding:14px; border-radius:12px; width:100%; max-width:360px; text-align:right;}
+    h3.section{color:#ffdede; font-weight:700; margin-bottom:6px;}
+    p.lead{color:#e9d1d1; font-size:14px; margin-bottom:8px;}
+    .features{display:flex; flex-wrap:wrap; gap:8px;}
+    .feature{flex:1 1 45%; background:rgba(255,255,255,0.03); padding:8px; border-radius:8px; display:flex; gap:6px; align-items:center;}
+    .feature .ico{width:28px;height:28px; display:flex; align-items:center; justify-content:center;}
+
+    /* carousel */
+    .carousel{display:flex; gap:6px; overflow-x:auto; padding:6px;}
+    .shot{min-width:80px;height:140px; border-radius:8px; overflow:hidden; flex-shrink:0;}
+    .shot img{width:100%; height:100%; object-fit:cover; display:block; cursor:zoom-in;}
+
+    /* video */
+    .video-container{position:relative; width:100%; padding-bottom:56.25%; border-radius:8px; overflow:hidden; margin:8px 0;}
+    .video-container iframe{position:absolute; width:100%; height:100%; top:0; left:0; border:none; border-radius:8px;}
+
+    /* footer */
+    footer.app-footer{padding:12px; text-align:center; font-size:13px; color:var(--muted); flex-shrink:0;}
+
+    /* lightbox */
+    .lightbox{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.8); z-index:9999;}
+    .lightbox.show{display:flex;}
+    .lightbox img{max-width:92%; max-height:88%; border-radius:10px; box-shadow:0 12px 40px rgba(0,0,0,0.6);}
+    
+    /* scroll behavior for carousel */
+    .carousel::-webkit-scrollbar{height:6px;}
+    .carousel::-webkit-scrollbar-thumb{background:var(--accent); border-radius:3px;}
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-left">
+      <div class="app-badge">
+        <img src="hrrr.png" alt="TC Wasel Logo" class="app-logo">
+        <div class="app-name">RECETA</div>
+        <div class="app-sub">
+          تطبيق لعرض الريسيبي الخاصة بالغسيل مع امكانيه ارسال تعديل
+		  
+		   <hr>
+		   <br>
+		  
+        </div>
+        <div class="cta-row">
+          <button class="btn" onclick="window.location.href='https://www.mediafire.com/file/pr8463c0qqec1zt/TC_Wasel.apk/file'">تحميل للاندرويد ⬇️</button>
+          <button class="btn" onclick="window.location.href='https://tcgarments.github.io/TC-Wasel-Application/'">فتح التطبيق ويب</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+    <div class="card">
+      <h3 class="section">عن التطبيق</h3>
+      <p class="lead">RECETA تطبيق لعرض الريسيبي الخاصة بالغسيل مع امكانيه ارسال تعديل</p>
+
+      <h3 class="section">المميزات</h3>
+      <div class="features">
+        <div class="feature"><div class="ico">💼</div><p>عرض الريسيبي لحظه بلحظة مع التحديث</p></div>
+        <div class="feature"><div class="ico">🔒</div><p>امكانية التصفح بسهولة ويسر</p></div>
+        <div class="feature"><div class="ico">⚡</div><p>امكانية ارسال تعديل الي احمد القاضي</p></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="app-footer">
+    &copy; 2026 Kadysoft — Ahmed Elkady ✨
+  </footer>
+
+  <!-- lightbox -->
+  <div class="lightbox" id="lightbox"><img id="lbImg"></div>
+  <script>
+    // lightbox click
+    document.querySelectorAll('.shot img').forEach(img=>{
+      img.addEventListener('click', e=>{
+        document.getElementById('lbImg').src = e.target.src;
+        document.getElementById('lightbox').classList.add('show');
+      });
+    });
+    document.getElementById('lightbox').addEventListener('click', ()=>document.getElementById('lightbox').classList.remove('show'));
+  </script>
+</body>
+</html>
