@@ -1,0 +1,29 @@
+
+package kadysoft.kady;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.fxml.Initializable;
+
+/**
+ * FXML Controller class
+ *
+ * @author ahmed.elkady
+ */
+public class TimerController implements Initializable {
+
+   
+    
+    
+    
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+       
+        
+        
+        
+        
+        
+    }    
+    
+}

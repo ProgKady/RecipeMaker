@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTabPane?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="834.0" prefWidth="1066.0" stylesheets="@primer-light.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="kadysoft.kady.TimerController">
+   <children>
+      <JFXTabPane layoutX="6.0" layoutY="5.0" prefHeight="823.0" prefWidth="1053.0">
+         <tabs>
+            <Tab text="KADINIO">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <JFXTextArea labelFloat="true" layoutX="16.0" layoutY="20.0" prefHeight="220.0" prefWidth="1019.0" style="-fx-font-weight: bold;" />
+                        <JFXButton buttonType="RAISED" layoutX="965.0" layoutY="20.0" style="-fx-background-color: #2e8b57; -fx-font-weight: bold; -fx-background-radius: 3em;" text="Browse" />
+                        <HBox alignment="CENTER_LEFT" layoutX="25.0" layoutY="255.0" prefHeight="48.0" prefWidth="999.0" spacing="28.0" style="-fx-background-color: rgb(219,219,219);">
+                           <opaqueInsets>
+                              <Insets left="10.0" />
+                           </opaqueInsets>
+                           <children>
+                              <Label style="-fx-font-weight: bold;" text="Stone Bath" />
+                              <Label layoutX="10.0" layoutY="24.0" style="-fx-font-weight: bold;" text="Recipe Time" />
+                              <Label layoutX="52.0" layoutY="24.0" style="-fx-font-weight: bold;" text="Load/Remove Stone" />
+                              <Label layoutX="94.0" layoutY="24.0" style="-fx-font-weight: bold;" text="Load/Remove Product" />
+                              <Label layoutX="136.0" layoutY="24.0" style="-fx-font-weight: bold;" text="Temp Time" />
+                              <Label layoutX="178.0" layoutY="24.0" style="-fx-font-weight: bold;" text="Extraction" />
+                              <Label layoutX="220.0" layoutY="24.0" prefHeight="20.0" prefWidth="115.0" style="-fx-font-weight: bold;" text="Chemical Dosage" />
+                              <Label layoutX="262.0" layoutY="24.0" prefHeight="20.0" prefWidth="109.0" style="-fx-font-weight: bold;" text="Fill/Empty Tank" />
+                           </children>
+                        </HBox>
+                        <VBox layoutX="25.0" layoutY="369.0" prefHeight="412.0" prefWidth="118.0" spacing="27.0" style="-fx-background-color: rgb(255,230,153);">
+                           <children>
+                              <Label style="-fx-font-weight: bold;" text="Load Stone" />
+                              <Label layoutX="10.0" layoutY="10.0" style="-fx-font-weight: bold;" text="Remove Stone" />
+                              <Label layoutX="10.0" layoutY="35.0" style="-fx-font-weight: bold;" text="Load Product" />
+                              <Label layoutX="10.0" layoutY="60.0" style="-fx-font-weight: bold;" text="Remove Product" />
+                              <Label layoutX="10.0" layoutY="85.0" style="-fx-font-weight: bold;" text="Temprature" />
+                              <Label layoutX="10.0" layoutY="110.0" style="-fx-font-weight: bold;" text="Fill Tank" />
+                              <Label layoutX="10.0" layoutY="135.0" style="-fx-font-weight: bold;" text="Empty Tank" />
+                              <Label layoutX="10.0" layoutY="160.0" style="-fx-font-weight: bold;" text="Chemical Dosage" />
+                              <Label layoutX="10.0" layoutY="185.0" style="-fx-font-weight: bold;" text="Cleaning Stone" />
+                           </children>
+                        </VBox>
+                        <HBox alignment="CENTER_LEFT" layoutX="26.0" layoutY="309.0" prefHeight="48.0" prefWidth="999.0" spacing="22.0" style="-fx-background-color: rgb(219,219,219);">
+                           <opaqueInsets>
+                              <Insets left="10.0" />
+                           </opaqueInsets>
+                           <children>
+                              <JFXTextField alignment="CENTER" labelFloat="true" prefHeight="36.0" prefWidth="78.0" style="-fx-font-weight: bold;" />
+                              <JFXTextField alignment="CENTER" labelFloat="true" layoutX="10.0" layoutY="16.0" prefHeight="36.0" prefWidth="84.0" style="-fx-font-weight: bold;" />
+                              <JFXTextField alignment="CENTER" labelFloat="true" layoutX="113.0" layoutY="16.0" prefHeight="36.0" prefWidth="138.0" style="-fx-font-weight: bold;" />
+                              <JFXTextField alignment="CENTER" labelFloat="true" layoutX="113.0" layoutY="16.0" prefHeight="36.0" prefWidth="144.0" style="-fx-font-weight: bold;" />
+                              <JFXTextField alignment="CENTER" labelFloat="true" layoutX="555.0" layoutY="16.0" prefHeight="36.0" prefWidth="76.0" style="-fx-font-weight: bold;" />
+                              <JFXTextField alignment="CENTER" labelFloat="true" layoutX="659.0" layoutY="16.0" prefHeight="36.0" prefWidth="99.0" style="-fx-font-weight: bold;" />
+                              <JFXTextField alignment="CENTER" labelFloat="true" layoutX="581.0" layoutY="16.0" prefHeight="36.0" prefWidth="105.0" style="-fx-font-weight: bold;" />
+                              <JFXTextField alignment="CENTER" labelFloat="true" layoutX="712.0" layoutY="16.0" prefHeight="36.0" prefWidth="109.0" style="-fx-font-weight: bold;" />
+                           </children>
+                        </HBox>
+                        <VBox alignment="TOP_CENTER" layoutX="158.0" layoutY="368.0" prefHeight="413.0" prefWidth="159.0" spacing="10.0" style="-fx-background-color: rgb(255,230,153);">
+                           <children>
+                              <JFXTextField alignment="CENTER" prefHeight="36.0" prefWidth="145.0" style="-fx-font-weight: bold;" />
+                              <JFXTextField alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="36.0" prefWidth="145.0" style="-fx-font-weight: bold;" />
+                              <JFXTextField alignment="CENTER" layoutX="10.0" layoutY="56.0" prefHeight="36.0" prefWidth="145.0" style="-fx-font-weight: bold;" text="2.45" />
+                              <JFXTextField alignment="CENTER" layoutX="10.0" layoutY="102.0" prefHeight="36.0" prefWidth="145.0" style="-fx-font-weight: bold;" text="0.5" />
+                              <JFXTextField alignment="CENTER" layoutX="10.0" layoutY="148.0" prefHeight="36.0" prefWidth="145.0" style="-fx-font-weight: bold;" text="1.5" />
+                              <JFXTextField alignment="CENTER" layoutX="10.0" layoutY="194.0" prefHeight="36.0" prefWidth="145.0" style="-fx-font-weight: bold;" text="1.5" />
+                              <JFXTextField alignment="CENTER" layoutX="10.0" layoutY="240.0" prefHeight="36.0" prefWidth="145.0" style="-fx-font-weight: bold;" text="3.55" />
+                              <JFXTextField alignment="CENTER" layoutX="10.0" layoutY="286.0" prefHeight="36.0" prefWidth="145.0" style="-fx-font-weight: bold;" text="6.3" />
+                              <JFXTextField alignment="CENTER" layoutX="10.0" layoutY="332.0" prefHeight="36.0" prefWidth="145.0" style="-fx-font-weight: bold;" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+         </tabs>
+      </JFXTabPane>
+   </children>
+</AnchorPane>

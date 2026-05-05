@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane stylesheets="@cupertino-light.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.Audit_WindowController">
+   <center>
+      <VBox prefHeight="867.0" prefWidth="1268.0" BorderPane.alignment="CENTER">
+         <children>
+            <TableView fx:id="datatable" prefHeight="868.0" prefWidth="1268.0" style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-alignment: center;" tableMenuButtonVisible="true" />
+         </children>
+      </VBox>
+   </center>
+   <bottom>
+      <HBox alignment="BOTTOM_LEFT" prefHeight="27.0" prefWidth="1268.0" spacing="25.0" BorderPane.alignment="CENTER">
+         <children>
+            <JFXButton fx:id="getauditbtn" buttonType="RAISED" onAction="#getauditbtnaction" prefHeight="37.0" prefWidth="88.0" style="-fx-background-radius: 3em; -fx-background-color: #007aff; -fx-text-fill: white;" text="Refresh">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="delete" buttonType="RAISED" onAction="#deleteaction" prefHeight="37.0" prefWidth="88.0" style="-fx-background-radius: 3em; -fx-background-color: #007aff; -fx-text-fill: white;" text="Export">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="filterbtn2" buttonType="RAISED" onAction="#filterbtn2action" prefHeight="35.0" prefWidth="88.0" style="-fx-background-radius: 3em; -fx-background-color: tomato; -fx-text-fill: white;" text="Clear">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </JFXButton>
+         </children>
+         <padding>
+            <Insets bottom="15.0" left="15.0" />
+         </padding>
+      </HBox>
+   </bottom>
+</BorderPane>

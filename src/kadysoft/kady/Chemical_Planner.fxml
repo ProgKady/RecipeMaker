@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXTabPane?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.web.WebView?>
+
+<BorderPane prefHeight="888.0" prefWidth="1306.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.Chemical_Planner_Controller">
+   <center>
+      <JFXTabPane prefHeight="1354.0" prefWidth="1502.0" stylesheets="@primer-dark.css" BorderPane.alignment="CENTER">
+         <tabs>
+            <Tab text="One By One">
+              <content>
+                  <VBox prefWidth="1306.0" spacing="10.0">
+                     <children>
+                        <HBox alignment="CENTER" spacing="10.0">
+                           <children>
+                              <JFXTextField fx:id="monthtf" alignment="CENTER" labelFloat="true" prefHeight="36.0" prefWidth="49.0" promptText="Month" style="-fx-background-radius: 3EM; -fx-font-weight: bold;" text="1" />
+                              <ComboBox fx:id="model" onHidden="#readoutmodelaction" onShowing="#readmodelaction" prefHeight="36.0" prefWidth="210.0" promptText="Model ..." style="-fx-font-weight: bold; -fx-background-radius: 3em;" />
+                              <ComboBox fx:id="recipe" editable="true" onHidden="#readoutrecipeaction" onShowing="#readrecipeaction" prefHeight="36.0" prefWidth="332.0" promptText="Recipe ..." style="-fx-font-weight: bold; -fx-background-radius: 3em;" />
+                              <Label prefHeight="20.0" prefWidth="29.0" text="Or" textAlignment="CENTER" />
+                              <Hyperlink fx:id="browselink" onAction="#browselinkaction" text="Browse" textAlignment="RIGHT" />
+                              <JFXTextField fx:id="quantityyy" alignment="CENTER" labelFloat="true" onKeyReleased="#quantityyyrel" prefHeight="36.0" prefWidth="106.0" promptText="Quantity" style="-fx-font-weight: bold; -fx-background-radius: 3em;" text="600" />
+                              <JFXTextField fx:id="pcsss" alignment="CENTER" labelFloat="true" onKeyReleased="#pcsssrel" prefHeight="36.0" prefWidth="76.0" promptText="PCS" style="-fx-font-weight: bold; -fx-background-radius: 3em;" text="120" />
+                              <JFXTextField fx:id="patch" alignment="CENTER" labelFloat="true" prefHeight="36.0" prefWidth="127.0" promptText="Machines" style="-fx-font-weight: bold; -fx-background-radius: 3em;" text="5" />
+                              <JFXTextField fx:id="date" alignment="CENTER" labelFloat="true" prefHeight="36.0" prefWidth="164.0" promptText="Date" style="-fx-font-weight: bold; -fx-background-radius: 3em;" visible="false" />
+                              <JFXTextArea fx:id="lili" prefHeight="31.0" prefWidth="44.0" visible="false" />
+                              <JFXButton fx:id="get" buttonType="RAISED" onAction="#getaction" prefHeight="36.0" prefWidth="89.0" style="-fx-font-weight: bold; -fx-background-radius: 3em; -fx-background-color: #358f80; -fx-text-fill: black;" text="Plan" />
+                              <JFXButton fx:id="clearal" buttonType="RAISED" onAction="#clearalaction" prefHeight="36.0" prefWidth="81.0" style="-fx-font-weight: bold; -fx-background-radius: 3em; -fx-background-color: #358f80; -fx-text-fill: black;" text="Clear" />
+                              <JFXButton fx:id="fixchemic" buttonType="RAISED" onAction="#fixchemicaction" style="-fx-background-color: #358f80; -fx-font-weight: bold; -fx-background-radius: 3em;" text="Fix Chemicals" />
+                              <JFXButton fx:id="adddbtn" buttonType="RAISED" onAction="#adddbtnaction" prefHeight="36.0" prefWidth="72.0" style="-fx-background-color: #aacc00; -fx-background-radius: 3em; -fx-font-weight: bold;" text="Add" />
+                              <JFXTextField fx:id="mno" alignment="CENTER" labelFloat="true" prefHeight="36.0" prefWidth="79.0" promptText="M. No" style="-fx-font-weight: bold; -fx-background-radius: 3em;" text="120" visible="false" />
+                              <JFXTextField fx:id="quantity" alignment="CENTER" labelFloat="true" onKeyReleased="#qurel" prefHeight="36.0" prefWidth="108.0" promptText="Quantity" style="-fx-font-weight: bold; -fx-background-radius: 3em;" visible="false" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
+                           </padding>
+                        </HBox>
+                        <VBox alignment="CENTER">
+                           <children>
+                              <HBox alignment="CENTER" prefHeight="439.0" prefWidth="1482.0" spacing="10.0">
+                                 <children>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                          <Label text="Model" />
+                                          <ListView fx:id="l1" prefHeight="758.0" prefWidth="130.0" styleClass="modern-list" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                          <Label text="Wash Name" />
+                                          <ListView fx:id="l2" prefHeight="758.0" prefWidth="130.0" styleClass="modern-list" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                          <Label text="Patch" />
+                                          <ListView fx:id="l3" onKeyReleased="#amountrell" prefHeight="756.0" prefWidth="130.0" styleClass="modern-list" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                          <Label text="Quantity" />
+                                          <ListView fx:id="l4" prefHeight="755.0" prefWidth="130.0" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                          <Label text="Units" />
+                                          <ListView fx:id="l5" prefHeight="756.0" prefWidth="130.0" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                          <Label text="Chemicals" />
+                                          <ListView fx:id="l6" prefHeight="758.0" prefWidth="130.0" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                          <Label text="Chemical&#10;Name" textAlignment="CENTER" />
+                                          <ListView fx:id="l7" prefHeight="758.0" prefWidth="130.0" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                          <Label text="Total&#10;Quantities" textAlignment="CENTER" />
+                                          <ListView fx:id="l8" prefHeight="756.0" prefWidth="130.0" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                          <Label text="Dilution" />
+                                          <ListView fx:id="l9" onKeyReleased="#totrel" prefHeight="755.0" prefWidth="130.0" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                          <Label text="Price" />
+                                          <ListView fx:id="l10" prefHeight="439.0" prefWidth="130.0" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                          <Label text="Unit Price" />
+                                          <ListView fx:id="l11" prefHeight="439.0" prefWidth="130.0" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                          <Label prefHeight="40.0" prefWidth="69.0" text="Total Price" />
+                                          <ListView fx:id="l12" prefHeight="439.0" prefWidth="130.0" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <WebView fx:id="webview" prefHeight="367.0" prefWidth="1477.0" stylesheets="@primer-dark.css" />
+                           </children>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
+                     </padding>
+                  </VBox>
+              </content>
+            </Tab>
+            <Tab text="All By One">
+              <content>
+                  <VBox spacing="5.0">
+                     <children>
+                        <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+                           <content>
+                              <Accordion fx:id="accord" />
+                           </content>
+                           <effect>
+                              <DropShadow color="WHITE" />
+                           </effect>
+                        </ScrollPane>
+                        <Separator prefWidth="200.0" />
+                        <HBox alignment="CENTER" spacing="5.0">
+                           <children>
+                              <ListView fx:id="recipelistall" editable="true" onDragDropped="#recipelistalldd" onDragOver="#recipelistalldo" prefHeight="510.0" prefWidth="1482.0" />
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </HBox>
+                        <HBox alignment="CENTER" spacing="25.0">
+                           <children>
+                              <JFXTextField fx:id="excelfile" onMouseClicked="#excelfileaction" prefHeight="36.0" prefWidth="337.0" promptText="Click Here To Choose Patch File" style="-fx-background-radius: 15; -fx-border-radius: 15; -jfx-focus-color: transparent; -jfx-unfocus-color: transparent;" />
+                              <JFXButton fx:id="planall" buttonType="RAISED" onAction="#planallaction" prefHeight="36.0" prefWidth="88.0" style="-fx-background-color: #358f80; -fx-background-radius: 3em; -fx-font-weight: bold;" text="Plan All">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </JFXButton>
+                              <JFXButton fx:id="clearlist" buttonType="RAISED" onAction="#clearlistaction" style="-fx-background-color: #358f80; -fx-background-radius: 3em; -fx-font-weight: bold;" text="Clear List">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </JFXButton>
+                              <JFXButton fx:id="delsel" buttonType="RAISED" onAction="#delselaction" prefHeight="36.0" prefWidth="109.0" style="-fx-background-color: #358f80; -fx-background-radius: 3em; -fx-font-weight: bold;" text="Del Selected">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </JFXButton>
+                              <JFXButton fx:id="fixchemicc" buttonType="RAISED" onAction="#fixchemiccaction" style="-fx-background-color: #358f80; -fx-font-weight: bold; -fx-background-radius: 3em;" text="Fix Chemicals" />
+                              <JFXCheckBox fx:id="skiperr" selected="true" style="-fx-font-weight: bold;" text="Errors Report" />
+                           </children>
+                           <padding>
+                              <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                           </padding>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="35.0">
+                           <children>
+                              <Label fx:id="count2" text="0 Of" />
+                              <Label fx:id="count" text="Items" />
+                              <Separator orientation="VERTICAL" prefHeight="42.0" prefWidth="29.0" />
+                              <Label fx:id="count1" text="Skipped" />
+                              <Label fx:id="count3" text="0" />
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </VBox>
+              </content>
+            </Tab>
+            <Tab text="Planned Data">
+               <content>
+                  <VBox alignment="CENTER" spacing="15.0">
+                     <children>
+                        <TableView fx:id="table" editable="true" prefHeight="878.0" prefWidth="1499.0" style="-fx-font-weight: bold;" tableMenuButtonVisible="true" />
+                        <HBox alignment="CENTER" prefHeight="50.0" prefWidth="543.0" spacing="30.0">
+                           <children>
+                              <JFXButton fx:id="deletebtn" buttonType="RAISED" onAction="#deletebtnaction" prefHeight="36.0" prefWidth="192.0" style="-fx-background-radius: 3em; -fx-font-weight: bold; -fx-background-color: #358f80;" text="Delete Selected Row (s)" />
+                              <JFXButton fx:id="exportbtn" buttonType="RAISED" onAction="#exportbtnaction" prefHeight="36.0" prefWidth="194.0" style="-fx-background-radius: 3em; -fx-font-weight: bold; -fx-background-color: #358f80;" text="Export Selected To Excel" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+               </content>
+            </Tab>
+         </tabs>
+      </JFXTabPane>
+   </center>
+   <top>
+      <MenuBar prefHeight="42.0" prefWidth="1502.0" style="-fx-font-size: 15; -fx-font-weight: bold;" visible="false" BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem fx:id="opennewrecipeadv" disable="true" mnemonicParsing="false" onAction="#opennewrecipeadvaction" text="Open a new recipe" visible="false" />
+                  <Menu fx:id="recentfiles" disable="true" mnemonicParsing="false" text="Recent files" />
+                  <MenuItem fx:id="savetodb" disable="true" mnemonicParsing="false" onAction="#savetodbaction" text="Save Data To DataBase" />
+                  <Menu fx:id="exporttomenu" disable="true" mnemonicParsing="false" text="Export To ...">
+                    <items>
+                      <MenuItem fx:id="exporttoexcel" mnemonicParsing="false" onAction="#exporttoexcelaction" text="Export to excel" />
+                        <MenuItem fx:id="exporttodb" mnemonicParsing="false" onAction="#exporttodbaction" text="Export To DB" />
+                    </items>
+                  </Menu>
+                  <MenuItem fx:id="displaydata" mnemonicParsing="false" onAction="#displaydataaction" text="Display Plans" />
+                  <MenuItem mnemonicParsing="false" onAction="#fullreportaction" text="Save chemical info to file" visible="false" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <stylesheets>
+      <URL value="@cupertino-light.css" />
+      <URL value="@../../../../RecipeMaker_Viewer_All/src/kadysoft/kady/styles.css" />
+   </stylesheets>
+</BorderPane>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXSpinner?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="811.0" prefWidth="1248.0" style="-fx-font-weight: bold;" stylesheets="@cupertino-light.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.KSBombController">
+   <children>
+      <JFXTextArea fx:id="answer" labelFloat="true" layoutX="14.0" layoutY="14.0" prefHeight="771.0" prefWidth="910.0" promptText="Extracted Text ..." />
+      <JFXButton fx:id="browseBtn" buttonType="RAISED" layoutX="948.0" layoutY="640.0" onAction="#browseImage" prefHeight="36.0" prefWidth="132.0" style="-fx-background-radius: 3em;" text="Browse Image" />
+      <JFXButton fx:id="askbtn" buttonType="RAISED" layoutX="1102.0" layoutY="640.0" onAction="#askbtnaction" prefHeight="36.0" prefWidth="132.0" style="-fx-background-radius: 3em; -fx-background-color: #003049;" text="Extract Image" />
+      <JFXSpinner fx:id="loading" layoutX="1152.0" layoutY="760.0" visible="false" />
+      <ImageView fx:id="imageview" fitHeight="265.0" fitWidth="285.0" layoutX="950.0" layoutY="31.0" pickOnBounds="true" preserveRatio="true" />
+      <JFXTextArea fx:id="message" labelFloat="true" layoutX="950.0" layoutY="345.0" prefHeight="278.0" prefWidth="285.0" promptText="Write instructions to control ..." text="Extract the following details from Recipe:&#10;&#10;&#10;All Time&#10;All Chemicals&#10;Everything would be good" />
+      <JFXButton fx:id="clearall" buttonType="RAISED" layoutX="948.0" layoutY="758.0" onAction="#clearallaction" prefHeight="36.0" prefWidth="132.0" style="-fx-background-radius: 3em; -fx-background-color: #780000;" text="Clear All" />
+      <JFXButton fx:id="exportdata" buttonType="RAISED" layoutX="948.0" layoutY="698.0" onAction="#exportdataaction" prefHeight="36.0" prefWidth="132.0" style="-fx-background-radius: 3em; -fx-background-color: #386641;" text="Export Data" />
+      <JFXButton buttonType="RAISED" layoutX="1103.0" layoutY="698.0" onAction="#asksbtnaction" prefHeight="36.0" prefWidth="132.0" style="-fx-background-radius: 3em; -fx-background-color: #003049;" text="Extract Images" />
+   </children>
+</AnchorPane>

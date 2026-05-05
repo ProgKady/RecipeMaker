@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXToggleButton?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.web.WebView?>
+
+<BorderPane prefHeight="909.0" prefWidth="1311.0" stylesheets="@nord-light.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.RecipeMakerController_1">
+   <top>
+      <MenuBar prefHeight="32.0" prefWidth="1313.0" style="-fx-font-size: 15; -fx-font-weight: bold; -fx-background-radius: 0; -fx-border-color: white;" stylesheets="@CSS.css" BorderPane.alignment="CENTER">
+        <menus>
+          <Menu fx:id="filemenu" mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem fx:id="createnewrecipe" disable="true" mnemonicParsing="false" onAction="#createnewrecipeaction" text="✨📑 Create a new recipe" />
+                  <MenuItem fx:id="createfastmode" mnemonicParsing="false" onAction="#createfastmodeaction" text="🚀📑 Create a recipe (Fast Mode)" />
+                  <MenuItem fx:id="emptyrecipeone" mnemonicParsing="false" onAction="#emptyrecipeoneaction" text="Create an empty recipe" visible="false" />
+                  <MenuItem fx:id="openoldrecipe" mnemonicParsing="false" onAction="#openoldrecipeaction" text="Edit a recipe (Simple)" visible="false" />
+                  <MenuItem fx:id="editadv" mnemonicParsing="false" onAction="#editadvaction" text="Edit old Recipe (Developer Mode)" visible="false" />
+                  <MenuItem fx:id="editorprint" mnemonicParsing="false" onAction="#editorprintaction" text="🖨 Print a ricipe in editor" />
+                  <MenuItem fx:id="openrecipesfolder" mnemonicParsing="false" onAction="#openrecipesfolderaction" text="Open Recipes Folder" visible="false" />
+                  <MenuItem fx:id="copyarecipe" mnemonicParsing="false" onAction="#copyarecipeaction" text="📋📂 Copy a Recipe in the same path" />
+                  <MenuItem fx:id="copyarecipepath" mnemonicParsing="false" onAction="#copyarecipepathaction" text="📋🔀 Copy a recipe to another path" />
+                  <Menu mnemonicParsing="false" text="🔒 Encrypt Me">
+                    <items>
+                        <MenuItem fx:id="encryptarecipe" mnemonicParsing="false" onAction="#encryptarecipeaction" style="-fx-background-color: red;" text="Encrypt a recipe (Basic)" />
+                      <MenuItem mnemonicParsing="false" onAction="#encryptadvaction" text="Encrypt a recipe (One_By_One_Advanced)" />
+                        <MenuItem mnemonicParsing="false" onAction="#encryptoall" text="Encrypt recipes (All_By_One_Advanced)" />
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="🔑🔒 Decrypt Me">
+                    <items>
+                        <MenuItem fx:id="decryptarecipe" mnemonicParsing="false" onAction="#decryptarecipeaction" style="-fx-background-color: red;" text="Decrypt a recipe (Basic)" />
+                      <MenuItem fx:id="decryptadv" disable="true" mnemonicParsing="false" onAction="#decryptadvaction" text="Decrypt a recipe (One_By_One_Advanced)" />
+                        <MenuItem fx:id="decryptrecipeall" disable="true" mnemonicParsing="false" onAction="#decryptrecipeallaction" text="Decrypt recipes (All_By_One_Advanced)" />
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="📤 Export ...">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#xlsxtopdfaction" style="-fx-background-color: red;" text="Excel To File (Not Licensed)." />
+                        <MenuItem mnemonicParsing="false" onAction="#htmltopdfaction" text="Excel To Image" />
+                        <MenuItem fx:id="htmltohta" disable="true" mnemonicParsing="false" onAction="#htmltohtaaction" text="HTML To HTA (KADINIO Method)" />
+                    </items>
+                  </Menu>
+              <MenuItem fx:id="exit" mnemonicParsing="false" onAction="#exitaction" text="✖ Exit" />
+            </items>
+          </Menu>
+            <Menu fx:id="viewmenu" mnemonicParsing="false" text="View">
+               <items>
+                  <MenuItem fx:id="viewrecipes" mnemonicParsing="false" onAction="#viewrecipesaction" style="-fx-background-color: green;" text="View Production Recipes" />
+                  <MenuItem fx:id="viewpilot" mnemonicParsing="false" onAction="#viewpilotaction" text="Preview Recipes Outside" />
+                  <MenuItem mnemonicParsing="false" onAction="#seepilotaction" text="View Pilots" />
+               </items>
+            </Menu>
+            <Menu fx:id="editrecipemenu" mnemonicParsing="false" text="Edit_Recipe">
+               <items>
+                  <SeparatorMenuItem mnemonicParsing="false">
+                     <content>
+                        <JFXToggleButton fx:id="hohoho" onAction="#hohohoaction" text="Admin" />
+                     </content>
+                  </SeparatorMenuItem>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="editedit" mnemonicParsing="false" onAction="#editeditaction" style="-fx-background-color: green;" text="Edit a recipe" />
+                  <MenuItem fx:id="editeditedit" disable="true" mnemonicParsing="false" onAction="#editediteditaction" text="Fast edit a recipe in Eagle" />
+                  <Menu mnemonicParsing="false" text="Edit a recipe" visible="false">
+                    <items>
+                      <MenuItem fx:id="saverecipe" disable="true" mnemonicParsing="false" onAction="#saverecipeaction" text="Save a recipe" visible="false" />
+                    </items>
+                  </Menu>
+               </items>
+            </Menu>
+            <Menu fx:id="toolsmenu" mnemonicParsing="false" text="Tools">
+              <items>
+                  <Menu mnemonicParsing="false" text="Convert Excel To System Recipes">
+                    <items>
+                        <Menu mnemonicParsing="false" text="Fast Mode">
+                           <items>
+                              <MenuItem mnemonicParsing="false" onAction="#excelfastmodeaction" text="Convert Excel To System Recipes" />
+                              <MenuItem mnemonicParsing="false" onAction="#excelconvertmulaction" text="Convert Multiple (No Model, Stage and related data)" />
+                           </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Detailed Mode">
+                           <items>
+                              <MenuItem fx:id="exceltohtml" mnemonicParsing="false" onAction="#exceltohtmlaction" text="Convert Excel To System Recipes" />
+                            <MenuItem fx:id="savetohtml" disable="true" mnemonicParsing="false" onAction="#savetohtmlaction" text="Save To System Recipes ..." />
+                           </items>
+                        </Menu>
+                    </items>
+                  </Menu>
+                  <Menu fx:id="toexcelmenu" disable="true" mnemonicParsing="false" text="Export a recipe to Excel">
+                    <items>
+                        <MenuItem fx:id="exporttoexcel" mnemonicParsing="false" onAction="#exporttoexcelaction" text="Export a recipe to Excel (Method 1)" />
+                      <MenuItem fx:id="myexporttoexcel" mnemonicParsing="false" onAction="#myexporttoexcelaction" text="Export a recipe to Excel (Method 2)" />
+                        <MenuItem fx:id="aiartool" mnemonicParsing="false" onAction="#aiartoolaction" text="Export a recipe to Excel (Method 3)" />
+                        <MenuItem fx:id="kadysoftmethod" mnemonicParsing="false" onAction="#kadysoftmethodaction" text="Kadysoft special method (Method 4)" />
+                        <MenuItem mnemonicParsing="false" onAction="#httoexaction" text="KADINIO (Method 5) Multiple Files" />
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Working With Recipe">
+                    <items>
+                      <MenuItem fx:id="findandreplaceall" mnemonicParsing="false" onAction="#findandreplaceallaction" text="Find And Replace (All)" />
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Working With Excel">
+                    <items>
+                      <MenuItem fx:id="protect" mnemonicParsing="false" onAction="#protectaction" text="Protect sheet" />
+                        <Menu mnemonicParsing="false" text="Add or Remove Sheets">
+                          <items>
+                            <MenuItem fx:id="addsheet" mnemonicParsing="false" onAction="#addsheetaction" text="Add new sheet" />
+                              <MenuItem fx:id="removesheet" mnemonicParsing="false" onAction="#removesheetaction" text="Remove sheet" />
+                          </items>
+                        </Menu>
+                        <MenuItem fx:id="deleterows" mnemonicParsing="false" onAction="#deleterowsaction" text="Delete blank rows and columns" />
+                        <MenuItem mnemonicParsing="false" onAction="#xlsxtosvgaction" text="Convert XLSX to SVG" fx:id="xlsxtosvg" />
+                        <MenuItem fx:id="exceltoword" mnemonicParsing="false" onAction="#exceltowordaction" text="Excel to word" visible="false" />
+                        <MenuItem fx:id="exceltotext" mnemonicParsing="false" onAction="#exceltotextaction" text="Excel to text" />
+                        <MenuItem fx:id="pdftoexcel" disable="true" mnemonicParsing="false" onAction="#pdftoexcelaction" text="PDF to excel" />
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Signature" visible="false">
+                    <items>
+                        <MenuItem fx:id="signout" mnemonicParsing="false" onAction="#signoutaction" text="Sign a recipe" />
+                      <MenuItem mnemonicParsing="false" onAction="#removesignaction" text="Remove Signature" />
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Fix Chemicals">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#fixoneaction" text="Fix One By One" />
+                        <MenuItem mnemonicParsing="false" onAction="#fixallaction" text="Fix All By One" />
+                    </items>
+                  </Menu>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <Menu mnemonicParsing="false" text="Fix LOT Numbers">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#fixoneeaction" text="Fix One By One" />
+                        <MenuItem mnemonicParsing="false" onAction="#fixalllaction" text="Fix All By One" />
+                     </items>
+                  </Menu>
+                  <MenuItem fx:id="addlogo" mnemonicParsing="false" onAction="#addlogoaction" text="Add Logo To Recipe" visible="false" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#fixdifinitionaction" text="Fix Chemicals Definition" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <SeparatorMenuItem mnemonicParsing="false" visible="false" />
+                  <MenuItem fx:id="mailerr" mnemonicParsing="false" onAction="#mailerraction" text="Create a Kadysoft Mailer" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="calculatetime" mnemonicParsing="false" onAction="#calculatetimeaction" text="Calculate Time" />
+                  <MenuItem fx:id="calcpilot" mnemonicParsing="false" onAction="#calcpilotaction" text="Calculate Time Pilots" />
+                  <MenuItem mnemonicParsing="false" onAction="#cal3shoots" text="Calculate Time 3 or 4 or 5 or 6 shots" />
+                <MenuItem mnemonicParsing="false" onAction="#addtimeraction" text="Show Time" visible="false" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#caltimemultiply" style="-fx-background-color: green;" text="Calculate Time (Multiple)" visible="false" />
+                  <Menu mnemonicParsing="false" text="Development Time">
+                    <items>
+                        <MenuItem fx:id="calculatedev" mnemonicParsing="false" onAction="#calculatedevaction" text="Calculate Time (1-2)" />
+                        <MenuItem mnemonicParsing="false" onAction="#calculatedev3shots" text="Calculate Time 3 or 4 or 5 or 6 Shots" />
+                        <MenuItem mnemonicParsing="false" onAction="#caldevmulaction" text="Calculate Multiple (1-2) Shots" visible="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#timedevreportaction" text="Time Report" visible="false" />
+                    </items>
+                  </Menu>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <Menu mnemonicParsing="false" text="Calculate Cost">
+                    <items>
+                        <MenuItem fx:id="calcost" mnemonicParsing="false" onAction="#calcostaction" text="Calculate Cost" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                      <MenuItem fx:id="comparecost" mnemonicParsing="false" onAction="#comparecostaction" text="Compare Cost" />
+                    </items>
+                  </Menu>
+                  <MenuItem mnemonicParsing="false" onAction="#calcostmultiply" style="-fx-background-color: green;" text="Calculate Cost (Multiple)" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#calcostshotmultiply" text="Calculate Cost By Shot" />
+                  <MenuItem fx:id="showcost" mnemonicParsing="false" onAction="#showcostaction" text="Show Cost" visible="false" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <Menu mnemonicParsing="false" text="Development Cost">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#calcostac" text="Calculate Cost" />
+                        <MenuItem mnemonicParsing="false" onAction="#calcostmulac" text="Calculate Cost (Multiple)" />
+                        <MenuItem mnemonicParsing="false" onAction="#showcostdevac" text="Show Cost" visible="false" />
+                    </items>
+                  </Menu>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="recetacal" mnemonicParsing="false" onAction="#recetacalaction" text="Coaster" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="recipeplanner" mnemonicParsing="false" onAction="#recipeplanneraction" text="Recipe Planner" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="recipeproc" mnemonicParsing="false" onAction="#recipeprocaction" text="Recipe Processes" />
+                  <MenuItem mnemonicParsing="false" onAction="#procmultiaction" style="-fx-background-color: green;" text="Recipe Processes (Multiple)" />
+                  <MenuItem fx:id="showrecipeproc" mnemonicParsing="false" onAction="#showrecipeprocaction" text="Show Recipes Processes" visible="false" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="washtype" mnemonicParsing="false" onAction="#washtypeaction" text="Get Recipe Washing Type" />
+                  <MenuItem mnemonicParsing="false" onAction="#typemultiaction" style="-fx-background-color: green;" text="Recipe Type (Multiple)" />
+                  <MenuItem fx:id="showwashtype" mnemonicParsing="false" onAction="#showwashtypeaction" text="Show Recipes Washing Types" visible="false" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#searchrecipeaction" text="Search Recipe" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#stonegetteraction" text="Stone Getter" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#recipecontentsearchaction" text="Recipe Content Search" />
+                  <MenuItem fx:id="chatgpt" mnemonicParsing="false" onAction="#chatgptaction" style="-fx-background-color: green;" text="Ask ChatGPT" visible="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#historyaction" text="Recipe Editing History" visible="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#fuzzymatch" text="Correct Recipes Names" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#adddatatorecipeaction" text="Add Data to Recipe" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#pcoaction" text="Get PCS Value From Recipes" />
+              </items>
+            </Menu>
+            <Menu fx:id="reports" mnemonicParsing="false" text="Reports">
+              <items>
+                  <MenuItem mnemonicParsing="false" style="-fx-background-color: red;" text="There are many reports here" />
+                  <MenuItem mnemonicParsing="false" style="-fx-background-color: red;" text="Every item has its method for reporting" />
+                  <MenuItem mnemonicParsing="false" style="-fx-background-color: red;" text="But here you can create full report for time, cost, processes, types and all." />
+                <MenuItem fx:id="createrepo" mnemonicParsing="false" onAction="#createrepoaction" text="Create Report" />
+              </items>
+            </Menu>
+            <Menu fx:id="addstepmenu" mnemonicParsing="false" text="Add Step">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Add Stage">
+                     <graphic>
+                        <HBox alignment="CENTER_LEFT" focusTraversable="true" prefHeight="100.0" prefWidth="200.0" spacing="25.0" stylesheets="@dracula_1.css">
+                           <children>
+                              <JFXTextField fx:id="stagefield" alignment="CENTER" promptText="Write Step" />
+                              <JFXButton fx:id="stageadd" alignment="CENTER" buttonType="RAISED" maxWidth="60.0" minWidth="60.0" onAction="#stageaddaction" prefWidth="60.0" text="ADD" />
+                           </children>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </HBox>
+                     </graphic>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" text="Add Model">
+                     <graphic>
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="25.0">
+                           <children>
+                              <JFXTextField fx:id="modelfield" alignment="CENTER" promptText="Write Step" />
+                              <JFXButton fx:id="modeladd" buttonType="RAISED" maxWidth="60.0" minWidth="60.0" onAction="#modeladdaction" prefWidth="60.0" text="ADD" />
+                           </children>
+                        </HBox>
+                     </graphic>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" text="Add Action">
+                     <graphic>
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="25.0">
+                           <children>
+                              <JFXTextField fx:id="actionfield" alignment="CENTER" promptText="Write Step" />
+                              <JFXButton fx:id="actionadd" buttonType="RAISED" maxWidth="60.0" minWidth="60.0" onAction="#actionaddaction" prefWidth="60.0" text="ADD" />
+                           </children>
+                        </HBox>
+                     </graphic>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" text="Add Unit">
+                     <graphic>
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="25.0">
+                           <children>
+                              <JFXTextField fx:id="unitfield" alignment="CENTER" promptText="Write Step" />
+                              <JFXButton fx:id="unitadd" alignment="CENTER" buttonType="RAISED" maxWidth="60.0" minWidth="60.0" onAction="#unitaddaction" prefWidth="60.0" text="ADD" />
+                           </children>
+                        </HBox>
+                     </graphic>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" text="Unspecified Action" visible="false">
+                     <graphic>
+                        <JFXTextArea fx:id="myarea" />
+                     </graphic>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" text="Add User">
+                     <graphic>
+                        <HBox alignment="CENTER_LEFT" focusTraversable="true" prefHeight="100.0" prefWidth="200.0" spacing="25.0" stylesheets="@dracula_1.css">
+                           <children>
+                              <JFXTextField fx:id="userfield" alignment="CENTER" promptText="Write Step" />
+                              <JFXButton fx:id="useradd" alignment="CENTER" buttonType="RAISED" maxWidth="60.0" minWidth="60.0" onAction="#useraddaction" prefWidth="60.0" text="ADD" />
+                           </children>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </HBox>
+                     </graphic>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" text="Add Mail">
+                     <graphic>
+                        <HBox alignment="CENTER_LEFT" focusTraversable="true" prefHeight="100.0" prefWidth="200.0" spacing="25.0" stylesheets="@dracula_1.css">
+                           <children>
+                              <JFXTextField fx:id="mailfield" alignment="CENTER" promptText="Write Step" />
+                              <JFXButton fx:id="mailadd" alignment="CENTER" buttonType="RAISED" maxWidth="60.0" minWidth="60.0" onAction="#mailaddaction" prefWidth="60.0" text="ADD" />
+                           </children>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </HBox>
+                     </graphic>
+                  </MenuItem>
+              </items>
+            </Menu>
+          <Menu fx:id="helpmenu" mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem fx:id="about" mnemonicParsing="false" onAction="#aboutaction" text="About" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <SeparatorMenuItem mnemonicParsing="false">
+                     <content>
+                        <JFXToggleButton fx:id="admon" onAction="#admonaction" text="Open Admin" />
+                     </content>
+                  </SeparatorMenuItem>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="block" disable="true" mnemonicParsing="false" onAction="#blockuseraction" text="Block User" />
+                  <MenuItem fx:id="unblock" disable="true" mnemonicParsing="false" onAction="#unblockuseraction" text="Unblock User" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="logout" mnemonicParsing="false" onAction="#logoutaction" text="Log Out" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <center>
+      <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="1313.0" BorderPane.alignment="CENTER">
+         <content>
+            <StackPane prefHeight="150.0" prefWidth="200.0">
+               <children>
+                  <JFXTextArea fx:id="lili" prefHeight="526.0" prefWidth="657.0" visible="false" />
+                  <WebView fx:id="website" prefHeight="912.0" prefWidth="1589.0" />
+                  <JFXTextArea fx:id="myarea" layoutX="10.0" layoutY="10.0" prefHeight="526.0" prefWidth="657.0" visible="false" />
+               </children>
+            </StackPane>
+         </content>
+      </ScrollPane>
+   </center>
+</BorderPane>

@@ -1,0 +1,82 @@
+.root {
+    -fx-background-color: #f3f4f6; /* Soft background for overall editor */
+    -fx-font-family: "Fira Code", "Consolas", monospace;
+    -fx-font-size: 13px;
+}
+
+.code-area {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #4b5563; /* Dark grey for default text */
+}
+
+/* Line Number Styling */
+.line-number {
+    -fx-text-fill: #9ca3af; /* Light grey for line numbers */
+}
+
+/* Syntax Highlighting */
+.keyword {
+    -fx-fill: #6366f1; /* Indigo for keywords */
+    -fx-font-weight: bold;
+}
+
+.semicolon {
+    -fx-fill: #d1d5db; /* Light grey to subtly highlight */
+    -fx-font-weight: bold;
+}
+
+.paren {
+    -fx-fill: #e11d48; /* Red-pink for parentheses */
+    -fx-font-weight: bold;
+}
+
+.bracket {
+    -fx-fill: #10b981; /* Emerald for brackets */
+    -fx-font-weight: bold;
+}
+
+.brace {
+    -fx-fill: #3b82f6; /* Blue for braces */
+    -fx-font-weight: bold;
+}
+
+.string {
+    -fx-fill: #d97706; /* Amber for strings */
+}
+
+.comment {
+    -fx-fill: #6b7280; /* Muted grey for comments */
+    -fx-font-style: italic;
+}
+
+/* HTML specific */
+.tag {
+    -fx-fill: #dc2626; /* Strong red for HTML tags */
+}
+
+.attribute {
+    -fx-fill: #f97316; /* Orange for HTML attributes */
+}
+
+/* CSS specific */
+.css-property {
+    -fx-fill: #0ea5e9; /* Sky blue for CSS properties */
+}
+
+.css-value {
+    -fx-fill: #6366f1; /* Indigo for CSS values */
+}
+
+/* JavaScript specific */
+.js-keyword {
+    -fx-fill: #ef4444; /* Warm red for JS keywords */
+}
+
+.js-function {
+    -fx-fill: #d97706; /* Amber for JS functions */
+}
+
+/* Paragraph Box with Caret */
+.paragraph-box:has-caret {
+    -fx-background-color: #e0f2fe; /* Light sky blue for active caret line */
+}

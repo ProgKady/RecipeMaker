@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="822.0" prefWidth="1130.0" stylesheets="@cupertino-light.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.SaverController">
+   <children>
+      <JFXButton fx:id="save" buttonType="RAISED" disable="true" layoutX="28.0" layoutY="753.0" onAction="#saveaction" prefHeight="36.0" prefWidth="144.0" style="-fx-background-radius: 3em; -fx-background-color: #00b4d8;" text="Save ...">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+         <effect>
+            <DropShadow />
+         </effect>
+      </JFXButton>
+      <JFXTextArea fx:id="code" labelFloat="true" layoutX="8.0" layoutY="21.0" onMouseClicked="#areaclick" prefHeight="700.0" prefWidth="1112.0" promptText="Click here to paste your code.">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </JFXTextArea>
+      <ComboBox fx:id="modell" layoutX="457.0" layoutY="736.0" onHidden="#modellhide" onShowing="#modellrel" prefHeight="32.0" prefWidth="291.0" promptText="Choose Model" style="-fx-font-size: 15; -fx-font-weight: bold; -fx-background-radius: 3em;" />
+      <Label layoutX="814.0" layoutY="762.0" style="-fx-font-weight: bold;" text="Signature will be by default: Mr Muhammet" underline="true" />
+      <JFXCheckBox fx:id="signme" checkedColor="#0d419d" layoutX="816.0" layoutY="731.0" onAction="#shift1action" selected="true" style="-fx-font-weight: bold;" text="Sign Me" />
+      <JFXButton fx:id="sendmaill" buttonType="RAISED" layoutX="200.0" layoutY="754.0" onAction="#sendmailaction" prefHeight="36.0" prefWidth="193.0" style="-fx-background-color: #00b4d8; -fx-background-radius: 3em; -fx-font-weight: bold;" text="Send Mail (Outside Files)" />
+      <Label fx:id="lonk" layoutX="376.0" layoutY="780.0" text="Label" visible="false" />
+      <Label fx:id="lonk1" layoutX="731.0" layoutY="732.0" text="Label" visible="false" />
+      <JFXListView fx:id="list" layoutX="1059.0" layoutY="743.0" prefHeight="22.0" prefWidth="26.0" visible="false" />
+      <JFXTextField fx:id="find" layoutX="557.0" layoutY="785.0" visible="false" />
+      <JFXCheckBox fx:id="fixche" checkedColor="#0d419d" layoutX="958.0" layoutY="731.0" selected="true" style="-fx-font-weight: bold;" text="Fix Chemicals" />
+      <Label layoutX="841.0" layoutY="790.0" style="-fx-font-weight: bold;" text="Fix Chemicals For Best Performance" underline="true" />
+      <Label fx:id="editedby" alignment="CENTER" layoutX="411.0" layoutY="790.0" prefHeight="20.0" prefWidth="416.0" style="-fx-font-weight: bold; -fx-background-color: #00b4d8; -fx-background-radius: 3em;" text="Edited By:   " />
+   </children>
+</AnchorPane>

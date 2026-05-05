@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="920.0" prefWidth="1321.0" stylesheets="@cupertino-light.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.CreateFastModeController">
+   <children>
+      <MFXTextField fx:id="date" alignment="CENTER" floatMode="BORDER" floatingText="Date" layoutX="23.0" layoutY="34.0" prefHeight="43.0" prefWidth="178.0" promptText="Date Shows Here...">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </MFXTextField>
+      <MFXButton fx:id="refresh" buttonType="RAISED" depthLevel="LEVEL5" layoutX="1162.0" layoutY="39.0" onAction="#refreshaction" prefHeight="33.0" prefWidth="79.0" style="-fx-font-weight: bold; -fx-background-color: #2ecc71; -fx-background-radius: 3em;" text="Refresh" />
+      <ComboBox fx:id="model" layoutX="212.0" layoutY="39.0" onShown="#modelaction" prefHeight="33.0" prefWidth="178.0" promptText="Model" style="-fx-background-radius: 3em; -fx-background-color: white; -fx-font-weight: bold;" />
+      <WebView fx:id="webview" layoutX="17.0" layoutY="95.0" prefHeight="743.0" prefWidth="1253.0" />
+      <MFXTextField fx:id="pcs" alignment="CENTER" floatMode="BORDER" floatingText="PCS" layoutX="945.0" layoutY="34.0" prefHeight="43.0" prefWidth="161.0" text="0">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </MFXTextField>
+      <MFXTextField fx:id="name" alignment="CENTER" floatMode="BORDER" floatingText="Name" layoutX="399.0" layoutY="34.0" prefHeight="43.0" prefWidth="178.0" promptText="Name Shows Here...">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </MFXTextField>
+      <MFXTextField fx:id="kg" alignment="CENTER" floatMode="BORDER" floatingText="KG" layoutX="779.0" layoutY="34.0" prefHeight="43.0" prefWidth="155.0" text="0">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </MFXTextField>
+      <ComboBox fx:id="stage" layoutX="589.0" layoutY="39.0" onShown="#stageaction" prefHeight="33.0" prefWidth="178.0" promptText="Stage" style="-fx-background-radius: 3em; -fx-background-color: white; -fx-font-weight: bold;" />
+      <MFXButton fx:id="save" buttonType="RAISED" depthLevel="LEVEL5" layoutX="626.0" layoutY="863.0" onAction="#saveaction" prefHeight="33.0" prefWidth="123.0" style="-fx-font-weight: bold; -fx-background-color: #3498db; -fx-background-radius: 3em;" text="Save" />
+   </children>
+</Pane>

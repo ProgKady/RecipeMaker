@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTabPane?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane prefHeight="850.0" prefWidth="1312.0" style="-fx-font-family: &quot;Cairo SemiBold&quot;;" stylesheets="@kadysoft/kady/cupertino-light.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller=".SettingsController">
+   <center>
+      <JFXTabPane BorderPane.alignment="CENTER">
+         <tabs>
+            <Tab text="DataBase">
+               <content>
+                  <BorderPane prefHeight="200.0" prefWidth="200.0">
+                     <top>
+                        <HBox alignment="CENTER_LEFT" prefHeight="64.0" prefWidth="1312.0" spacing="20.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <JFXTextField labelFloat="true" prefHeight="32.0" prefWidth="386.0" promptText="Choose database to start ..." style="-fx-font-weight: bold; -fx-text-fill: black; -jfx-focus-color: transparent; -jfx-unfocus-color: transparent; -fx-background-radius: 15;">
+                                 <effect>
+                                    <DropShadow height="25.0" offsetY="6.0" radius="12.0" width="25.0" />
+                                 </effect>
+                              </JFXTextField>
+                              <JFXButton buttonType="RAISED" style="-fx-background-color: #007aff; -fx-font-weight: bold; -fx-text-fill: white; -fx-background-radius: 15;" text="Browse" />
+                              <JFXButton buttonType="RAISED" layoutX="335.0" layoutY="44.0" style="-fx-background-color: #007aff; -fx-font-weight: bold; -fx-text-fill: white; -fx-background-radius: 15;" text="Create One" />
+                              <JFXButton buttonType="RAISED" layoutX="428.0" layoutY="30.0" style="-fx-background-color: #007aff; -fx-font-weight: bold; -fx-text-fill: white; -fx-background-radius: 15;" text="Test Connection" />
+                              <JFXButton buttonType="RAISED" layoutX="545.0" layoutY="30.0" style="-fx-background-color: #007aff; -fx-font-weight: bold; -fx-text-fill: white; -fx-background-radius: 15;" text="Get Tables" />
+                              <ComboBox prefHeight="32.0" prefWidth="193.0" promptText="DataBase Tables" style="-fx-font-weight: bold; -fx-background-radius: 15;">
+                                 <effect>
+                                    <DropShadow height="25.0" offsetY="6.0" radius="12.0" width="25.0" />
+                                 </effect>
+                              </ComboBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                           </padding>
+                        </HBox>
+                     </top>
+                     <bottom>
+                        <TitledPane prefHeight="200.0" prefWidth="200.0" text="Log" BorderPane.alignment="CENTER">
+                           <content>
+                              <JFXTextArea editable="false" labelFloat="true" promptText="Logs will drop here ..." />
+                           </content>
+                        </TitledPane>
+                     </bottom>
+                     <center>
+                        <TableView prefHeight="200.0" prefWidth="200.0" style="-fx-font-weight: bold;" tableMenuButtonVisible="true" BorderPane.alignment="CENTER" />
+                     </center></BorderPane>
+               </content>
+            </Tab>
+            <Tab text="Adds On">
+               <content>
+                  <ScrollPane fitToHeight="true" fitToWidth="true">
+                     <content>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                           <center>
+                              <Label style="-fx-font-size: 25;" text="No changes here." underline="true" BorderPane.alignment="CENTER" />
+                           </center></BorderPane>
+                     </content>
+                  </ScrollPane>
+               </content>
+            </Tab>
+         </tabs>
+      </JFXTabPane>
+   </center>
+</BorderPane>

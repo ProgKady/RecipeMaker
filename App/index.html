@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>TC Garments</title>
+<meta name="theme-color" content="#ffffff">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/hrrr_180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Cairo',sans-serif;
+  background:#f5f7fa;
+  color:#1a1a1a;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content: center;
+  align-items:center;
+  overflow:hidden;
+  position:relative;
+  padding:10px 8px;
+}
+
+/* خلفية الأنيميشن خفيفة وأنيقة */
+.bg{position:fixed;inset:0;background:transparent;pointer-events:none;z-index:0}
+.dot{
+  position:absolute;
+  width:5px;height:5px;
+  background:#ff3366;
+  border-radius:50%;
+  box-shadow:0 0 12px rgba(255,51,102,0.6);
+  animation:float 14s infinite linear;
+}
+@keyframes float{
+  0%{transform:translateY(100vh) scale(0);}
+  100%{transform:translateY(-100px) scale(1);}
+}
+
+/* اللوجو الآن مربع بزوايا منحنية (مش دايرة) */
+.logo{
+  width:100px;
+  height:100px;
+  border-radius:24px; /* زوايا منحنية حلوة */
+  object-fit:cover;
+  border:4px solid #ff3366;
+  box-shadow:0 0 25px rgba(255,51,102,0.4);
+  margin-bottom:12px;
+  z-index:10;
+  animation:pulse 4s infinite;
+}
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 25px rgba(255,51,102,0.4);}
+  50%{box-shadow:0 0 50px rgba(255,51,102,0.7);}
+}
+
+.card{
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(20px);
+  padding:22px 18px;
+  border-radius:20px;
+  width:90%;
+  max-width:310px;
+  text-align:center;
+  border:1px solid rgba(255,51,102,0.25);
+  box-shadow:0 10px 35px rgba(0,0,0,0.08);
+  z-index:10;
+  margin-bottom:15px;
+}
+
+h2{
+  color:#e91e63;
+  font-size:21px;
+  margin-bottom:12px;
+  text-shadow:0 2px 8px rgba(233,30,99,0.15);
+}
+
+input{
+  width:100%;
+  padding:11px 15px;
+  margin:7px 0;
+  background:#ffffff;
+  border:2px solid #e0e0e0;
+  border-radius:50px;
+  color:#333;
+  font-size:15px;
+  outline:none;
+  transition:all .3s;
+}
+input:focus{
+  border:2px solid #ff3366;
+  box-shadow:0 0 20px rgba(255,51,102,0.25);
+}
+input::placeholder{color:#999}
+
+button{
+  width:100%;
+  padding:12px;
+  background:linear-gradient(145deg,#ff3366,#e91e63);
+  color:white;
+  border:none;
+  border-radius:50px;
+  font-size:16px;
+  font-weight:900;
+  cursor:pointer;
+  margin-top:10px;
+  box-shadow:0 8px 25px rgba(255,51,102,0.35);
+  transition:all .3s;
+}
+button:hover:not(:disabled){
+  transform:translateY(-4px);
+  box-shadow:0 15px 40px rgba(255,51,102,0.5);
+}
+button:disabled{
+  background:#ccc;
+  box-shadow:none;
+  cursor:not-allowed;
+}
+
+p#status{
+  margin-top:10px;
+  color:#e91e63;
+  font-weight:bold;
+  min-height:20px;
+  font-size:14px;
+}
+
+footer{
+  color:#777;
+  font-size:12px;
+  text-align:center;
+  z-index:10;
+  width:100%;
+  padding:0 10px;
+  position:fixed;
+  bottom:10px;
+  left:0;
+}
+.footer-link{color:#e91e63;text-decoration:none;font-weight:bold}
+.support-btn{
+  background:#25d366;
+  color:white;
+  padding:7px 18px;
+  border-radius:25px;
+  text-decoration:none;
+  margin-top:6px;
+  display:inline-block;
+  font-size:13px;
+}
+
+/* تكييف للشاشات الصغيرة */
+@media (max-height: 680px), (max-width: 360px) {
+  .logo{width:85px;height:85px;border-radius:20px;margin-bottom:8px;}
+  .card{padding:18px 15px;max-width:280px;border-radius:16px;margin-bottom:10px;}
+  h2{font-size:19px;margin-bottom:10px;}
+  input{padding:10px 12px;font-size:14px;margin:6px 0;}
+  button{padding:11px;font-size:15px;margin-top:8px;}
+  footer{bottom:5px;font-size:11px;}
+  .support-btn{padding:6px 15px;}
+}
+</style>
+</head>
+<body>
+<div class="bg" id="bg"></div>
+
+<!-- اللوجو مربع منحني الزوايا -->
+<img src="hrrr.png" alt="Logo" class="logo">
+
+<div class="card">
+  <h2>تسجيل الدخول</h2>
+  <input type="text" id="name" placeholder="الاسم الكامل">
+  <input type="text" id="code" placeholder="الكود الخاص">
+  <button id="registerBtn">دخول</button>
+  <p id="status"></p>
+</div>
+
+<footer>
+  © 2026 <a href="#" onclick="openExternalLink('https://facebook.com/kadinioo')" class="footer-link">Ahmed Elkady - Kadysoft Ltd.</a><br>
+  <a href="#" onclick="openExternalLink('https://wa.me/201555266002')" class="support-btn">الدعم الفني (واتساب)</a>
+</footer>
+
+<script>
+function openExternalLink(url) {
+  window.location.href = "intent://" + url.replace(/^https?:\/\//, '') + "#Intent;package=com.android.chrome;scheme=https;end;";
+}
+</script>
+
+<script>
+// أنيميشن النقاط المتحركة في الخلفية
+setInterval(()=>{
+  const d=document.createElement('div');
+  d.classList.add('dot');
+  d.style.left=Math.random()*100+'vw';
+  d.style.animationDuration=(Math.random()*8+10)+'s';
+  document.getElementById('bg').appendChild(d);
+  setTimeout(()=>d.remove(),20000);
+},350);
+</script>
+
+<script>
+const API_URL = "https://corsproxy.io/?" + encodeURIComponent("https://script.google.com/macros/s/AKfycbx8DmT2qd0Et1Ny21Q4Bzk0ylvNjfmb_YoPZDeqJ__HP0TDAcacG2ZgDKsJqKQpIr10/exec");
+const nameInput = document.getElementById("name");
+const codeInput = document.getElementById("code");
+const btn = document.getElementById("registerBtn");
+const status = document.getElementById("status");
+
+window.addEventListener("DOMContentLoaded", () => {
+  const savedName = localStorage.getItem("name");
+  const savedCode = localStorage.getItem("code");
+  if (savedName && savedCode) {
+    nameInput.value = savedName;
+    codeInput.value = savedCode;
+    checkStatus(savedName, savedCode);
+  }
+});
+
+btn.addEventListener("click", async () => {
+  const name = nameInput.value.trim();
+  const code = codeInput.value.trim();
+  if (!name || !code) { alert("من فضلك أدخل الاسم والكود أولاً."); return; }
+  btn.disabled = true;
+  status.textContent = "جارٍ التحقق...";
+  try {
+    const res = await fetch(`${API_URL}?action=register&name=${encodeURIComponent(name)}&code=${encodeURIComponent(code)}`);
+    const data = await res.json();
+    localStorage.setItem("name", name);
+    localStorage.setItem("code", code);
+    handleStatus(data.status);
+  } catch (err) {
+    status.textContent = "فشل الاتصال.";
+    btn.disabled = false;
+  }
+});
+
+async function checkStatus(name, code) {
+  status.textContent = "جارٍ التحقق...";
+  disableInputs();
+  try {
+    const res = await fetch(`${API_URL}?action=check&name=${encodeURIComponent(name)}&code=${encodeURIComponent(code)}`);
+    const data = await res.json();
+    handleStatus(data.status);
+  } catch (err) {
+    status.textContent = "فشل الاتصال.";
+    enableInputs();
+  }
+}
+
+function handleStatus(state) {
+  switch (state) {
+    case "نعم": status.textContent = "تمت الموافقة! جاري التحويل..."; setTimeout(() => location.href = "index2.html", 1200); break;
+    case "لا": status.textContent = "تم رفض الطلب."; localStorage.clear(); enableInputs(); break;
+    case "لسه": status.textContent = "في انتظار الموافقة..."; disableInputs(); break;
+    default: status.textContent = "حالة غير معروفة."; localStorage.clear(); enableInputs(); break;
+  }
+}
+
+function disableInputs() { nameInput.disabled = codeInput.disabled = btn.disabled = true; }
+function enableInputs() { nameInput.disabled = codeInput.disabled = btn.disabled = false; }
+</script>
+
+<script>
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+</script>
+</body>
+</html>

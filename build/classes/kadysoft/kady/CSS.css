@@ -1,0 +1,60 @@
+
+.file
+{
+
+-fx-graphic : url("file.png");
+
+}
+
+.edit
+{
+
+-fx-graphic : url("edit.png");
+
+}
+
+
+.editr
+{
+
+-fx-graphic : url("editr.png");
+
+}
+
+.view
+{
+
+-fx-graphic : url("view.png");
+
+}
+
+
+.report
+{
+
+-fx-graphic : url("report.png");
+
+}
+.tool
+{
+
+-fx-graphic : url("tool.png");
+
+}
+
+
+.help
+{
+
+-fx-graphic : url("help.png");
+
+}
+
+.addstep
+{
+
+-fx-graphic : url("addstep.png");
+
+}
+
+
