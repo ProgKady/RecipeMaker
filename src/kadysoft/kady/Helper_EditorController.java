@@ -14,7 +14,6 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -41,9 +40,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -62,7 +59,6 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -71,10 +67,6 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
@@ -83,7 +75,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -93,10 +84,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
@@ -107,11 +96,11 @@ import javafx.stage.Window;
 import javafx.util.Duration;
 import javax.imageio.ImageIO;
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.MimeMessage;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import netscape.javascript.JSObject;
 import org.controlsfx.control.Notifications;
@@ -182,7 +171,7 @@ public class Helper_EditorController implements Initializable {
     
     
     
-      public static String bosboss,procccc,stageoo;
+      public static String bosboss,procccc,stageoo,linko;
   
   public static String funkifi;
   
@@ -337,7 +326,7 @@ void trickaction(MouseEvent event) {
     
       
       @FXML
-    void anotheraction (ActionEvent event) throws IOException, ClassNotFoundException {
+    void anotheraction (ActionEvent event) throws IOException, ClassNotFoundException, Exception {
         
         /////////////////////////////////dfgdsgsdgsd////////////////////////////////////
         
@@ -360,22 +349,78 @@ void trickaction(MouseEvent event) {
       String didd2="\\"+f.getName();
       String didd3=NewDir.file_dir+"\\PILOT\\";
       String modelooo=pathy.replace(didd1,"").replace(didd3,"").replace(didd2,"");
-      
-      
-      
-      
-        link=pathy;
-        recipe=thename;
-        Path path = Paths.get(link);
-        stage= path.getName(2).toString();
-        model= path.getName(3).toString();
-        editedby.setText(recipe+" Is Editing By "+user);
-        nomo=path.getFileName().toString();
+
+        
+        
+               
+    ////////////////////////////////////////////////////////////
+    
+
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String result = KeyDecoder.extractData(longKey.trim());
+    if (f == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = f.getAbsolutePath();
+    File originalFile = new File(input);
+    //Add backup here
+    File backupFolder = new File("D:\\All_Recipessss\\Backup");
+    if (!backupFolder.exists()) {
+        backupFolder.mkdirs();
+    }
+    String backupFileName = originalFile.getName() + ".bak";
+    File backupFile = new File(backupFolder, backupFileName);
+    try {
+        java.nio.file.Files.copy(originalFile.toPath(), 
+                                backupFile.toPath(), 
+                                java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+        System.out.println("✅ Backup created / updated: " + backupFile.getAbsolutePath());
+    } catch (Exception backupEx) {
+        System.out.println("⚠️ Warning: Failed to create backup - " + backupEx.getMessage());
+    }
+    // =================================================
+    
+    String tempOutput = System.getProperty("user.home")+"\\"+f.getName()+ ".tmp";
+    System.out.println("Decrypting with password: " + result); // للتصحيح
+    FileDecryptor.decrypt(input, tempOutput, result);
+    
+
+
+    ////////////////////////////////////////////////////////////
+   
+    link=tempOutput;
+    linko=pathy;
+    recipe=thename;
+    Path path = Paths.get(linko);
+    stage= path.getName(2).toString();
+    model= path.getName(3).toString();
+    editedby.setText(recipe+" Is Editing By "+user);
+    nomo=path.getFileName().toString();    
+        
+        
         
        ///Decrypt////////////////////////////////////
            try { 
     code.clear();
-    InputStream inputinstream=new FileInputStream(pathy);
+    InputStream inputinstream=new FileInputStream(link);
     BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
     String lo;
     code.appendText("");
@@ -435,7 +480,7 @@ void trickaction(MouseEvent event) {
         }catch (Exception g) {}
 /////////////////////////////////////////////
 
-    InputStream inputinstream=new FileInputStream(pathy);
+    InputStream inputinstream=new FileInputStream(link);
     BufferedReader buf=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
     OutputStream instreamm=new FileOutputStream(NewDir.file_dirrrr + "\\Editor\\kadysoft.html");
     PrintWriter pw = new PrintWriter(new OutputStreamWriter (instreamm,"UTF-8"));
@@ -875,4594 +920,8045 @@ try {
     
     
     
+    
+    
+    
+    
+  
+    
+    
+    
     @FXML
-    void saveaction(ActionEvent event) throws FileNotFoundException, IOException, WriterException, SQLException, Exception {
+void saveaction(ActionEvent event) throws FileNotFoundException, IOException, WriterException, SQLException, Exception {
 
-        //Save Action Goes Here.
-        
-            
-      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-      alert.setTitle("Add Time?");
-      alert.setHeaderText("Add Time To Recipe Or Not ...");
-      alert.setContentText("Please Click 'OK' To Add Time To Recipe Or Click 'Cancel' To Continue Without Time.");
-      DialogPane dialogPane = alert.getDialogPane();
-      dialogPane.getStylesheets().add(
-      getClass().getResource("cupertino-light.css").toExternalForm());
-      Optional<ButtonType> option = alert.showAndWait();
-      if (option.get() == null) {
-          
-      } else if (option.get() == ButtonType.OK) {
-      
-          ////////////////////////////////////////////////////////////////////////////////////////////////////
-         
-             
-   ///////////////////////////////////////Everything Will Go Here///////////////////////////////////////////////////
-   WebEngine engine = codey.getEngine();
-   //Object value=engine.executeScript("document.getElementById('txtBody').value;");
-   Object value=engine.executeScript("tinymce.get('txtBody').getContent();");
-   String thecodee=/*"<style>\n" +
-"        body {\n" +
-"            user-select: none;\n" +
-"            -webkit-user-select: none;\n" +
-"            -moz-user-select: none;\n" +
-"            -ms-user-select: none;\n" +
-"        }\n" +
-"    </style>"
-            
-          +"<script>\n" +
-"        document.addEventListener('dragstart', function(event) {\n" +
-"            event.preventDefault();\n" +
-"        });\n" +
-"\n" +
-"        document.addEventListener('drop', function(event) {\n" +
-"            event.preventDefault();\n" +
-"        });\n" +
-"\n" +
-"        document.addEventListener('contextmenu', function(event) {\n" +
-"            event.preventDefault();\n" +
-"        });\n" +
-"    </script>"  
-            
-            + "<script>\n" +
-"  \n" +
-"  window.addEventListener(`contextmenu`, (e) => {\n" +
-"    e.preventDefault();\n" +
-"});\n" +
-"  \n" +
-"  </script>"
-             + ""
-            + "\n<meta charset=\"UTF-8\"/>\n<meta name=\"viewport\" content=\"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\"/>\n\t\t<meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\" />"
-            + ""
-            + "<script>\n" +
-"            \n" +
-"            document.addEventListener('keydown', event => {\n" +
-"  console.log(`User pressed: ${event.key}`);\n" +
-"  event.preventDefault();\n" +
-"  return false;\n" +
-"});\n" +
-"            \n" +
-"            </script>"
-            
-       +"<script>\n" +
-"        document.addEventListener('keydown', function (event) {\n" +
-"            // Disable specific keys or key combinations\n" +
-"            event.preventDefault();\n" +
-"        });\n" +
-"    </script>"+*/value.toString();
-   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
-   //Get Time And Shots
-   
-   List<Integer> time = new ArrayList<>();
-   List<Integer> timeSum = new ArrayList<>();
-   List<String> shots = new ArrayList<>();
-   int sum = 0, bathnum=0, firstshot=0, secondshot=0,thirdshot=0,forthshot=0;
-   
-   Document doc = Jsoup.parse(thecodee);
-   for (Element table : doc.select("tbody")) {
-   for (Element row : table.select("tr")) {
-   Elements tds = row.select("td");
-   if (tds.get(2).text().isEmpty()||tds.get(2).text().contains("/")||tds.get(2).text().contains("\\")||tds.get(2).text().contains("SPIN")||tds.get(2).text().contains("spin")||tds.get(2).text().contains("TIME")||tds.get(2).text().contains("time")||tds.get(2).text().matches("[a-zA-Z_]+")||tds.get(2).text().contains("PRODUCTION")||tds.get(2).text().contains("RECIPE")||tds.get(2).text().contains("RECIPI")||tds.get(2).text().contains("DATE")||tds.get(2).text().contains("WASH")) {}
-   else {
-   String stringg=tds.get(2).text().replace(" CONT","").replace(" CONG","").replace("CONG","").replace(" cont","").replace(" CNTRL","").replace(" control","").replace(" CONTROL","").replace(" con","").replace(" CON","").replace(" CNTRL","").replace(" KONTROL","").replace("CONT","").replace("cont","").replace("CNTRL","").replace("control","").replace("CONTROL","").replace("con","").replace("CON","").replace("CNTRL","").replace("KONTROL","");
-   
-   if (stringg.contains("+")) {
-   String sum1 = stringg;
-   String[] numbers1 = sum1.split("\\+");
-   int total1 = 0;
-   for (String numStr1 : numbers1) {
-   total1 += Integer.parseInt(numStr1);
-   }
-   time.add(total1);
-   }
-   
-   else {
-   int ioo=Integer.parseInt(stringg);
-   time.add(ioo);     
-   }
-   }
-                              
-                            String dalil=tds.get(3).text();
-                            if (dalil.contains("EXTRACT")||dalil.contains("extract")||dalil.contains("Extract")||dalil.contains("EXTRA")||dalil.contains("EXTRACTION")||dalil.contains("extraction")) {
-                            for (int i = 0; i < time.size(); i++)
-                            sum += time.get(i);
-                            timeSum.add(sum);
-                            time.clear();
-                            shots.add(dalil);}else {
-                            
-                        
-                            
-                            }}}
-    
-   
-   
-                          bathnum=shots.size();
-                          if (shots.size()==1) {
-                          firstshot=timeSum.get(0);}
-                          else if (shots.size()==2) {
-                          firstshot=timeSum.get(0);
-                          secondshot=timeSum.get(1)-timeSum.get(0);}
-                         
-                          else {
-                          
-                       
-                          
-                          }
-   
-   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
-   //Get Temp
-   
-   try {
-      BufferedReader buf = new BufferedReader(new FileReader(NewDir.file_dirr + "\\Timer_Temp.kady"));
-      
-      timer_temprature=buf.readLine();
-      
-      buf.close();
-      } catch (FileNotFoundException fileNotFoundException) {
-      } catch (IOException iOException) {}
-   
-                            int temp=0;
-                            int temp2=0;
-                            int temp3=0;
-                            String timer_tempra=timer_temprature;
-                            int timer_temp=Integer.parseInt(timer_tempra);
-                            
-                            Document docy = Jsoup.parse(thecodee);
-                            
-                            for (Element table : docy.select("table")) {
-                            for (Element row : table.select("tr")) {
-                            Elements tds = row.select("td");
-                            if (tds.get(3).text().contains("/")||tds.get(3).text().contains("\\")||tds.get(3).text().isEmpty()||tds.get(3).text().contains("TEMP")||tds.get(3).text().contains("OPERATOR")||tds.get(3).text().contains("temp")||tds.get(3).text().contains("operator")) {}
-                            else {
-                                
-                            String tempo=tds.get(3).text();
-                            
-                            if (tempo.contains("EXTRACT")) {
-                                
-                                String pattern = "[a-zA-Z_ _&_.]+";
-                                tempo = tempo.replaceAll(pattern, "");
-                                if (tempo.matches("[0-9]+")) {
-                                int cvd2=Integer.parseInt(tempo); 
-                                if (cvd2>timer_temp) { 
-                                temp2+=1;
-                                }
-                                else {
-                                }}break;
-                             }
-                            
-                            else {
-                           
-                                String pattern = "[a-zA-Z_ _&_.]+";  
-                                tempo = tempo.replaceAll(pattern, "");
-                                if (tempo.matches("[0-9]+")) {
-                                int cvd=Integer.parseInt(tempo); 
-                                if (cvd>timer_temp) { 
-                                temp+=1;
-                                }else {}}
-                                
-                            }}}}
-                            
-                            int tempall=0;
-                            Document docc = Jsoup.parse(thecodee);
-                            for (Element table : docc.select("table")) {
-                            for (Element row : table.select("tr")) {
-                            Elements tds = row.select("td");
-                            if (tds.get(3).text().contains("/")||tds.get(3).text().contains("\\")||tds.get(3).text().isEmpty()||tds.get(3).text().contains("TEMP")||tds.get(3).text().contains("OPERATOR")||tds.get(3).text().contains("temp")||tds.get(3).text().contains("operator")) {}
-                            else {
-                                String tempo=tds.get(3).text();
-                                String pattern = "[a-zA-Z_ _&_.]+";
-                                tempo = tempo.replaceAll(pattern, "");
-                                if (tempo.matches("[0-9]+")) {
-                                int cvd=Integer.parseInt(tempo); 
-                                if (cvd>timer_temp) { 
-                                tempall+=1;}
-                                else {}}else {}}}}
-                            
-                            
-   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
-   //Get Stone Bath   
-   
-                            int stonebathh=0;
-                            Document doccc = Jsoup.parse(thecodee);
-                            for (Element table : docc.select("table")) {
-                            for (Element row : table.select("tr")) {
-                            Elements tds = row.select("td");
-                            if (tds.get(7).text().isEmpty()||tds.get(7).text().contains("/")||tds.get(7).text().contains("\\")||tds.get(7).text().contains("CHEMICAL")||tds.get(7).text().contains("chemical")||tds.get(7).text().matches("[0-9_-]+")) {}
-                            else {
-                            String erw=tds.get(7).text().toString();
-                            if (erw.contains("STONE")||erw.contains("STON")||erw.contains("BOOL")||erw.contains("FOAM")||erw.contains("BOLL"))  {
-                            stonebathh+=1;  
-                            }else {}}}}
-   
-                            
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    //Get Water Bath  
-    
-    
-                            
-        
-                            int waterbath=0;
-                            int waterbath2=0;
-                            Document docu = Jsoup.parse(thecodee);
-                           
-                            for (Element table : docu.select("table")) {
-                            for (Element row : table.select("tr")) {
-                            Elements tds = row.select("td");
-                            
-                            if (tds.get(4).text().contains("'")||tds.get(4).text().contains("DRYER")||tds.get(4).text().contains("LITER")||tds.get(4).text().matches("[a-zA-Z_]+")) {}
-                            else {
-                                
-                            String tempo=tds.get(3).text();
-                            
-                            if (tempo.contains("EXTRACT")) {
-                                if (tds.get(4).text().matches("[0-9]+")) {
-                                int cvd2=Integer.parseInt(tds.get(4).text()); 
-                                waterbath2+=1;
-                                
-                                }
-                                
-                                break;
-                                
-                            }
-                            
-                            
-                            else {
-                           
-                                if (tds.get(4).text().matches("[0-9]+")) {
-                                int cvd=Integer.parseInt(tds.get(4).text()); 
-                               
-                                waterbath+=1;
-                                
-                                }
-                                
-                            }
-                            
-                           }}}
-                            
-        
-        
-        
-                            int waterbathall=0;
-                            Document dock = Jsoup.parse(thecodee);
-                            
-                            for (Element table : dock.select("table")) {
-                            for (Element row : table.select("tr")) {
-                            Elements tds = row.select("td");
-                            if (tds.get(4).text().isEmpty()||tds.get(4).text().contains("'")||tds.get(4).text().contains("DRYER")||tds.get(4).text().contains("LITER")||tds.get(4).text().matches("[a-zA-Z_]+")) {}
-                            else { 
-                            String erw=tds.get(4).text().toString();
-                            waterbathall+=1;
-                            }}}
-        
-                            
-   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
-   //Read Vars From File  
-   
+    // =========================================================
+    // مرحلة 1: سؤال المستخدم هل يضيف الوقت أم لا
+    // =========================================================
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    alert.setTitle("Add Time?");
+    alert.setHeaderText("Add Time To Recipe Or Not ...");
+    alert.setContentText("Please Click 'OK' To Add Time To Recipe Or Click 'Cancel' To Continue Without Time.");
+    DialogPane dialogPane = alert.getDialogPane();
+    dialogPane.getStylesheets().add(getClass().getResource("cupertino-light.css").toExternalForm());
+    Optional<ButtonType> option = alert.showAndWait();
+
+    if (option.get() == null) {
+        return;
+    }
+
+    // =========================================================
+    // مرحلة 2: قراءة محتوى الـ TinyMCE Editor
+    // =========================================================
+    WebEngine engine = codey.getEngine();
+    Object value = engine.executeScript("tinymce.get('txtBody').getContent();");
+    String thecodee = value.toString();
+
+    boolean addTime = (option.get() == ButtonType.OK);
+
+    // =========================================================
+    // مرحلة 3: حساب الوقت (فقط لو المستخدم اختار OK)
+    // =========================================================
+    if (addTime) {
+
+        // --- 3A: حساب عدد الشوتات والوقت ---
+        List<Integer> time = new ArrayList<>();
+        List<Integer> timeSum = new ArrayList<>();
+        List<String> shots = new ArrayList<>();
+        int sum = 0, bathnum = 0, firstshot = 0, secondshot = 0;
+
+        Document doc = Jsoup.parse(thecodee);
+        for (Element table : doc.select("tbody")) {
+            for (Element row : table.select("tr")) {
+                Elements tds = row.select("td");
+                String tdTime = tds.get(2).text();
+                if (tdTime.isEmpty() || tdTime.contains("/") || tdTime.contains("\\")
+                        || tdTime.contains("SPIN") || tdTime.contains("spin")
+                        || tdTime.contains("TIME") || tdTime.contains("time")
+                        || tdTime.matches("[a-zA-Z_]+") || tdTime.contains("PRODUCTION")
+                        || tdTime.contains("RECIPE") || tdTime.contains("RECIPI")
+                        || tdTime.contains("DATE") || tdTime.contains("WASH")) {
+                    // تجاهل
+                } else {
+                    String stringg = tdTime
+                            .replace(" CONT","").replace(" CONG","").replace("CONG","")
+                            .replace(" cont","").replace(" CNTRL","").replace(" control","")
+                            .replace(" CONTROL","").replace(" con","").replace(" CON","")
+                            .replace(" KONTROL","").replace("CONT","").replace("cont","")
+                            .replace("CNTRL","").replace("control","").replace("CONTROL","")
+                            .replace("con","").replace("CON","").replace("KONTROL","");
+
+                    if (stringg.contains("+")) {
+                        int total1 = 0;
+                        for (String numStr1 : stringg.split("\\+")) {
+                            total1 += Integer.parseInt(numStr1);
+                        }
+                        time.add(total1);
+                    } else {
+                        time.add(Integer.parseInt(stringg));
+                    }
+                }
+
+                String dalil = tds.get(3).text();
+                if (dalil.contains("EXTRACT") || dalil.contains("extract")
+                        || dalil.contains("Extract") || dalil.contains("EXTRA")
+                        || dalil.contains("EXTRACTION") || dalil.contains("extraction")) {
+                    for (int i = 0; i < time.size(); i++) sum += time.get(i);
+                    timeSum.add(sum);
+                    time.clear();
+                    shots.add(dalil);
+                }
+            }
+        }
+
+        bathnum = shots.size();
+        if (shots.size() == 1) {
+            firstshot = timeSum.get(0);
+        } else if (shots.size() == 2) {
+            firstshot = timeSum.get(0);
+            secondshot = timeSum.get(1) - timeSum.get(0);
+        }
+
+        // --- 3B: قراءة درجة الحرارة من ملف الإعدادات ---
+        try {
+            BufferedReader buf = new BufferedReader(new FileReader(NewDir.file_dirr + "\\Timer_Temp.kady"));
+            timer_temprature = buf.readLine();
+            buf.close();
+        } catch (Exception ignored) {}
+
+        int timer_temp = Integer.parseInt(timer_temprature);
+
+        // --- 3C: حساب الحرارة (قبل EXTRACT وبعده) ---
+        int temp = 0, temp2all = 0, tempall = 0;
+        Document docy = Jsoup.parse(thecodee);
+        boolean extractFound = false;
+        for (Element table : docy.select("table")) {
+            if (extractFound) break;
+            for (Element row : table.select("tr")) {
+                Elements tds = row.select("td");
+                String t3 = tds.get(3).text();
+                if (t3.contains("/") || t3.contains("\\") || t3.isEmpty()
+                        || t3.contains("TEMP") || t3.contains("OPERATOR")
+                        || t3.contains("temp") || t3.contains("operator")) continue;
+
+                String tempo = t3.replaceAll("[a-zA-Z_ &.]+", "");
+                if (t3.contains("EXTRACT")) {
+                    if (tempo.matches("[0-9]+") && Integer.parseInt(tempo) > timer_temp) temp2all++;
+                    extractFound = true;
+                    break;
+                } else {
+                    if (tempo.matches("[0-9]+") && Integer.parseInt(tempo) > timer_temp) temp++;
+                }
+            }
+        }
+        Document docc = Jsoup.parse(thecodee);
+        for (Element table : docc.select("table")) {
+            for (Element row : table.select("tr")) {
+                Elements tds = row.select("td");
+                String t3 = tds.get(3).text();
+                if (t3.contains("/") || t3.contains("\\") || t3.isEmpty()
+                        || t3.contains("TEMP") || t3.contains("OPERATOR")
+                        || t3.contains("temp") || t3.contains("operator")) continue;
+                String tempo = t3.replaceAll("[a-zA-Z_ &.]+", "");
+                if (tempo.matches("[0-9]+") && Integer.parseInt(tempo) > timer_temp) tempall++;
+            }
+        }
+
+        // --- 3D: حساب Stone Bath ---
+        int stonebathh = 0;
+        for (Element table : docc.select("table")) {
+            for (Element row : table.select("tr")) {
+                Elements tds = row.select("td");
+                String t7 = tds.get(7).text();
+                if (t7.isEmpty() || t7.contains("/") || t7.contains("\\")
+                        || t7.contains("CHEMICAL") || t7.contains("chemical")
+                        || t7.matches("[0-9_-]+")) continue;
+                if (t7.contains("STONE") || t7.contains("STON") || t7.contains("BOOL")
+                        || t7.contains("FOAM") || t7.contains("BOLL")) stonebathh++;
+            }
+        }
+
+        // --- 3E: حساب Water Bath ---
+        int waterbath = 0, waterbathall = 0;
+        boolean extractFoundW = false;
+        Document docu = Jsoup.parse(thecodee);
+        for (Element table : docu.select("table")) {
+            if (extractFoundW) break;
+            for (Element row : table.select("tr")) {
+                Elements tds = row.select("td");
+                String t4 = tds.get(4).text();
+                if (t4.contains("'") || t4.contains("DRYER") || t4.contains("LITER")
+                        || t4.matches("[a-zA-Z_]+")) continue;
+                if (tds.get(3).text().contains("EXTRACT")) {
+                    if (t4.matches("[0-9]+")) waterbath++;  // هذا عداد pre-extract
+                    extractFoundW = true;
+                    break;
+                } else {
+                    if (t4.matches("[0-9]+")) waterbath++;
+                }
+            }
+        }
+        Document dock = Jsoup.parse(thecodee);
+        for (Element table : dock.select("table")) {
+            for (Element row : table.select("tr")) {
+                Elements tds = row.select("td");
+                String t4 = tds.get(4).text();
+                if (t4.isEmpty() || t4.contains("'") || t4.contains("DRYER")
+                        || t4.contains("LITER") || t4.matches("[a-zA-Z_]+")) continue;
+                waterbathall++;
+            }
+        }
+
+        // --- 3F: قراءة إعدادات التايمر ---
+        try {
+            BufferedReader buf = new BufferedReader(new FileReader(NewDir.file_dirr + "\\Timer.kady"));
+            lproduct   = buf.readLine().replace("Load_Product=", "");
+            rproduct   = buf.readLine().replace("Remove_Product=", "");
+            tempraturee = buf.readLine().replace("Temprature=", "");
+            ftank      = buf.readLine().replace("Fill_Tank=", "");
+            etank      = buf.readLine().replace("Empty_Tank=", "");
+            cdosage    = buf.readLine().replace("Chemical_Dosage=", "");
+            buf.close();
+        } catch (Exception ignored) {}
+
+        // --- 3G: حساب التايمنج الكلي ---
+        int bathnumm = bathnum;
+        bosbos = bathnum;
+        double firstshott  = firstshot;
+        double secondshott = secondshot;
+
+        int tempp     = temp;
+        int tempp2    = tempall - temp;
+        int temppall  = tempall;
+        int waterbathx    = waterbath;
+        int waterbath2x   = waterbathall - waterbath;
+        int waterbathallx = waterbathall;
+
+        loadremoveproduct = Double.parseDouble(lproduct) + Double.parseDouble(rproduct);
+        tempraturetime    = tempp  * Double.parseDouble(tempraturee);
+        chemicaldosage    = Double.parseDouble(cdosage);
+        fillemptytank     = waterbathx * (Double.parseDouble(ftank) + Double.parseDouble(etank));
+
+        loadremoveproduct2 = Double.parseDouble(lproduct) + Double.parseDouble(rproduct);
+        tempraturetime2    = tempp2 * Double.parseDouble(tempraturee);
+        chemicaldosage2    = Double.parseDouble(cdosage);
+        fillemptytank2     = waterbath2x * (Double.parseDouble(ftank) + Double.parseDouble(etank));
+
+        loadremoveproductall = Double.parseDouble(lproduct) + Double.parseDouble(rproduct);
+        tempraturetimeall    = temppall * Double.parseDouble(tempraturee);
+        chemicaldosageall    = Double.parseDouble(cdosage);
+        fillemptytankall     = waterbathallx * (Double.parseDouble(ftank) + Double.parseDouble(etank));
+
+        // --- 3H: سؤال المستخدم عن Stone Baths (shot 1 دائماً) ---
+// استخدم الدالة الجديدة كالتالي:
+double[] result1 = askStoneAndAdditionalTime(stonebathh, "1 shot");
+stonabathth = result1[0];
+gmff1       = result1[1];
+
+// للشوت الثاني:
+if (bathnumm == 2) {
+    double[] result2 = askStoneAndAdditionalTime(stonebathh, "second shot");
+    stonabaththh = result2[0];
+    gmff2        = result2[1];
+}
+
+        // --- 3I: حساب النتائج النهائية ووضعها في الـ HTML ---
+        // Shot 1
+        gmf1 = roundOne(stonabathth + firstshott + loadremoveproduct + loadremovestone
+                + tempraturetime + extraction + chemicaldosage + fillemptytank + gmff1);
+        gdf1 = roundOne(gmf1 / 60.0);
+
+        if (bathnumm == 2) {
+            // Shot 2
+            gmf2 = roundOne(stonabaththh + secondshott + loadremoveproduct2 + loadremovestone2
+                    + tempraturetime2 + extraction2 + chemicaldosage2 + fillemptytank2 + gmff2);
+            gdf2 = roundOne(gmf2 / 60.0);
+        }
+
+        // إدراج صف الوقت في جدول الـ HTML
+        Document report = Jsoup.parse(thecodee);
+        domy = report.children();
+
+        if (bathnumm == 1) {
+            domy.select("tbody").append(buildTimeRow("Recipe Time", gmf1, gdf1, null, 0, 0));
+        } else if (bathnumm == 2) {
+            domy.select("tbody").append(buildTimeRow("First Shot",  gmf1, gdf1, "Second Shot", gmf2, gdf2));
+        } else {
+            // أكثر من شوتين - لا نضيف وقت، نُظهر رسالة خطأ
+            showNotif("Cancel!", "Operation Cancelled, We don't have 3 shots in one recipe.", true);
+            domy = Jsoup.parse(thecodee).children();
+        }
+
+        // تحديث thecodee بالمحتوى الجديد (بعد إضافة صف الوقت)
+        thecodee = domy.toString();
+
+    } // end if(addTime)
+
+    // =========================================================
+    // مرحلة 4: Fix Chemicals (اختياري) - مشترك بين OK و Cancel
+    // =========================================================
+    if (fixche.isSelected()) {
+        thecodee = applyChemicalFixes(thecodee);
+    }
+
+    // =========================================================
+    // مرحلة 5: Sign (اختياري) - تحديد المحتوى النهائي roraa
+    // =========================================================
+    roraa = thecodee;
+
+    // =========================================================
+    // مرحلة 6: كتابة الملف المؤقت + QR + تشفير + حفظ
+    // =========================================================
     try {
-      BufferedReader buf = new BufferedReader(new FileReader(NewDir.file_dirr + "\\Timer.kady"));
-      
-      lproduct=buf.readLine().replace("Load_Product=","");
-      rproduct=buf.readLine().replace("Remove_Product=","");
-      tempraturee=buf.readLine().replace("Temprature=","");
-      ftank=buf.readLine().replace("Fill_Tank=","");
-      etank=buf.readLine().replace("Empty_Tank=","");
-      cdosage =buf.readLine().replace("Chemical_Dosage=","");
-      
-      buf.close();
-      } catch (FileNotFoundException fileNotFoundException) {
-      } catch (IOException iOException) {}
-   
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    String lproductt=lproduct;
-    String rproductt=rproduct;
-    String tempratureee=tempraturee;
-    String ftankk=ftank;
-    String etankk=etank;
-    String cdosagee=cdosage;
-    
-    int bathnumm=bathnum;
-    
-    bosbos=bathnum;
-    
-    double firstshott=firstshot;
-    double secondshott=secondshot;
-    
-    int tempp=temp;
-    int tempp2=tempall-temp;
-    int temppall=tempall;
-    
-    int waterbathx=waterbath;
-    int waterbath2x=waterbathall-waterbath;
-    int waterbathallx=waterbathall;
-    
-    int stonebathhh=stonebathh;
-    
-    loadremoveproduct=Double.parseDouble(lproductt)+Double.parseDouble(rproductt);
-    tempraturetime=tempp*Double.parseDouble(tempratureee);
-    chemicaldosage=Double.parseDouble(cdosagee);
-    fillemptytank=waterbathx*(Double.parseDouble(ftankk)+Double.parseDouble(etankk));
-    
-    loadremoveproduct2=Double.parseDouble(lproductt)+Double.parseDouble(rproductt);
-    tempraturetime2=tempp2*Double.parseDouble(tempratureee);
-    chemicaldosage2=Double.parseDouble(cdosagee);
-    fillemptytank2=waterbath2x*(Double.parseDouble(ftankk)+Double.parseDouble(etankk));
-    
-    loadremoveproductall=Double.parseDouble(lproductt)+Double.parseDouble(rproductt);
-    tempraturetimeall=temppall*Double.parseDouble(tempratureee);
-    chemicaldosageall=Double.parseDouble(cdosagee);
-    fillemptytankall=waterbathallx*(Double.parseDouble(ftankk)+Double.parseDouble(etankk));
-    
-    //Alert for Bath Here
-    
-    
-    
-    if (bathnumm==1) {
-        
-      JFXTextField fss=new JFXTextField ("");
-      fss.setPromptText("Write Stone Baths Number");
-      fss.setMinSize(300, 30);
-      fss.setLabelFloat(true);
-      fss.setStyle("-fx-font-weight:bold;");
-      fss.setEditable(true);
-      
-      JFXTextField fsss=new JFXTextField ("0");
-      fsss.setPromptText("Addtional Time");
-      fsss.setMinSize(300, 30);
-      fsss.setLabelFloat(true);
-      fsss.setStyle("-fx-font-weight:bold;");
-      fsss.setEditable(true);
-      
-      VBox fewe=new VBox ();
-      fewe.setSpacing(10);
-      fewe.getChildren().addAll(fss,fsss);
-      
-      Alert alerto = new Alert(Alert.AlertType.INFORMATION);
-      alerto.setTitle("Stone Bath?");
-      alerto.setHeaderText("We found stone or foam "+stonebathhh+" times. but 1 shot.");
-      alerto.setContentText("Hello, Please tell me: Stone Baths Number?.");
-      alerto.setGraphic(fewe);
-      alerto.setResizable(false);
-      DialogPane dialogPaneo = alerto.getDialogPane();
-      dialogPaneo.getStylesheets().add(
-    getClass().getResource("cupertino-light.css").toExternalForm());
-      Optional<ButtonType> optiono = alerto.showAndWait();
-      passy=fss.getText();
-      stonabathth=Double.parseDouble(passy);
-      if (optiono.get() == null) {} 
-      else if (optiono.get() == ButtonType.OK) {
-          
-          /////////////////////////////////Stone Bath////////////////////////////////////////
-          
-          if (stonabathth==0) {
-          loadstone=0;
-          removestone=0;
-          cleaningstone=0;
-          extraction=0;
-          double dos3=loadstone+removestone;
-          loadremovestone=dos3;
-          
-      }
-      else if (stonabathth==1){
-          
-          loadstone=5.5;
-          removestone=4.15;
-          cleaningstone=15;
-          extraction=20;
-          double dos3=loadstone+removestone;
-          loadremovestone=dos3;
-          
-      }
-      
-      
-      else if (stonabathth==2){
-          
-          
-          loadstone=16.5;
-          removestone=8.3;
-          cleaningstone=20;
-          extraction=20;
-          double dos3=loadstone+removestone;
-          loadremovestone=dos3;
-          
-          
-      }
-      
-      
-      else {
-          double v=stonabathth;
-          double v1=v*4.15;
-          double v2=15+((v-1)*1.5);
-          
-          loadstone=v2;
-          removestone=v1;
-          cleaningstone=0;
-          extraction=20;
-          double dos3=loadstone+removestone;
-          loadremovestone=dos3;
-          
-          
-      }
-          
-          
-          gmff1=Double.parseDouble(fsss.getText());
-      
-          
-          ////////////////////////////////////////////////////////////////////////////////////
-      }
-      
-      else if (optiono.get() == ButtonType.CANCEL) {
-      Notifications noti = Notifications.create();
-      noti.title("Cancel!");
-      noti.text("Operation Cancelled, Something was wrong.");
-      noti.position(Pos.CENTER);
-      noti.hideAfter(Duration.seconds(3));
-      noti.showInformation();
-      } else {
-         
-      }
-        
-    }
-    
-    else if (bathnumm==2) {
-        
-      JFXTextField fss=new JFXTextField ("");
-      fss.setPromptText("Write Stone Baths Number");
-      fss.setMinSize(300, 30);
-      fss.setLabelFloat(true);
-      fss.setStyle("-fx-font-weight:bold;");
-      fss.setEditable(true);
-      
-      
-      JFXTextField fsssy=new JFXTextField ("0");
-      fsssy.setPromptText("Addtional Time");
-      fsssy.setMinSize(300, 30);
-      fsssy.setLabelFloat(true);
-      fsssy.setStyle("-fx-font-weight:bold;");
-      fsssy.setEditable(true);
-      
-      VBox fewe=new VBox ();
-      fewe.setSpacing(10);
-      fewe.getChildren().addAll(fss,fsssy);
-      
-      
-      Alert alerto = new Alert(Alert.AlertType.INFORMATION);
-      alerto.setTitle("Stone Bath?");
-      alerto.setHeaderText("We found stone or foam "+stonebathhh+" times. for the first shot.");
-      alerto.setContentText("Hello, Please tell me: Stone Baths Number?.");
-      alerto.setGraphic(fewe);
-      alerto.setResizable(false);
-      DialogPane dialogPaneo = alerto.getDialogPane();
-      dialogPaneo.getStylesheets().add(
-    getClass().getResource("cupertino-light.css").toExternalForm());
-      Optional<ButtonType> optiono = alerto.showAndWait();
-      passy=fss.getText();
-      stonabathth=Double.parseDouble(passy);
-      if (optiono.get() == null) {} 
-      else if (optiono.get() == ButtonType.OK) {
-          
-          /////////////////////////////////Stone Bath////////////////////////////////////////
-          
-          if (stonabathth==0) {
-          loadstone=0;
-          removestone=0;
-          cleaningstone=0;
-          extraction=0;
-          double dos3=loadstone+removestone;
-          loadremovestone=dos3;
-          
-      }
-      else if (stonabathth==1){
-          
-          loadstone=5.5;
-          removestone=4.15;
-          cleaningstone=15;
-          extraction=20;
-          double dos3=loadstone+removestone;
-          loadremovestone=dos3;
-          
-      }
-      
-      
-      else if (stonabathth==2){
-          
-          
-          loadstone=16.5;
-          removestone=8.3;
-          cleaningstone=20;
-          extraction=20;
-          double dos3=loadstone+removestone;
-          loadremovestone=dos3;
-          
-          
-      }
-      
-      
-      else {
-          double v=stonabathth;
-          double v1=v*4.15;
-          double v2=15+((v-1)*1.5);
-          
-          loadstone=v2;
-          removestone=v1;
-          cleaningstone=0;
-          extraction=20;
-          double dos3=loadstone+removestone;
-          loadremovestone=dos3;
-          
-          
-      }
-          
-          
-          gmff1=Double.parseDouble(fsssy.getText());
-      
-          
-          ////////////////////////////////////////////////////////////////////////////////////
-      }
-      
-      else if (optiono.get() == ButtonType.CANCEL) {
-      Notifications noti = Notifications.create();
-      noti.title("Cancel!");
-      noti.text("Operation Cancelled, Something was wrong.");
-      noti.position(Pos.CENTER);
-      noti.hideAfter(Duration.seconds(3));
-      noti.showInformation();
-      } else {
-         
-      }
-      
-      ///////////yrtyrty///////////
-      
-      JFXTextField fsss=new JFXTextField ("");
-      fsss.setPromptText("Write Stone Baths Number");
-      fsss.setMinSize(300, 30);
-      fsss.setLabelFloat(true);
-      fsss.setStyle("-fx-font-weight:bold;");
-      fsss.setEditable(true);
-      
-      JFXTextField fssss=new JFXTextField ("0");
-      fssss.setPromptText("Addtional Time");
-      fssss.setMinSize(300, 30);
-      fssss.setLabelFloat(true);
-      fssss.setStyle("-fx-font-weight:bold;");
-      fssss.setEditable(true);
-      
-      VBox fewer=new VBox ();
-      fewer.setSpacing(10);
-      fewer.getChildren().addAll(fsss,fssss);
-      
-      
-      Alert alertoo = new Alert(Alert.AlertType.INFORMATION);
-      alertoo.setTitle("Stone Bath?");
-      alertoo.setHeaderText("We found stone or foam "+stonebathhh+" times. for the second shot.");
-      alertoo.setContentText("Hello, Please tell me: Stone Baths Number?.");
-      alertoo.setGraphic(fewer);
-      alertoo.setResizable(false);
-      DialogPane dialogPaneoo = alertoo.getDialogPane();
-      dialogPaneoo.getStylesheets().add(
-    getClass().getResource("cupertino-light.css").toExternalForm());
-      Optional<ButtonType> optionoio = alertoo.showAndWait();
-      passyy=fsss.getText();
-      stonabaththh=Double.parseDouble(passyy);
-      if (optionoio.get() == null) {} 
-      else if (optionoio.get() == ButtonType.OK) {
-         
-          /////////////////////////////////Stone Bath////////////////////////////////////////
-          
-          if (stonabaththh==0) {
-          loadstone2=0;
-          removestone2=0;
-          cleaningstone2=0;
-          extraction2=0;
-          double dos3=loadstone2+removestone2;
-          loadremovestone2=dos3;
-          
-      }
-      else if (stonabaththh==1){
-          
-          loadstone2=5.5;
-          removestone2=4.15;
-          cleaningstone2=15;
-          extraction2=20;
-          double dos3=loadstone2+removestone2;
-          loadremovestone2=dos3;
-          
-      }
-      
-      
-      else if (stonabaththh==2){
-          
-          
-          loadstone2=16.5;
-          removestone2=8.3;
-          cleaningstone2=20;
-          extraction2=20;
-          double dos3=loadstone2+removestone2;
-          loadremovestone2=dos3;
-          
-          
-      }
-      
-      
-      else {
-          double v=stonabaththh;
-          double v1=v*4.15;
-          double v2=15+((v-1)*1.5);
-          
-          loadstone2=v2;
-          removestone2=v1;
-          cleaningstone2=0;
-          extraction2=20;
-          double dos3=loadstone2+removestone2;
-          loadremovestone2=dos3;
-          
-          
-      }
-          
-          
-          gmff2=Double.parseDouble(fssss.getText());
-      
-          
-          ////////////////////////////////////////////////////////////////////////////////////
-      }
-      
-      else if (optionoio.get() == ButtonType.CANCEL) {
-      Notifications noti = Notifications.create();
-      noti.title("Cancel!");
-      noti.text("Operation Cancelled, Something was wrong.");
-      noti.position(Pos.CENTER);
-      noti.hideAfter(Duration.seconds(3));
-      noti.showInformation();
-      } else {
-         
-      }
-      
-        
-    }
-    
-      
-    
-    
-    
-    
-    /////////////////////////////////////////////Starting//////////////////////////////////////////////////////////
-    
-    
-    if (bathnumm==1) {
-        
-        gmf1=stonabathth+firstshott+loadremoveproduct+loadremovestone+tempraturetime+extraction+chemicaldosage+fillemptytank;
-        gmf1=gmf1+gmff1;
-        double number1 = gmf1;
-        String formatted1 = String.format("%.1f", number1);
-        gmf1=Double.parseDouble(formatted1);
-        
-        gdf1=(stonabathth+firstshott+loadremoveproduct+loadremovestone+tempraturetime+extraction+chemicaldosage+fillemptytank)/60.0;
-        
-        double number11 = gdf1;
-        String formatted11 = String.format("%.1f", number11);
-        gdf1=Double.parseDouble(formatted11);
-        
-        //Write to recipe here //////////////////////////////////////////////////////////
-        
-Document report = Jsoup.parse(thecodee);
-domy = report.children();
-domy.select("tbody").append("<tr>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%; background-color: #f6ff00; border-color: #ff0000; text-align: center;\"><b>Recipe Time :</b> <u><b>"+Double.toString((gmf1))+"</b></u> <b>Mins.</b></td>\n" +
-"<td style=\"width: 11.1111%; background-color: #f6ff00; border-color: #ff0000; text-align: center;\"><u><b>"+Double.toString((gdf1))+"</b></u> <b>Hours.</b></td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +        
-"</tr>");
+        // 6A: كتابة HTML الأساسي في الملف المؤقت
+        writeHtmlToTempFile(link, roraa);
 
-        
-        /////////////////////////////////////////////////////////////////////////////////
-        
-    }
-    
-    else if (bathnumm==2) {
-        
-        gmf1=stonabathth+firstshott+loadremoveproduct+loadremovestone+tempraturetime+extraction+chemicaldosage+fillemptytank;
-        gmf1=gmf1+gmff1;
-        double number1 = gmf1;
-        String formatted1 = String.format("%.1f", number1);
-        gmf1=Double.parseDouble(formatted1);
-        
-        gdf1=(stonabathth+firstshott+loadremoveproduct+loadremovestone+tempraturetime+extraction+chemicaldosage+fillemptytank)/60.0;
-        
-        double number11 = gdf1;
-        String formatted11 = String.format("%.1f", number11);
-        gdf1=Double.parseDouble(formatted11);
-        
-        
-        
-        
-        
-        gmf2=stonabaththh+secondshott+loadremoveproduct2+loadremovestone2+tempraturetime2+extraction2+chemicaldosage2+fillemptytank2;
-        gmf2=gmf2+gmff2;
-        double number2 = gmf2;
-        String formatted2 = String.format("%.1f", number2);
-        gmf2=Double.parseDouble(formatted2);
-        
-        gdf2=(stonabaththh+secondshott+loadremoveproduct2+loadremovestone2+tempraturetime2+extraction2+chemicaldosage2+fillemptytank2)/60.0;
-        
-        double number22 = gdf2;
-        String formatted22 = String.format("%.1f", number22);
-        gdf2=Double.parseDouble(formatted22);
-        
-        
-          //Write to recipe here //////////////////////////////////////////////////////////
-        
-Document report = Jsoup.parse(thecodee);
-domy = report.children();
-domy.select("tbody").append("<tr>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%; background-color: #f6ff00; border-color: #ff0000; text-align: center;\"><b>First Shot :</b> <u><b>"+Double.toString((gmf1))+"</b></u> <b>Mins.</b></td>\n" +
-"<td style=\"width: 11.1111%; background-color: #f6ff00; border-color: #ff0000; text-align: center;\"><u><b>"+Double.toString((gdf1))+"</b></u> <b>Hours.</b></td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +        
-"</tr>"
-        + "<tr>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
-"<td style=\"width: 11.1111%; background-color: #f6ff00; border-color: #ff0000; text-align: center;\"><b>Second Shot :</b> <u><b>"+Double.toString((gmf2))+"</b></u> <b>Mins.</b></td>\n" +
-"<td style=\"width: 11.1111%; background-color: #f6ff00; border-color: #ff0000; text-align: center;\"><u><b>"+Double.toString((gdf2))+"</b></u> <b>Hours.</b></td>\n" +
-"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +        
-"</tr>");
+        // 6B: إدراج QR Code في الجدول
+        injectQrCode(link);
 
-        
-        /////////////////////////////////////////////////////////////////////////////////
-        
-        
-        
-    }
-    
-    
-    else {
-        
-        //Noti
-        
-      Notifications noti = Notifications.create();
-      noti.title("Cancel!");
-      noti.text("Operation Cancelled, We don't have 3 shots in one recipe.");
-      noti.position(Pos.CENTER);
-      noti.hideAfter(Duration.seconds(3));
-      noti.showError();
-      
-      
-Document report = Jsoup.parse(thecodee);
-domy = report.children();
-  
-      
-    }
-    
-    
-    
-    /////////////////////////////////////////////Ending////////////////////////////////////////////////////////////
-   
-   
-   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
-   if (signme.isSelected()==true) {
-       
-   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
-   
-   if (fixche.isSelected()==true) {
-       
-      String codee = domy.toString();
-      if (!codee.contains("TABLE")) {
-      Notifications noti = Notifications.create();
-      noti.title("Recipe Error");
-      noti.text("Maybe not a recipe, Open a recipe first!.");
-      noti.hideAfter(Duration.seconds(3));
-      noti.position(Pos.CENTER);
-      noti.showError();    
+        // =========================================================
+// 6C: حفظ نسخة HTML نظيفة في r.ks قبل التشفير
+// =========================================================
+String rksPath = System.getProperty("user.home") + "\\r.ks";
+
+// نطبق التصليح أولاً قبل حفظ r.ks
+String cleanForCost = thecodee;
+
+if (fixche.isSelected()) {
+    cleanForCost = applyChemicalFixes(thecodee);   // مهم جداً
+} else {
+    // لو المستخدم مش مختار Fix Chemicals، نطبقه هنا强制 لأغراض التكلفة
+    cleanForCost = applyChemicalFixes(thecodee);
+}
+
+try (PrintWriter rksWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(rksPath), "UTF-8"))) {
+    rksWriter.print(cleanForCost);   // نحفظ النسخة المُصححة
+} catch (Exception ex) {
+    ex.printStackTrace();
+}
+
+        // 6D: تشفير الحروف (character obfuscation)
+        String obfuscated = obfuscateFile(link);
+
+        // 6E_pre: كتابة النص المشفر في الملف المؤقت
+        try (PrintWriter pw2 = new PrintWriter(new OutputStreamWriter(new FileOutputStream(link), "UTF-8"))) {
+            pw2.print(obfuscated);
         }
-        else {
-            Document docj = Jsoup.parse(codee);
-        for (Element table : docj.select("TABLE")) {
-        for (Element row : table.select("TR")) {
-            Elements tds = row.select("TD");
-            if (tds.get(7).text().isEmpty()) {   
-            }
-            else {  
-             ///////////////////////////////////////////////////////////////
-String string=tds.get(7).text();
-BufferedReader buf=new BufferedReader (new FileReader (NewDir.file_dirrrr + "\\Recipe_Indexes\\Chemical_Dictionary.kady"));
-String line;
-String linebeforeequal;
-String lineafterequal;
-while ((line=buf.readLine())!=null) {
-    
-    
-linebeforeequal=line.substring(0,line.indexOf("=")-0);
-lineafterequal=line.substring(line.indexOf("=") + 1 , line.length());
-if (string.equals(lineafterequal)) {
-//System.out.println(string+" = "+linebeforeequal);
-String formattedText = "<b style='display:block; text-align:center;'>" + linebeforeequal + "</b>";
-tds.get(8).html(formattedText); // Use .html() instead of .text()     
-//tds.get(8).text(linebeforeequal);
-//System.out.println(tds.get(8).text());
-break;
 
-    }
-    else {
-        
-    }
-    
-}
-buf.close();
-    
-            }   
-         
-        }}
-       roraa=docj.toString();
+        // 6F: تشفير بالباسورد
+        String longKey;
+        try (BufferedReader reader = new BufferedReader(new FileReader("lib\\java.dat"))) {
+            longKey = reader.readLine();
         }
-        ////////////////////////////////////////////////////////////////////////////// 
-org.jsoup.nodes.Document doct = Jsoup.parse(roraa);
-for (Element table : doct.select("TABLE")) {
-for (Element row : table.select("TR")) {
-Elements tds = row.select("TD");
-if (tds.get(8).text().isEmpty()) {   
-}
-else {  
-String string=tds.get(8).text();
-BufferedReader bufi=new BufferedReader (new FileReader (NewDir.file_dirrrr + "\\Recipe_Indexes\\Lot_Numbers.kady"));
-String line;
-String linebeforeequal;//Chemical Name
-String lineafterequal;//Lot Numbers
-boolean found = false;         
-while ((line=bufi.readLine())!=null) {
-linebeforeequal=line.substring(0,line.indexOf("="));//Chemical Name
-lineafterequal=line.substring(line.indexOf("=") + 1);//Lot Numbers
-if (string.equalsIgnoreCase(linebeforeequal)) {
-System.out.println(linebeforeequal);
-String formattedText = "<b style='display:block; text-align:center;'>" + lineafterequal + "</b>";
-tds.get(9).html(formattedText); // Use .html() instead of .text()     
-//tds.get(9).text(lineafterequal);
-found = true;                    
-break;
-    }   
-}
-bufi.close();}}}
-roraa=doct.toString();   
+        String password    = KeyDecoder.extractData(longKey.trim());
+        String encryptedTemp = link + ".enc";
+        FileEncryptor.encrypt(link, encryptedTemp, password);
 
+        // 6G: اختيار مكان الحفظ
+        FileChooser dialog = new FileChooser();
+        dialog.setInitialDirectory(new File(NewDir.file_dir + "\\" + stage + "\\" + model));
+        dialog.setInitialFileName(recipe + ".ks");
+        dialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("Kadysoft Files", "*.ks"));
+        File dialogResult = dialog.showSaveDialog(null);
+        if (dialogResult == null) {
+            new File(encryptedTemp).delete();
+            return;
+        }
 
-//////////////////////////////////////////////////////////////////////////////
+        // 6H: نقل الملف المشفر إلى المسار المختار
+        java.nio.file.Files.move(
+                new File(encryptedTemp).toPath(),
+                dialogResult.toPath(),
+                java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
+        showNotif("Success!", "File saved and encrypted successfully.", false);
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-         
-org.jsoup.nodes.Document doctp = Jsoup.parse(roraa);
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        showNotif("Save Failed!", "Error while saving encrypted file.", true);
+        return;
+    }
 
-// مر على كل جدول
-for (Element table : doctp.select("table")) {
-    for (Element row : table.select("tr")) {
-        Elements tds = row.select("td");
+    // =========================================================
+    // مرحلة 7: قاعدة البيانات - Timer
+    // =========================================================
+    Date d1 = new Date();
+    datevalue = new SimpleDateFormat("yyyy-MM-dd").format(d1);
+    modeloo   = model;
+    filenammm = recipe;
+    shoty     = 1;
 
-        // اتأكد إن فيه على الأقل 11 عمود (0 → 10)
-        if (tds.size() > 10) {
-            String target = tds.get(8).text().trim();
+    try {
+        pst = conn.prepareStatement("SELECT * FROM Timer WHERE Name LIKE ? AND Model LIKE ?");
+        pst.setString(1, filenammm);
+        pst.setString(2, modeloo);
+        rs = pst.executeQuery();
+        find.setText(rs.next() ? "found" : "not_found");
+    } catch (Exception ignored) {
+    } finally {
+        closeQuietly(rs, pst);
+    }
 
-            if (!target.isEmpty()) {
-                Path mapPath = Paths.get(NewDir.file_dirrrr, "Recipe_Indexes", "Chemical_Translation.kady");
-
-                try (BufferedReader bufi = Files.newBufferedReader(mapPath, StandardCharsets.UTF_8)) {
-                    String line;
-                    boolean found = false;
-
-                    while ((line = bufi.readLine()) != null) {
-                        // اتأكد إن السطر فيه =
-                        if (!line.contains("=")) continue;
-
-                        String linebeforeequal = line.substring(0, line.indexOf("=")).trim();
-                        String lineafterequal = line.substring(line.indexOf("=") + 1).trim();
-
-                        if (target.equalsIgnoreCase(linebeforeequal)) {
-                            System.out.println("Matched: " + linebeforeequal);
-
-                            String formattedText =
-                                    "<b style='display:block; text-align:center;'>" +
-                                            lineafterequal +
-                                            "</b>";
-
-                            // استبدل العمود رقم 10 بالنص الجديد
-                            tds.get(10).html(formattedText);
-
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    if (!found) {
-                        System.out.println("No match for: " + target);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+    if (addTime) {
+        String fifi = find.getText();
+        if (fifi.equals("found")) {
+            updateTimerDB();
+        } else if (fifi.equals("not_found")) {
+            insertTimerDB();
         }
     }
-}
 
-roraa = doctp.toString();
-
-       
-       
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-       
-   }
-   
-   else {
-       
-       //Continue..........
-       roraa=domy.toString();
-   }
+    // =========================================================
+    // مرحلة 8: حساب التكلفة
+    // =========================================================
+    // r.ks تم حفظه في مرحلة 6C قبل التشفير - نقرأه مباشرة بدون فك تشفير
     
-   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
-      
-   
-      
-       
-       
-       
-            //String codee=code.getText();
-            String pathtosignature="file://"+NewDir.file_dirrrrr+"\\Mr_Muhammet.png";
-            String modely=model;
-            FileChooser dialog = new FileChooser();
-            dialog.setInitialDirectory(new File(NewDir.file_dir+"\\"+stage+"\\"+model));
-            dialog.setInitialFileName(recipe+".ks");
-            dialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("Kadysoft Files", new String[] { "*.ks" }));
-            dialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("HTML Files", new String[] { "*.html" }));
-            File dialogResult = dialog.showSaveDialog(null);
-            filePath = dialogResult.getAbsolutePath().toString();
-            OutputStream instream=new FileOutputStream(filePath);
-            pw = new PrintWriter(new OutputStreamWriter (instream,"UTF-8"));
-            pw.println("<!DOCTYPE html>\n<html lang=\"ar\">\n<head>\n<title>Kadysoft</title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>td {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}\ntable {\nheight:5px;\nmax-width:100%;\nheight:100%;\nwhite-space:nowrap;\n}\ntr {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}"
-                    + ""
-                    + ""
-                    
-                        + ""
-                + "/* Centered Watermark */\n" +
-"    .watermark {\n" +
-"      position: fixed;\n" +
-"      top: 50%;\n" +
-"      left: 50%;\n" +
-"      transform: translate(-50%, -50%) rotate(-45deg);\n" +
-"      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
-"      background-repeat: no-repeat;\n" +
-"      background-size: contain;\n" +
-"      width: 300px;\n" +
-"      height: 200px;\n" +
-"      opacity: 0.3;\n" +
-"      pointer-events: none;\n" +
-"      z-index: 1000;\n" +
-"    }\n" +
-"    /* Repeated Watermark */\n" +
-"    .watermark-repeated {\n" +
-"      position: fixed;\n" +
-"      top: 0;\n" +
-"      left: 0;\n" +
-"      width: 100%;\n" +
-"      height: 100%;\n" +
-"      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
-"      background-repeat: repeat;\n" +
-"      background-size: 300px 200px;\n" +
-"      opacity: 0.2;\n" +
-"      pointer-events: none;\n" +
-"      z-index: 1000;\n" +
-"    }"
-                + ""
-                + "</STYLE></HEAD>\n" +
-"<BODY><CENTER>\n"
-+ "<div class=\"watermark\"></div>" 
-                
-                    
-                    + ""
-                    + "\n\n");
-            pw.println("<!-- Creating Recipe From Kadysoft Ltd.-->\n\n");
-            pw.println(roraa);
-            pw.println("\n\n</center>\n</body>\n</html>");
-            pw.println("<b id=\"signname\">Mr_Muhammet Signature: "+"</b><img id=\"signimage\" src=\""+pathtosignature+"\" width=\"300\" height=\"90\" alt=\"Developed By Kadysoft Ltd (Ahmed Elkady).\" style=\"border-color:black;border-width:10px;\">");   
-      
-            if (roraa.contains("background-image:")) {
-                
-            }
-            else {
-                pw.println("\n\n<style>\n" +
-"body {\n" +
-"  background-image: url(\""+modely+".bmp\");\n" +
-"  background-position: center;\n" +
-"  height: 170px;\n" +
-"background-position-x:550px;"+
-"  background-repeat: no-repeat;\n" +
-"  background-size: 120px 90px;\n" +
-"}\n" +
-"</style>");             
-          }
-            pw.close();
-            
-            
-       /////////////////////////////////////////////////// 
-    code.clear();
-    InputStream inputinstream=new FileInputStream(filePath);
-    BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
-    //BufferedReader bi=new BufferedReader (new FileReader (pathy));
-    String lo;
-    while ((lo=bi.readLine())!=null) {
-        
-        code.appendText("\n"+lo
-       .replace("A","ﬦ")
-       .replace("B","ﬧ")
-       .replace("C","ﬨ")
-       .replace("D","﬩")
-       .replace("E","שׁ")    
-       .replace("F","שׂ")        
-       .replace("G","שּׁ")         
-       .replace("H","שּׂ")         
-       .replace("I","אַ")         
-       .replace("J","אָ")         
-       .replace("K","אּ")         
-       .replace("L","בּ")         
-       .replace("M","גּ")         
-       .replace("N","דּ")         
-       .replace("O","הּ")         
-       .replace("P","וּ")         
-       .replace("Q","זּ")         
-       .replace("R","טּ")         
-       .replace("S","יּ")         
-       .replace("T","ךּ")         
-       .replace("U","כּ")         
-       .replace("V","לּ")
-       .replace("W","מּ")         
-       .replace("X","נּ")         
-       .replace("Y","סּ")         
-       .replace("Z","ףּ")
-                
-       .replace("0","פּ")         
-       .replace("1","צּ")         
-       .replace("2","קּ")         
-       .replace("3","רּ")         
-       .replace("4","שּ")         
-       .replace("5","תּ")         
-       .replace("6","וֹ")         
-       .replace("7","בֿ")         
-       .replace("8","כֿ")
-       .replace("9","פֿ")
-                
-       .replace("a","ﬦ")
-       .replace("b","ﬧ")
-       .replace("c","ﬨ")
-       .replace("d","﬩")
-       .replace("e","שׁ")    
-       .replace("f","שׂ")        
-       .replace("g","שּׁ")         
-       .replace("h","שּׂ")         
-       .replace("i","אַ")         
-       .replace("j","אָ")         
-       .replace("k","אּ")         
-       .replace("l","בּ")         
-       .replace("m","גּ")         
-       .replace("n","דּ")         
-       .replace("o","הּ")         
-       .replace("p","וּ")         
-       .replace("q","זּ")         
-       .replace("r","טּ")         
-       .replace("s","יּ")         
-       .replace("t","ךּ")         
-       .replace("u","כּ")         
-       .replace("v","לּ")
-       .replace("w","מּ")         
-       .replace("x","נּ")         
-       .replace("y","סּ")         
-       .replace("z","ףּ")                
-      ); 
-
-
-    }
-    bi.close();
-    String gf=code.getText();
-    OutputStream instreamm=new FileOutputStream(filePath);
-    PrintWriter pw = new PrintWriter(new OutputStreamWriter (instreamm,"UTF-8"));
-    //PrintWriter pw=new PrintWriter (new FileWriter (pathy));
-    pw.println(gf);
-    pw.close();
-    Notifications noti = Notifications.create();
-    noti.title("Successful");
-    noti.text("We have encrypted the recipe successfully.");
-    noti.hideAfter(Duration.seconds(3));
-    noti.position(Pos.CENTER);
-    noti.showInformation();
-    code.clear();
-
-       //////////////////////////////////////////////////
-        
-       //////////////////////////////////////////////////
-            //Desktop desk = Desktop.getDesktop();
-            //desk.open(new File (filePath));
-            Stage jk = (Stage)this.save.getScene().getWindow();
-            //jk.close();
-   
-       /////////////////////////////////////////////////// 
-   
-       //////////////////////////////////////////////////
-       
-   }
-   
-   
-   else {
-       
-       
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
-   
-   if (fixche.isSelected()==true) {
-       
-       String codee = domy.toString();
-      if (!codee.contains("TABLE")) {
-      Notifications noti = Notifications.create();
-      noti.title("Recipe Error");
-      noti.text("Maybe not a recipe, Open a recipe first!.");
-      noti.hideAfter(Duration.seconds(3));
-      noti.position(Pos.CENTER);
-      noti.showError();    
-        }
-        else {
-            Document docj = Jsoup.parse(codee);
-        for (Element table : docj.select("TABLE")) {
-        for (Element row : table.select("TR")) {
-            Elements tds = row.select("TD");
-            if (tds.get(7).text().isEmpty()) {   
-            }
-            else {  
-             ///////////////////////////////////////////////////////////////
-String string=tds.get(7).text();
-BufferedReader buf=new BufferedReader (new FileReader (NewDir.file_dirrrr + "\\Recipe_Indexes\\Chemical_Dictionary.kady"));
-String line;
-String linebeforeequal;
-String lineafterequal;
-while ((line=buf.readLine())!=null) {
-linebeforeequal=line.substring(0,line.indexOf("=")-0);
-lineafterequal=line.substring(line.indexOf("=") + 1 , line.length());
-if (string.equals(lineafterequal)) {
-//System.out.println(string+" = "+linebeforeequal);
-String formattedText = "<b style='display:block; text-align:center;'>" + linebeforeequal + "</b>";
-tds.get(8).html(formattedText); // Use .html() instead of .text()     
-//tds.get(8).text(linebeforeequal);
-//System.out.println(tds.get(8).text());
-break;
-
-    }
-    else {
-        
-    }
     
-}
-
-buf.close();
-    
-            }   
-         
-        }}
-       roraa=docj.toString();
-        }
-        
-////////////////////////////////////////////////////////////////////////////// 
-org.jsoup.nodes.Document doct = Jsoup.parse(roraa);
-for (Element table : doct.select("TABLE")) {
-for (Element row : table.select("TR")) {
-Elements tds = row.select("TD");
-if (tds.get(8).text().isEmpty()) {   
-}
-else {  
-String string=tds.get(8).text();
-BufferedReader bufi=new BufferedReader (new FileReader (NewDir.file_dirrrr + "\\Recipe_Indexes\\Lot_Numbers.kady"));
-String line;
-String linebeforeequal;//Chemical Name
-String lineafterequal;//Lot Numbers
-boolean found = false;         
-while ((line=bufi.readLine())!=null) {
-linebeforeequal=line.substring(0,line.indexOf("="));//Chemical Name
-lineafterequal=line.substring(line.indexOf("=") + 1);//Lot Numbers
-if (string.equalsIgnoreCase(linebeforeequal)) {
-System.out.println(linebeforeequal);
-String formattedText = "<b style='display:block; text-align:center;'>" + lineafterequal + "</b>";
-tds.get(9).html(formattedText); // Use .html() instead of .text()     
-//tds.get(9).text(lineafterequal);
-found = true;                    
-break;
-    }   
-}
-bufi.close();}}}
-roraa=doct.toString();      
-//////////////////////////////////////////////////////////////////////////////
     
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
-      
-org.jsoup.nodes.Document doctp = Jsoup.parse(roraa);
-
-// مر على كل جدول
-for (Element table : doctp.select("table")) {
-    for (Element row : table.select("tr")) {
-        Elements tds = row.select("td");
-
-        // اتأكد إن فيه على الأقل 11 عمود (0 → 10)
-        if (tds.size() > 10) {
-            String target = tds.get(8).text().trim();
-
-            if (!target.isEmpty()) {
-                Path mapPath = Paths.get(NewDir.file_dirrrr, "Recipe_Indexes", "Chemical_Translation.kady");
-
-                try (BufferedReader bufi = Files.newBufferedReader(mapPath, StandardCharsets.UTF_8)) {
-                    String line;
-                    boolean found = false;
-
-                    while ((line = bufi.readLine()) != null) {
-                        // اتأكد إن السطر فيه =
-                        if (!line.contains("=")) continue;
-
-                        String linebeforeequal = line.substring(0, line.indexOf("=")).trim();
-                        String lineafterequal = line.substring(line.indexOf("=") + 1).trim();
-
-                        if (target.equalsIgnoreCase(linebeforeequal)) {
-                            System.out.println("Matched: " + linebeforeequal);
-
-                            String formattedText =
-                                    "<b style='display:block; text-align:center;'>" +
-                                            lineafterequal +
-                                            "</b>";
-
-                            // استبدل العمود رقم 10 بالنص الجديد
-                            tds.get(10).html(formattedText);
-
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    if (!found) {
-                        System.out.println("No match for: " + target);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-}
-
-roraa = doctp.toString();
-  
-       
-       
- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-   }
-   
-   else {
-       
-       //Continue..........
-       roraa=domy.toString();
-   }
     
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
-      
-       
-       
-            //String codee=code.getText();
-            String pathtosignature="file://"+NewDir.file_dirrrrr+"\\Mr_Moharam.png";
-            String modely=model;
-            FileChooser dialog = new FileChooser();
-            dialog.setInitialDirectory(new File(NewDir.file_dir+"\\"+stage+"\\"+model));
-            dialog.setInitialFileName(recipe+".ks");
-            dialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("Kadysoft Files", new String[] { "*.ks" }));
-            dialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("HTML Files", new String[] { "*.html" }));
-            File dialogResult = dialog.showSaveDialog(null);
-            filePath = dialogResult.getAbsolutePath().toString();
-            OutputStream instream=new FileOutputStream(filePath);
-            pw = new PrintWriter(new OutputStreamWriter (instream,"UTF-8"));
-            pw.println("<!DOCTYPE html>\n<html lang=\"ar\">\n<head>\n<title>Kadysoft</title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>td {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}\ntable {\nheight:5px;\nmax-width:100%;\nheight:100%;\nwhite-space:nowrap;\n}\ntr {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}"
-                    + ""
-                    + ""
-                    
-                        + ""
-                + "/* Centered Watermark */\n" +
-"    .watermark {\n" +
-"      position: fixed;\n" +
-"      top: 50%;\n" +
-"      left: 50%;\n" +
-"      transform: translate(-50%, -50%) rotate(-45deg);\n" +
-"      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
-"      background-repeat: no-repeat;\n" +
-"      background-size: contain;\n" +
-"      width: 300px;\n" +
-"      height: 200px;\n" +
-"      opacity: 0.3;\n" +
-"      pointer-events: none;\n" +
-"      z-index: 1000;\n" +
-"    }\n" +
-"    /* Repeated Watermark */\n" +
-"    .watermark-repeated {\n" +
-"      position: fixed;\n" +
-"      top: 0;\n" +
-"      left: 0;\n" +
-"      width: 100%;\n" +
-"      height: 100%;\n" +
-"      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
-"      background-repeat: repeat;\n" +
-"      background-size: 300px 200px;\n" +
-"      opacity: 0.2;\n" +
-"      pointer-events: none;\n" +
-"      z-index: 1000;\n" +
-"    }"
-                + ""
-                + "</STYLE></HEAD>\n" +
-"<BODY><CENTER>\n"
-+ "<div class=\"watermark\"></div>" 
-                
-                    
-                    + ""
-                    + "\n\n");
-            pw.println("<!-- Creating Recipe From Kadysoft Ltd.-->\n\n");
-            pw.println(roraa);
-            pw.println("\n\n</center>\n</body>\n</html>");
-            //pw.println("<b>Mr_Moharam Signature: "+"</b><img src=\""+pathtosignature+"\" width=\"300\" height=\"90\" alt=\"Developed By Kadysoft Ltd (Ahmed Elkady).\" style=\"border-color:black;border-width:10px;\">");   
-      
-            if (roraa.contains("background-image:")) {
-                
-            }
-            else {
-                pw.println("\n\n<style>\n" +
-"body {\n" +
-"  background-image: url(\""+modely+".bmp\");\n" +
-"  background-position: center;\n" +
-"  height: 170px;\n" +
-"background-position-x:550px;"+
-"  background-repeat: no-repeat;\n" +
-"  background-size: 120px 90px;\n" +
-"}\n" +
-"</style>");             
-          }
-            pw.close();
-            
-            
-               /////////////////////////////////////////////////// 
-   code.clear();
-    InputStream inputinstream=new FileInputStream(filePath);
-    BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
-    //BufferedReader bi=new BufferedReader (new FileReader (pathy));
-    String lo;
-    while ((lo=bi.readLine())!=null) {
-        
-        code.appendText("\n"+lo
-       .replace("A","ﬦ")
-       .replace("B","ﬧ")
-       .replace("C","ﬨ")
-       .replace("D","﬩")
-       .replace("E","שׁ")    
-       .replace("F","שׂ")        
-       .replace("G","שּׁ")         
-       .replace("H","שּׂ")         
-       .replace("I","אַ")         
-       .replace("J","אָ")         
-       .replace("K","אּ")         
-       .replace("L","בּ")         
-       .replace("M","גּ")         
-       .replace("N","דּ")         
-       .replace("O","הּ")         
-       .replace("P","וּ")         
-       .replace("Q","זּ")         
-       .replace("R","טּ")         
-       .replace("S","יּ")         
-       .replace("T","ךּ")         
-       .replace("U","כּ")         
-       .replace("V","לּ")
-       .replace("W","מּ")         
-       .replace("X","נּ")         
-       .replace("Y","סּ")         
-       .replace("Z","ףּ")
-                
-       .replace("0","פּ")         
-       .replace("1","צּ")         
-       .replace("2","קּ")         
-       .replace("3","רּ")         
-       .replace("4","שּ")         
-       .replace("5","תּ")         
-       .replace("6","וֹ")         
-       .replace("7","בֿ")         
-       .replace("8","כֿ")
-       .replace("9","פֿ")
-                
-       .replace("a","ﬦ")
-       .replace("b","ﬧ")
-       .replace("c","ﬨ")
-       .replace("d","﬩")
-       .replace("e","שׁ")    
-       .replace("f","שׂ")        
-       .replace("g","שּׁ")         
-       .replace("h","שּׂ")         
-       .replace("i","אַ")         
-       .replace("j","אָ")         
-       .replace("k","אּ")         
-       .replace("l","בּ")         
-       .replace("m","גּ")         
-       .replace("n","דּ")         
-       .replace("o","הּ")         
-       .replace("p","וּ")         
-       .replace("q","זּ")         
-       .replace("r","טּ")         
-       .replace("s","יּ")         
-       .replace("t","ךּ")         
-       .replace("u","כּ")         
-       .replace("v","לּ")
-       .replace("w","מּ")         
-       .replace("x","נּ")         
-       .replace("y","סּ")         
-       .replace("z","ףּ")                
-      ); 
-
-
-    }
-    bi.close();
-    String gf=code.getText();
-    OutputStream instreamm=new FileOutputStream(filePath);
-    PrintWriter pw = new PrintWriter(new OutputStreamWriter (instreamm,"UTF-8"));
-    //PrintWriter pw=new PrintWriter (new FileWriter (pathy));
-    pw.println(gf);
-    pw.close();
-    Notifications noti = Notifications.create();
-    noti.title("Successful");
-    noti.text("We have encrypted the recipe successfully.");
-    noti.hideAfter(Duration.seconds(3));
-    noti.position(Pos.CENTER);
-    noti.showInformation();
-    code.clear();
-
-
-       //////////////////////////////////////////////////
-            
-            
-            
-            //Desktop desk = Desktop.getDesktop();
-            //desk.open(new File (filePath));
-            Stage jk = (Stage)this.save.getScene().getWindow();
-            //jk.close();
-   
-       /////////////////////////////////////////////////// 
-   
-       ///////////////////////////////////////////////////
-   }
-   
-   
-   //////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
-   
-  //////////////////////////////////////////////////
-  //Here Will Write To DB...........................
-  
-      
-      Date currentDate1 = GregorianCalendar.getInstance().getTime();
-      DateFormat df1 = DateFormat.getDateInstance();
-      String dateString1 = df1.format(currentDate1);
-      Date d1 = new Date();
-      SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
-      String timeString1 = sdf1.format(d1);
-      SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-      String timeString2 = sdf2.format(d1);
-      datevalue = timeString2;                                                          //Date
-      modeloo=model;                 //Model
-      filenammm=recipe;
-      
-      
-      shoty=1;
-      
-
-       try {
-           
-                    String sql0 = "select * from Timer where Name like '" + filenammm + "' and Model like '" + modeloo + "' ";
-                    pst = conn.prepareStatement(sql0);
-                    rs = pst.executeQuery();
-
-                    
-                    if (rs.next()) {
-                        
-                       //Update
-                       
-                       find.setText("found");
-                       
-                   ///////    
-                       
-                    }
-                    
-    ///////////////////////////////////////////////////////////////////////////////////                
-                    
-                    
-                    else {
-                        
-                       //Insert
-                       
-                   find.setText("not_found");
-                  
-      //////////////////////////////////////////                  
-                        
-
-                    }
-      
-                    
-    }
-        
-        catch (Exception exception) {
-    } 
-        finally {
-      try {
-        rs.close();
-        pst.close();
-      
-      } catch (Exception exception) {}
-    } 
-     
-       
-       
-       
-       
-     String fifi=find.getText();
-     
-     
-     if (fifi.equals("found")) {
-         
-         //////////////////////////ppppppppppppppppppppp///////////////////////////////////////
-         
-                             
-                          if (bosbos==1) {
-                              
-                           String ti1,ti2;
-                           String ti3,ti4;
-                           ti4=Integer.toString(shoty+1);
-                           ti3=Integer.toString(shoty);
-                           ti1=Double.toString(gdf1);
-                           ti2=Double.toString(gdf2);
-                           String mi1=Double.toString(gmf1);
-                           String mi2=Double.toString(gmf2);
-                           
-                                 try {
-       
-                                     
-                                                 
-      String sqlm = "select * from Timer where Name=?";
-      pst = conn.prepareStatement(sqlm);
-      pst.setString(1, filenammm);
-      rs = pst.executeQuery();
-      
-      String add1 = rs.getString("Time_In_Min");
-      oldtimemin=add1;  //OLD TIME IN MINUTES.
-      
-      String add2 = rs.getString("Time_In_Hour");
-      oldtimehour=add2;  //OLD TIME IN HOUR.
-      
-      
-             
-                                     
-                String sqlp= "update Timer set Date='"+datevalue+"', Time_In_Min='"+oldtimemin+"', Time_In_Hour='"+oldtimehour+"', Time_In_Min_Updated='"+mi1+"', Time_In_Hour_Updated='"+ti1+"', Total_Min='"+(mi1)+"', Total_Hour='"+(ti1)+"' where Name='"+filenammm+"' and Shot='"+ti3+"' ";
-                pst=conn.prepareStatement(sqlp);
-                pst.execute();
-                                     
-     
-                
-                
-                        }
-                        
-                     catch (Exception exception) {
-    } 
-        finally {
-      try {
-        rs.close();
-        pst.close();
-      
-      } catch (Exception exception) {}
-    }    
-                           
-                           
-                           
-                           
-                       }
-                       
-                       if (bosbos==2) {
-                           
-                               
-                           String ti1,ti2;
-                           String ti3,ti4;
-                           ti4=Integer.toString(shoty+1);
-                           ti3=Integer.toString(shoty);
-                           ti1=Double.toString(gdf1);
-                           ti2=Double.toString(gdf2);
-                           String mi1=Double.toString(gmf1);
-                           String mi2=Double.toString(gmf2);
-                           
-                           
-                              try {
-                                  
-                                  
-      String sqlm = "select * from Timer where Name=? and Shot=?";
-      pst = conn.prepareStatement(sqlm);
-      pst.setString(1, filenammm);
-      pst.setString(2, ti3);
-      rs = pst.executeQuery();
-      
-      String add1 = rs.getString("Time_In_Min");
-      oldtimemin=add1;  //OLD TIME IN MINUTES.
-      
-      String add2 = rs.getString("Time_In_Hour");
-      oldtimehour=add2;  //OLD TIME IN HOUR.
-      
-   //   pst.execute();
-                            
-         
-                String sqlp= "update Timer set Date='"+datevalue+"', Time_In_Min='"+oldtimemin+"', Time_In_Hour='"+oldtimehour+"', Time_In_Min_Updated='"+mi1+"', Time_In_Hour_Updated='"+ti1+"', Total_Min='"+(Double.toString(gmf1+gmf2))+"', Total_Hour='"+(Double.toString(gdf1+gdf2))+"'  where Name='"+filenammm+"' and Shot='"+ti3+"' ";
-                pst=conn.prepareStatement(sqlp);
-                pst.execute();    
-                            
-                            
-                        }
-                        
-                     catch (Exception exception) {
-    } 
-        finally {
-      try {
-        rs.close();
-        pst.close();
-      
-      } catch (Exception exception) {}
-    }    
-                           
-                              
-                                 try {
-                            
-                                    
-      String sqlm = "select * from Timer where Name=? and Shot=?";
-      pst = conn.prepareStatement(sqlm);
-      pst.setString(1, filenammm);
-      pst.setString(2, ti4);
-      rs = pst.executeQuery();
-      
-      String add1 = rs.getString("Time_In_Min");
-      oldtimemin2=add1;  //OLD TIME IN MINUTES.
-      
-      String add2 = rs.getString("Time_In_Hour");
-      oldtimehour2=add2;  //OLD TIME IN HOUR.
-      
-     // pst.execute();
-                                     
-          
-                String sqlp= "update Timer set Date='"+datevalue+"', Time_In_Min='"+oldtimemin2+"', Time_In_Hour='"+oldtimehour2+"', Time_In_Min_Updated='"+mi2+"', Time_In_Hour_Updated='"+ti2+"', Total_Min='"+(Double.toString(gmf1+gmf2))+"', Total_Hour='"+(Double.toString(gdf1+gdf2))+"'  where Name='"+filenammm+"' and Shot='"+ti4+"' ";
-                pst=conn.prepareStatement(sqlp);
-                pst.execute();         
-                                     
-                            
-                            
-                        }
-                        
-                     catch (Exception exception) {
-    } 
-        finally {
-      try {
-        rs.close();
-        pst.close();
-      
-      } catch (Exception exception) {}
-    }    
-                           
-                           
-                           
-                           
-                       }
-                       
-         
-
-
-         
-         //////////////////////////ppppppppppppppppppppp///////////////////////////////////////
-     }
-       
-       
-     else if (fifi.equals("not_found")) {
-         
-         
-         //////////////////////////ppppppppppppppppppppp///////////////////////////////////////
-         
-         
-         
-                       if (bosbos==1) {
-                           
-                           
-                                 try {
-                            
-          String reg = "insert into Timer (Date, Model, Name, Shot, Time_In_Min, Time_In_Hour, Time_In_Min_Updated, Time_In_Hour_Updated, Total_Min, Total_Hour) values (?,?,?,?,?,?,?,?,?,?)";
-          pst = conn.prepareStatement(reg);
-          pst.setString(1,datevalue);
-          pst.setString(2,modeloo);
-          pst.setString(3,filenammm);
-          pst.setString(4,Integer.toString(shoty));
-          pst.setString(5,Double.toString(gmf1));
-          pst.setString(6,Double.toString(gdf1));
-          pst.setString(7,"Hasnot_Updated_Yet");
-          pst.setString(8,"Hasnot_Updated_Yet");
-          pst.setString(9,Double.toString(gmf1));
-          pst.setString(10,Double.toString(gdf1));
-          pst.execute();
-                            
-                            
-                        }
-                        
-                     catch (Exception exception) {
-    } 
-        finally {
-      try {
-        rs.close();
-        pst.close();
-      
-      } catch (Exception exception) {}
-    }    
-                           
-                           
-                           
-                           
-                       }
-                       
-                       if (bosbos==2) {
-                           
-                              try {
-                            
-          String reg = "insert into Timer (Date, Model, Name, Shot, Time_In_Min, Time_In_Hour, Time_In_Min_Updated, Time_In_Hour_Updated, Total_Min, Total_Hour) values (?,?,?,?,?,?,?,?,?,?)";
-          pst = conn.prepareStatement(reg);
-          pst.setString(1,datevalue);
-          pst.setString(2,modeloo);
-          pst.setString(3,filenammm);
-          pst.setString(4,Integer.toString(shoty));
-          pst.setString(5,Double.toString(gmf1));
-          pst.setString(6,Double.toString(gdf1));
-          pst.setString(7,"Hasnot_Updated_Yet");
-          pst.setString(8,"Hasnot_Updated_Yet");
-          pst.setString(9,Double.toString(gmf1+gmf2));
-          pst.setString(10,Double.toString(gdf1+gdf2));
-          pst.execute();
-                            
-                       
-          
-          
-//          pst.setString(9,Double.toString(gmf1+gmf2));
-//          pst.setString(10,Double.toString(gdf1+gdf2));
-//          
-//          , Total_Min='"+(mi1+mi2)+"', Total_Hour='"+(ti1+ti2)+"'
-          
-          
-                        }
-                        
-                     catch (Exception exception) {
-    } 
-        finally {
-      try {
-        rs.close();
-        pst.close();
-      
-      } catch (Exception exception) {}
-    }    
-                           
-                              
-                                 try {
-                            
-          String reg = "insert into Timer (Date, Model, Name, Shot, Time_In_Min, Time_In_Hour, Time_In_Min_Updated, Time_In_Hour_Updated, Total_Min, Total_Hour) values (?,?,?,?,?,?,?,?,?,?)";
-          pst = conn.prepareStatement(reg);
-          pst.setString(1,datevalue);
-          pst.setString(2,modeloo);
-          pst.setString(3,filenammm);
-          pst.setString(4,Integer.toString(shoty+1));
-          pst.setString(5,Double.toString(gmf2));
-          pst.setString(6,Double.toString(gdf2));
-          pst.setString(7,"Hasnot_Updated_Yet");
-          pst.setString(8,"Hasnot_Updated_Yet");
-          pst.setString(9,Double.toString(gmf1+gmf2));
-          pst.setString(10,Double.toString(gdf1+gdf2));
-          pst.execute();
-                            
-                            
-                        }
-                        
-                     catch (Exception exception) {
-    } 
-        finally {
-      try {
-        rs.close();
-        pst.close();
-      
-      } catch (Exception exception) {}
-    }    
-                           
-                           
-                           
-                           
-                       }
-                       
-        
-         
-         
-         //////////////////////////ppppppppppppppppppppp///////////////////////////////////////
-         
-         
-     }
-       
-     
-     else {}
-       
-       
-       
-///////////////////////////////Calculate Cost/////////////////////////////////////////////////////////////   
-       
-InputStream inputinstream=new FileInputStream(filePath);
-BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
-String lo;
-code.clear();
-while ((lo=bi.readLine())!=null) {        
-code.appendText("\n"+lo
-.replace("ﬦ","A")
-.replace("ﬧ","B")
-.replace("ﬨ","C")
-.replace("﬩","D")
-.replace("שׁ","E")    
-.replace("שׂ","F")        
-.replace("שּׁ","G")         
-.replace("שּׂ","H")         
-.replace("אַ","I")         
-.replace("אָ","J")         
-.replace("אּ","K")         
-.replace("בּ","L")         
-.replace("גּ","M")         
-.replace("דּ","N")         
-.replace("הּ","O")         
-.replace("וּ","P")         
-.replace("זּ","Q")         
-.replace("טּ","R")         
-.replace("יּ","S")         
-.replace("ךּ","T")         
-.replace("כּ","U")         
-.replace("לּ","V")
-.replace("מּ","W")         
-.replace("נּ","X")         
-.replace("סּ","Y")         
-.replace("ףּ","Z")         
-.replace("פּ","0")         
-.replace("צּ","1")         
-.replace("קּ","2")         
-.replace("רּ","3")         
-.replace("שּ","4")         
-.replace("תּ","5")         
-.replace("וֹ","6")         
-.replace("בֿ","7")         
-.replace("כֿ","8")
-.replace("פֿ","9")
-.replace("&NBSP;","")                       
-); 
-}
-bi.close();
-String gf=code.getText();
-OutputStream instreamm=new FileOutputStream(System.getProperty("user.home")+"\\r.ks");
-PrintWriter pwe = new PrintWriter(new OutputStreamWriter (instreamm,"UTF-8"));
-pwe.println(gf);
-pwe.close();
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////   
+    // =========================================================
+// مرحلة 8: حساب التكلفة - نسخة Dialog (بدون Console)
+// =========================================================
 List<Double> pri = new ArrayList<>();
 List<Double> qua = new ArrayList<>();
 List<Double> dil = new ArrayList<>();
 List<String> nom = new ArrayList<>();
-String except=null;
-////////////////////////////////////////////////
-//Document docj = Jsoup.parse(roraa);
-File inputFile = new File(System.getProperty("user.home")+"\\r.ks"); //
-org.jsoup.nodes.Document docj = Jsoup.parse(inputFile, "UTF-8"); //
-for (Element table : docj.select("TABLE")) {
-for (Element row : table.select("TR")) {
-Elements tds = row.select("TD");
-if (tds.get(8).text().isEmpty()||tds.get(8).text().contains("OLD STONE")) {   
-}
-else {  
-String string=tds.get(8).text();
-BufferedReader buf=new BufferedReader (new FileReader (NewDir.file_dirrrr + "\\Recipe_Indexes\\Prices.kady"));
-String line;
-String linebeforeequal;
-String lineafterequal;
-while ((line=buf.readLine())!=null) {       
-linebeforeequal=line.substring(0,line.indexOf("=$")-0);  //Item
-lineafterequal=line.substring(line.indexOf("=$") + 2 , line.length());  //Price
-if (string.equals(linebeforeequal)) {
-double number1 = Double.parseDouble(lineafterequal);
-pri.add(number1);
-String itaam = linebeforeequal;
-nom.add(itaam); 
-break;
-}
-//else {
-//except=except+"\n"+tds.get(8).text();
-//}
-}
-buf.close();
-}          
-//////////////////////KG//////////////////////////
-String skip=tds.get(8).text();
-if (skip.equals("OLD STONE")) {   
-}
-else {
-if (tds.get(5).text().isEmpty()||tds.get(5).text().contains("/")||tds.get(5).text().contains("\\")||tds.get(5).text().contains("OPERATPR")||tds.get(5).text().contains("OPERATOR")||tds.get(5).text().contains("AMOUNT")||tds.get(5).text().contains("AMT")||tds.get(5).text().contains("-")||tds.get(5).text().contains("DATE")||tds.get(5).text().contains("WASH")||tds.get(5).text().contains("WASH NAME")) {}
-else if (tds.get(6).text().contains("GR")||tds.get(6).text().contains("Gr")||tds.get(6).text().contains("gr")) {
-double am=(Double.parseDouble(tds.get(5).text().replace(",","."))/1000);
-String amm=Double.toString(am);
-if (amm.contains("E")) { 
-BigDecimal bd = new BigDecimal(amm);
-double val = bd.doubleValue();
-qua.add(val);   
-}
-else {
-qua.add(am);
-}
-}
 
-else if (tds.get(6).text().contains("GARDAL")||tds.get(6).text().contains("GARDEL")
-||tds.get(6).text().contains("Gardal")||tds.get(6).text().contains("Gardel")||tds.get(6).text().contains("gardal")||tds.get(6).text().contains("gardel")) {
-String sky=tds.get(8).text();
-if (sky.equals("FOAM")) {
-double am=4.0/5.0;
-qua.add(am);   
-}
-else {
-double am=Double.parseDouble(tds.get(5).text().replace(",","."))*12;
-qua.add(am);    
-}
-}
-else {
-double number2 = Double.parseDouble(tds.get(5).text());
-qua.add(number2);
-}    
-}
-//////////////////////////////////////////////
-if (tds.get(8).text().isEmpty()||tds.get(8).text().contains("/")||tds.get(8).text().contains("\\")||tds.get(8).text().contains("CHEMICAL")||tds.get(8).text().contains("chemical")||tds.get(8).text().matches("[0-9_-]+")||tds.get(8).text().contains("TIME")||tds.get(8).text().contains("HOURS")||tds.get(8).text().contains("MINS")||tds.get(8).text().contains("SHOT")||tds.get(8).text().contains("OLD STONE")) {    
-}
-else {  
-String string = tds.get(8).text();
-BufferedReader buf = new BufferedReader(new FileReader(NewDir.file_dirrrr + "\\Recipe_Indexes\\Dilution.kady"));
-String line;
-boolean found = false;
-while ((line = buf.readLine()) != null) {
-String linebeforeequal = line.substring(0, line.indexOf("=")).trim();  // Item
-String lineafterequal = line.substring(line.indexOf("=") + 1).trim();  // Dilution
-if (string.equals(linebeforeequal)) {
-double number3 = Double.parseDouble(lineafterequal);
-dil.add(number3);
-found = true;
-break;
-}
-}
-if (!found) {
-double number3 = Double.parseDouble("1.0");
-dil.add(number3);
-}
-buf.close();
-}
-///////////////////////////////////////////////
-}}    
-if (qua.size()!=pri.size()||qua.size()!=dil.size()) { 
-Notifications noti = Notifications.create();
-noti.title("Fatal Error!");
-noti.text("We found that all chemicals names weren't set.\nWe suggest to fix chemicals again.");
-noti.position(Pos.CENTER);
-noti.hideAfter(Duration.seconds(5));
-noti.showError();
-}
-else {
-//Show alert to write pcs.    
-List<Double> result = new ArrayList<>();
-for (int i = 0; i < qua.size(); i++) {
-result.add((qua.get(i) / dil.get(i))* pri.get(i));
-}
+try {
+    File inputFile = new File(System.getProperty("user.home") + "\\r.ks");
+    org.jsoup.nodes.Document docj = Jsoup.parse(inputFile, "UTF-8");
 
-summo = 0.0;
-for (double number : result) {
-summo += number;
-}
-////////////////////////////////////////////////////////////////////////////////////////////
-            // Parse the HTML file
-            Document docv = Jsoup.parse(inputFile, "UTF-8");
-            // Find all table rows
-            Elements rows = docv.select("tr");
-            boolean pcsFound = false;
-            for (Element row : rows) {
-                Elements cells = row.select("td");
-                for (int i = 0; i < cells.size(); i++) {
-                    if ("PCS".equalsIgnoreCase(cells.get(i).text().trim())) {
-                        if (i + 1 < cells.size()) {
-                            String nextValue = cells.get(i + 1).text().trim();
-                            System.out.println("Next value after PCS: " + nextValue);
-                            pecoco=nextValue;
-                        } else {
-                            System.out.println("PCS found but no next cell.");
-                            pecoco="120";
+    StringBuilder debugInfo = new StringBuilder("=== Chemical Debug ===\n\n");
+
+    for (Element table : docj.select("TABLE")) {
+        for (Element row : table.select("TR")) {
+            Elements tds = row.select("TD");
+            if (tds.size() < 9) continue;
+
+            String chemName = tds.get(8).text().trim();
+            if (chemName.isEmpty() || chemName.contains("OLD STONE")) continue;
+
+            String qtyText = tds.get(5).text().trim();
+            String unitText = tds.get(6).text().trim();
+
+            // Price
+            boolean priceFound = false;
+            double priceVal = 0.0;
+            try (BufferedReader buf = new BufferedReader(new FileReader(NewDir.file_dirrrr + "\\Recipe_Indexes\\Prices.kady"))) {
+                String line;
+                while ((line = buf.readLine()) != null) {
+                    if (line.contains("=$")) {
+                        String bef = line.substring(0, line.indexOf("=$")).trim();
+                        if (chemName.equals(bef)) {
+                            priceVal = Double.parseDouble(line.substring(line.indexOf("=$") + 2).trim());
+                            priceFound = true;
+                            break;
                         }
-                        pcsFound = true;
-                        break;
                     }
-                    
-                    else if (cells.get(i).text().trim().contains("PCS")) {
-                        if (i + 1 < cells.size()) {
-                            String nextValue = cells.get(i + 1).text().trim();
-                            System.out.println("Next value after PCS: " + nextValue);
-                            pecoco=nextValue;
-                        } else {
-                            System.out.println("PCS found but no next cell.");
-                            pecoco="120";
-                        }
-                        pcsFound = true;
-                        break;
-                    }
-                    
                 }
+            } catch (Exception ignored) {}
 
-                if (pcsFound) break;
+            // Quantity
+            double quantity = 0.0;
+            boolean qtyValid = false;
+            if (!qtyText.isEmpty() && !qtyText.contains("/") && !qtyText.contains("\\")
+                    && !qtyText.contains("OPERATOR") && !qtyText.contains("AMOUNT")
+                    && !qtyText.contains("DATE") && !qtyText.contains("WASH")) {
+
+                try {
+                    if (unitText.toUpperCase().contains("GR")) {
+                        quantity = Double.parseDouble(qtyText.replace(",", ".")) / 1000.0;
+                    } else if (unitText.toUpperCase().contains("GARDAL") || unitText.toUpperCase().contains("GARDEL")) {
+                        quantity = chemName.equals("FOAM") ? 0.8 : Double.parseDouble(qtyText.replace(",", ".")) * 12;
+                    } else {
+                        quantity = Double.parseDouble(qtyText.replace(",", "."));
+                    }
+                    qtyValid = true;
+                } catch (Exception ignored) {}
             }
 
-            if (!pcsFound) {
-                System.out.println("PCS not found");
-                pecoco="";
+            // Dilution
+            double dilution = 1.0;
+            try (BufferedReader buf = new BufferedReader(new FileReader(NewDir.file_dirrrr + "\\Recipe_Indexes\\Dilution.kady"))) {
+                String line;
+                while ((line = buf.readLine()) != null) {
+                    if (line.contains("=")) {
+                        String bef = line.substring(0, line.indexOf("=")).trim();
+                        if (chemName.equals(bef)) {
+                            dilution = Double.parseDouble(line.substring(line.indexOf("=") + 1).trim());
+                            break;
+                        }
+                    }
+                }
+            } catch (Exception ignored) {}
+
+            // إضافة فقط لو صالح
+            if (qtyValid && priceFound) {
+                pri.add(priceVal);
+                qua.add(quantity);
+                dil.add(dilution);
+                nom.add(chemName);
+                debugInfo.append("✓ ").append(chemName).append(" | Qty=").append(quantity).append("\n");
+            } else if (qtyValid) {
+                debugInfo.append("⚠ Price missing: ").append(chemName).append("\n");
             }
-/////////////////////////////////////////////////////////////////////////////////////////////
-JFXTextField grr = new JFXTextField(pecoco);
-grr.setStyle("-fx-font-size:15;-fx-font-weight:bold;");
-grr.setLabelFloat(true);
-grr.setPromptText("Add PCS Number ...");
-grr.setMinSize(300.0D, 25.0D);
-Alert aloo = new Alert(Alert.AlertType.INFORMATION);
-aloo.setTitle("PCS Number?");
-aloo.setGraphic((Node)grr);
-aloo.setResizable(false);
-DialogPane dialogPanej = aloo.getDialogPane();
-dialogPanej.getStylesheets().add(
-getClass().getResource("cupertino-light.css").toExternalForm());
-aloo.showAndWait();
-pcsnum=Double.parseDouble(grr.getText());
-onegar=summo/pcsnum;
-//Save To DB Here.
+        }
+    }
 
-try {
-String sql0 = "select * from Cost where Name like '" + filenammm + "' and Model like '" + modeloo + "' ";
-pst = conn.prepareStatement(sql0);
-rs = pst.executeQuery();                    
-if (rs.next()) {                        
-//Update
-findo="found";   
-}                    
-else {
-//Insert
-findo="not_found";   
-}        
-}catch (Exception exception) {
-} 
-finally {
-try {
-rs.close();
-pst.close();     
-} catch (Exception exception) {}
+//    debugInfo.append("\n=== Final Summary ===\n");
+//    debugInfo.append("Total Chemicals Added = ").append(qua.size()).append("\n");
+//    debugInfo.append("pri = ").append(pri.size()).append(" | qua = ").append(qua.size()).append(" | dil = ").append(dil.size());
+//
+//    // عرض الـ Debug في Dialog
+//    Alert debugAlert = new Alert(Alert.AlertType.INFORMATION);
+//    debugAlert.setTitle("Cost Calculation Debug");
+//    debugAlert.setHeaderText("Chemical Processing Result");
+//    debugAlert.setContentText(debugInfo.toString());
+//    debugAlert.getDialogPane().getStylesheets().add(getClass().getResource("cupertino-light.css").toExternalForm());
+//    debugAlert.showAndWait();
+
+    // ====================== التنفيذ الطبيعي ======================
+    if (qua.isEmpty() || qua.size() != pri.size() || qua.size() != dil.size()) {
+        showNotif("Fatal Error!", 
+            "Mismatch in chemicals!\n\nTotal Added = " + qua.size() + 
+            "\n\nPlease make sure 'Fix Chemicals' is checked and try again.", true);
+    } else {
+        // حساب التكلفة
+        summo = 0.0;
+        for (int i = 0; i < qua.size(); i++) {
+            summo += (qua.get(i) / dil.get(i)) * pri.get(i);
+        }
+
+        pecoco = findPcsFromDoc(docj);
+
+        JFXTextField grr = new JFXTextField(pecoco);
+        grr.setStyle("-fx-font-size:15;-fx-font-weight:bold;");
+        grr.setLabelFloat(true);
+        grr.setPromptText("Add PCS Number ...");
+        grr.setMinSize(300.0D, 25.0D);
+
+        Alert aloo = new Alert(Alert.AlertType.INFORMATION);
+        aloo.setTitle("PCS Number?");
+        aloo.setGraphic(grr);
+        aloo.setResizable(false);
+        aloo.getDialogPane().getStylesheets().add(getClass().getResource("cupertino-light.css").toExternalForm());
+        aloo.showAndWait();
+
+        pcsnum = Double.parseDouble(grr.getText().trim());
+        onegar = summo / pcsnum;
+
+        saveCostToDB();
+
+        // Cost By Shot
+        Document docm = Jsoup.parse(inputFile, "UTF-8");
+        String pcsStr = extractPCS(docm);
+        double pcs = parsePCS(pcsStr);
+        List<Shot> shotsy = extractShotsAndCosts(docm);
+
+        if (shotsy.isEmpty()) {
+            showNotif("تحذير", "لم يتم العثور على كيماويات صالحة", true);
+        } else {
+            saveCostByShotToDB(shotsy, pcs, pcsStr);
+        }
+
+        // النتيجة النهائية
+        Alert alertio = new Alert(Alert.AlertType.CONFIRMATION);
+        alertio.setTitle("Result");
+        alertio.setHeaderText("Cost Result");
+        alertio.setContentText("Here is the result of chemicals costs for one garment : " + String.format("%.4f", onegar) + " $.");
+        ButtonType btnReport = new ButtonType("Report");
+        ButtonType btnCancel = new ButtonType("Cancel");
+        alertio.getButtonTypes().setAll(btnReport, btnCancel);
+        alertio.getDialogPane().getStylesheets().add(getClass().getResource("cupertino-light.css").toExternalForm());
+        Optional<ButtonType> results = alertio.showAndWait();
+        if (results.isPresent() && results.get() == btnReport) {
+            generateCostReport(qua, dil, pri, nom, "");
+        }
+    }
+
+} catch (Exception ex) {
+    ex.printStackTrace();
+    showNotif("Cost Error", "حدث خطأ: " + ex.getMessage(), true);
 }
-if (findo.equals("found")) {
-try {    
-String sqlm = "select * from Cost where Name=? and Model=?";
-pst = conn.prepareStatement(sqlm);
-pst.setString(1, filenammm);
-pst.setString(2, modeloo);
-rs = pst.executeQuery();      
-String addd1 = rs.getString("Total_Cost_Old");
-oldtotalcost=addd1;
-String addd2 = rs.getString("PCS_Old");
-oldpcs=addd2;      
-String addd3 = rs.getString("One_Garment_Old");
-oldonegarmentcost=addd3;
+    
+    
+   
+    
+    
+    
+    // =========================================================
+    // مرحلة 9: تحديث قاعدة البيانات (أنواع الوصفة، العمليات، الحجر)
+    // =========================================================
+    Date d1l = new Date();
+    String dateString2l = new SimpleDateFormat("yyyy-MM-dd").format(d1l);
 
-String sqlp= "update Cost set Date='"+datevalue+"', Total_Cost_Old='"+oldtotalcost+"', PCS_Old='"+oldpcs+"', One_Garment_Old='"+oldonegarmentcost+"', Total_Cost_New='"+Double.toString(summo)+"', PCS_New='"+Double.toString(pcsnum)+"', One_Garment_New='"+Double.toString(onegar)+"' where Name='"+filenammm+"' and Model='"+modeloo+"'";
-pst=conn.prepareStatement(sqlp);
-pst.execute();
-}                        
-catch (Exception exception) {
-} 
-finally {
-try {
-rs.close();
-pst.close();
-Notifications noti = Notifications.create();
-noti.title("Successful");
-noti.text("We have updated the cost successfully.");
-noti.hideAfter(Duration.seconds(3));
-noti.position(Pos.CENTER);
-noti.showInformation();
-} catch (Exception exception) {}
-}                               
+    detectAndSaveRecipeTypes(dateString2l);
+    detectAndSaveProcesses(dateString2l);
+    detectAndSaveStoneWeight(dateString2l);
+
+
+// =========================================================
+// مرحلة 12: Git + Email (مستقلة عن الواجهة)
+// =========================================================
+showNotif("Processing...", "جاري حفظ Git وإرسال الإيميل...\nممكن تغلق البرنامج الآن.", false);
+
+new Thread(() -> {
+    Git.gitCommands();              // أولاً Git
+    sendEmailNotification(addTime); // ثانياً الإيميل في نفس الـ thread
+}, "GitAndEmail-Thread").start();
+
+
+    // =========================================================
+    // مرحلة 13: تسجيل في جدول Notifications
+    // =========================================================
+    try {
+        pst = conn.prepareStatement(
+                "INSERT INTO Notifications (Recipient, Sender, Message, Delivered) VALUES (?, ?, ?, 0)");
+        pst.setString(1, "Recipe_Maker");
+        pst.setString(2, "Ahmed Elkady");
+        pst.setString(3, "We have updated " + filenammm + " successfully in " + datevalue + " of " + modeloo + " model.");
+        pst.executeUpdate();
+    } catch (Exception ignored) {
+    } finally {
+        closeQuietly(rs, pst);
+    }
+
+    // =========================================================
+    // مرحلة 14: حفظ التغييرات في سجل التعديلات
+    // =========================================================
+    List<Map<String, Object>> changes = computeChanges(originalltextt, code.getText());
+    if (!changes.isEmpty()) saveToHistory(changes);
+    code.clear();
+
+    // =========================================================
+    // مرحلة 15: تنظيف الملفات المؤقتة (بعد الانتهاء من كل العمليات)
+    // =========================================================
+    new File(link).delete();
+    File encTempFileCleanup = new File(link + ".enc");
+    if (encTempFileCleanup.exists()) encTempFileCleanup.delete();
+
+} // end saveaction
+
+
+// ==========================================================================
+// Helper Methods
+// ==========================================================================
+
+/** تقريب رقم لخانة عشرية واحدة */
+private double roundOne(double val) {
+    return Double.parseDouble(String.format("%.1f", val));
 }
-else if (findo.equals("not_found")) {
-try {                            
-String reg = "insert into Cost (Date, Model, Name, Total_Cost_Old, PCS_Old, One_Garment_Old, Total_Cost_New, PCS_New, One_Garment_New) values (?,?,?,?,?,?,?,?,?)";
-pst = conn.prepareStatement(reg);
-pst.setString(1,datevalue);
-pst.setString(2,modeloo);
-pst.setString(3,filenammm);
 
-pst.setString(4,Double.toString(summo));
-pst.setString(5,Double.toString(pcsnum));
-pst.setString(6,Double.toString(onegar));
-
-pst.setString(7,"Hasnot_Updated_Yet");
-pst.setString(8,"Hasnot_Updated_Yet");
-pst.setString(9,"Hasnot_Updated_Yet");
-
-pst.execute();                                        
-}                                            
-catch (Exception exception) {
-} 
-finally {
-try {
-rs.close();
-pst.close();
-Notifications noti = Notifications.create();
-noti.title("Successful");
-noti.text("We have inserted the new cost successfully.");
-noti.hideAfter(Duration.seconds(3));
-noti.position(Pos.CENTER);
-noti.showInformation();
-} catch (Exception exception) {}
-}                               
+/** بناء صف HTML للوقت */
+private String buildTimeRow(String label1, double min1, double hr1,
+                             String label2, double min2, double hr2) {
+    String ec = "<td style=\"width: 11.1111%;\">&nbsp;</td>\n";
+    String ec8 = ec + ec + ec + ec + ec + ec + ec + ec; // 8 خلايا فارغة
+    String row1 = "<tr>\n"
+            + ec8
+            + "<td style=\"width: 11.1111%; background-color: #f6ff00; border-color: #ff0000; text-align: center;\">"
+            + "<b>" + label1 + " :</b> <u><b>" + min1 + "</b></u> <b>Mins.</b></td>\n"
+            + "<td style=\"width: 11.1111%; background-color: #f6ff00; border-color: #ff0000; text-align: center;\">"
+            + "<u><b>" + hr1 + "</b></u> <b>Hours.</b></td>\n"
+            + ec
+            + "</tr>";
+    if (label2 == null) return row1;
+    String row2 = "<tr>\n"
+            + ec8
+            + "<td style=\"width: 11.1111%; background-color: #f6ff00; border-color: #ff0000; text-align: center;\">"
+            + "<b>" + label2 + " :</b> <u><b>" + min2 + "</b></u> <b>Mins.</b></td>\n"
+            + "<td style=\"width: 11.1111%; background-color: #f6ff00; border-color: #ff0000; text-align: center;\">"
+            + "<u><b>" + hr2 + "</b></u> <b>Hours.</b></td>\n"
+            + ec
+            + "</tr>";
+    return row1 + row2;
 }
-else{}
+
+/**
+ * يطبق قيم الحجر للـ shot المحدد.
+ * shot=1 يملأ loadstone/removestone/cleaningstone/extraction/loadremovestone
+ * shot=2 يملأ النظائر الثانية
+ */
+private void applyStoneValues(double stoneNum, int shot) {
+    double load, remove, cleaning, ext;
+    if (stoneNum == 0) {
+        load = 0; remove = 0; cleaning = 0; ext = 0;
+    } else if (stoneNum == 1) {
+        load = 5.5; remove = 4.15; cleaning = 15; ext = 20;
+    } else if (stoneNum == 2) {
+        load = 16.5; remove = 8.3; cleaning = 20; ext = 20;
+    } else {
+        load    = 15 + ((stoneNum - 1) * 1.5);
+        remove  = stoneNum * 4.15;
+        cleaning = 0; ext = 20;
+    }
+    if (shot == 1) {
+        loadstone = load; removestone = remove;
+        cleaningstone = cleaning; extraction = ext;
+        loadremovestone = load + remove;
+    } else {
+        loadstone2 = load; removestone2 = remove;
+        cleaningstone2 = cleaning; extraction2 = ext;
+        loadremovestone2 = load + remove;
+    }
+}
 
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// CODE GOES HERE - ابدأ من هنا
+/**
+ * سؤال المستخدم عن عدد حمامات الحجر + الوقت الإضافي في نافذة واحدة
+ * @param found عدد مرات ظهور Stone/Foam
+ * @param shotLabel "1 shot" أو "second shot"
+ * @return array [stoneBaths, additionalTime]
+ */
+private double[] askStoneAndAdditionalTime(int found, String shotLabel) {
+    // TextField الأول: Stone Baths
+    JFXTextField stoneField = new JFXTextField("");
+    stoneField.setPromptText("Stone Baths Number");
+    stoneField.setMinSize(350, 35);
+    stoneField.setLabelFloat(true);
+    stoneField.setStyle("-fx-font-weight:bold;");
+
+    // TextField الثاني: Additional Time
+    JFXTextField timeField = new JFXTextField("0");
+    timeField.setPromptText("Additional Time (Minutes)");
+    timeField.setMinSize(350, 35);
+    timeField.setLabelFloat(true);
+    timeField.setStyle("-fx-font-weight:bold;");
+
+    // VBox لترتيب الحقول تحت بعض
+    VBox vbox = new VBox(15);
+    vbox.setAlignment(Pos.CENTER);
+    vbox.getChildren().addAll(
+        new Label("Stone Baths Number:"),
+        stoneField,
+        new Label("Additional Time for " + shotLabel + ":"),
+        timeField
+    );
+
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("Stone & Additional Time");
+    alert.setHeaderText("Shot: " + shotLabel + " | Stone/Foam found " + found + " times");
+    alert.setContentText("Please enter the required values:");
+    alert.setGraphic(vbox);
+    alert.setResizable(false);
+    alert.getDialogPane().getStylesheets().add(getClass().getResource("cupertino-light.css").toExternalForm());
+
+    alert.showAndWait();
+
+    double stoneBaths = 0;
+    double additionalTime = 0;
+
+    try {
+        stoneBaths = Double.parseDouble(stoneField.getText().trim());
+    } catch (Exception e) {
+        stoneBaths = 0;
+    }
+
+    try {
+        additionalTime = Double.parseDouble(timeField.getText().trim());
+    } catch (Exception e) {
+        additionalTime = 0;
+    }
+
+    return new double[]{stoneBaths, additionalTime};
+}
 
 
+/** تطبيق إصلاحات الكيماويات (Dictionary, Lot Numbers, Translation) */
+private String applyChemicalFixes(String html) {
+    if (!html.contains("TABLE")) {
+        showNotif("Recipe Error", "Maybe not a recipe, Open a recipe first!.", true);
+        return html;
+    }
+    // Step 1: Chemical Dictionary (col7 → col8)
+    Document docj = Jsoup.parse(html);
+    for (Element table : docj.select("TABLE")) {
+        for (Element row : table.select("TR")) {
+            Elements tds = row.select("TD");
+            if (tds.get(7).text().isEmpty()) continue;
+            String string = tds.get(7).text();
+            try (BufferedReader buf = new BufferedReader(
+                    new FileReader(NewDir.file_dirrrr + "\\Recipe_Indexes\\Chemical_Dictionary.kady"))) {
+                String line;
+                while ((line = buf.readLine()) != null) {
+                    String bef = line.substring(0, line.indexOf("="));
+                    String aft = line.substring(line.indexOf("=") + 1);
+                    if (string.equals(aft)) {
+                        tds.get(8).html("<b style='display:block; text-align:center;'>" + bef + "</b>");
+                        break;
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+    }
+    html = docj.toString();
 
-// 2. باقي الكود اللي عندك (تنظيف الملف، Jsoup، إلخ) ...
-Document docm = Jsoup.parse(inputFile, "UTF-8");
-String pcsStr = extractPCS(docm);
-double pcs = parsePCS(pcsStr);
+    // Step 2: Lot Numbers (col8 → col9)
+    org.jsoup.nodes.Document doct = Jsoup.parse(html);
+    for (Element table : doct.select("TABLE")) {
+        for (Element row : table.select("TR")) {
+            Elements tds = row.select("TD");
+            if (tds.get(8).text().isEmpty()) continue;
+            String string = tds.get(8).text();
+            try (BufferedReader bufi = new BufferedReader(
+                    new FileReader(NewDir.file_dirrrr + "\\Recipe_Indexes\\Lot_Numbers.kady"))) {
+                String line;
+                while ((line = bufi.readLine()) != null) {
+                    String bef = line.substring(0, line.indexOf("="));
+                    String aft = line.substring(line.indexOf("=") + 1);
+                    if (string.equalsIgnoreCase(bef)) {
+                        tds.get(9).html("<b style='display:block; text-align:center;'>" + aft + "</b>");
+                        break;
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+    }
+    html = doct.toString();
 
-// استخراج الشوتات
-List<Shot> shotsy = extractShotsAndCosts(docm);
+    // Step 3: Chemical Translation (col8 → col10)
+    org.jsoup.nodes.Document doctp = Jsoup.parse(html);
+    Path mapPath = Paths.get(NewDir.file_dirrrr, "Recipe_Indexes", "Chemical_Translation.kady");
+    for (Element table : doctp.select("table")) {
+        for (Element row : table.select("tr")) {
+            Elements tds = row.select("td");
+            if (tds.size() <= 10) continue;
+            String target = tds.get(8).text().trim();
+            if (target.isEmpty()) continue;
+            try (BufferedReader bufi = Files.newBufferedReader(mapPath, StandardCharsets.UTF_8)) {
+                String line;
+                while ((line = bufi.readLine()) != null) {
+                    if (!line.contains("=")) continue;
+                    String bef = line.substring(0, line.indexOf("=")).trim();
+                    String aft = line.substring(line.indexOf("=") + 1).trim();
+                    if (target.equalsIgnoreCase(bef)) {
+                        tds.get(10).html("<b style='display:block; text-align:center;'>" + aft + "</b>");
+                        break;
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+    }
+    return doctp.toString();
+}
 
-if (shotsy.isEmpty()) {
-    showNotification("تحذير", "لم يتم العثور على كيماويات صالحة في: " + filenammm, true);
-    // اختياري: return; لو عايز توقف التنفيذ هنا
-} else {
-    // 3. حساب التكاليف بشكل صحيح
+/** كتابة ملف HTML الكامل (مع Header/Footer/Watermark/Signature/Background) في مسار مؤقت */
+private void writeHtmlToTempFile(String path, String content) throws Exception {
+    String pathtosignature = "file://" + NewDir.file_dirrrrr + "\\Mr_Muhammet.png";
+    String modely = model;
+    try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"))) {
+        pw.println("<!DOCTYPE html>\n<html lang=\"ar\">\n<head>\n<title>Kadysoft</title>\n"
+                + "<meta charset=\"UTF-8\">\n"
+                + "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
+                + "<style>\n"
+                + "td { height:5px; max-width:100%; white-space:nowrap; }\n"
+                + "table { height:5px; max-width:100%; white-space:nowrap; }\n"
+                + "tr { height:5px; max-width:100%; white-space:nowrap; }\n"
+                + ".watermark {\n"
+                + "  position:fixed; top:50%; left:50%;\n"
+                + "  transform:translate(-50%,-50%) rotate(-45deg);\n"
+                + "  background-image:url('logo.png');\n"
+                + "  background-repeat:no-repeat; background-size:contain;\n"
+                + "  width:300px; height:200px; opacity:0.3;\n"
+                + "  pointer-events:none; z-index:1000;\n"
+                + "}\n"
+                + "</style>\n"
+                + "</head>\n<body><center>\n"
+                + "<div class=\"watermark\"></div>\n\n");
+        pw.println("<!-- Creating Recipe From Kadysoft Ltd.-->\n");
+        pw.println(content);
+        pw.println("\n\n</center>\n</body>\n</html>");
+        pw.println("<b id=\"signname\">Mr_Muhammet Signature: </b>"
+                + "<img id=\"signimage\" src=\"" + pathtosignature + "\" "
+                + "width=\"300\" height=\"90\" alt=\"Developed By Kadysoft Ltd (Ahmed Elkady).\" "
+                + "style=\"border-color:black;border-width:10px;\">");
+        if (!content.contains("background-image:")) {
+            pw.println("\n<style>\nbody {\n  background-image: url(\"" + modely + ".bmp\");\n"
+                    + "  background-position: center;\n  height: 170px;\n"
+                    + "  background-position-x: 550px;\n  background-repeat: no-repeat;\n"
+                    + "  background-size: 120px 90px;\n}\n</style>");
+        }
+    }
+}
+
+/** إدراج QR Code في الجدول #EXTABLE - آمن ولا يرمي Exception */
+private void injectQrCode(String path) {
+    try {
+    Date d = new Date();
+    String dateString     = new SimpleDateFormat("dd/MM/yyyy").format(d);
+    String programmerName = "Ahmed Elkady.";
+    String companyName    = "Kadysoft Ltd.";
+    String factoryName    = "T&C Garments.";
+    String recipeName     = recipe + ".";
+    String clientName     = model  + ".";
+    String lastEditorName = user   + ".";
+    String date           = dateString + ".";
+    String repolink       = "https://progkady.github.io/RecipesStore/";
+    double pcsCost        = onegar;
+    int qty = 0;
+    try { qty = Integer.parseInt(pecoco.trim()); } catch (Exception ignored) {}
+
+    String qrText = "★ Recipe Details ★\n-------------------------\n"
+            + "• Programmer : " + programmerName + "\n"
+            + "• Developer : "  + companyName    + "\n"
+            + "• Factory : "    + factoryName    + "\n"
+            + "• Recipe : "     + recipeName     + "\n"
+            + "• Customer : "   + clientName     + "\n"
+            + "• Quantity : "   + qty            + "\n"
+            + "• Editor Name : " + lastEditorName + "\n"
+            + "• Last Update : " + date           + "\n"
+            + "• Pcs Cost : "   + pcsCost        + " $\n\n"
+            + "• Recipes Link : " + repolink      + "\n"
+            + "Thanks For Using Receta From Kadysoft Ltd. ❤";
+
+    int qrSize = 250;
+    BufferedImage qrImage  = createPrintableQR(qrText, qrSize);
+    String qrBase64        = imageToBase64Png(qrImage);
+
+    String htmlContent     = readFile(path);
+    Document docd          = Jsoup.parse(htmlContent);
+    docd.outputSettings().syntax(Document.OutputSettings.Syntax.html).charset("UTF-8");
+
+    Element table = docd.select("table#EXTABLE").first();
+    if (table == null) {
+        System.out.println("تحذير: الجدول #EXTABLE مش موجود - سيتم الحفظ بدون QR.");
+        writeFile(path, docd.outerHtml()); return;
+    }
+    Elements rows = table.select("tbody > tr");
+    if (rows.isEmpty()) { writeFile(path, docd.outerHtml()); return; }
+    int mergeRows     = Math.min(7, rows.size());
+    int qrColumnIndex = 8;
+    Elements cells = rows.get(0).select("td");
+    if (cells.size() <= qrColumnIndex) {
+        System.out.println("تحذير: العمود رقم 9 مش موجود - سيتم الحفظ بدون QR.");
+        writeFile(path, docd.outerHtml()); return;
+    }
+
+    Element qrCell    = cells.get(qrColumnIndex);
+    Element oldQrImg  = qrCell.selectFirst("img[src^=data:image]");
+
+    String qrHtml = "<img src=\"data:image/png;base64," + qrBase64 + "\" "
+            + "alt=\"★ Recipe Details ★&#10;-------------------------&#10;"
+            + "• Programmer : " + programmerName + "&#10;"
+            + "• Developer : "  + companyName    + "&#10;"
+            + "• Factory : "    + factoryName    + "&#10;"
+            + "• Recipe : "     + recipeName     + "&#10;"
+            + "• Customer : "   + clientName     + "&#10;"
+            + "• Quantity : "   + qty            + "&#10;"
+            + "• Editor Name : " + lastEditorName + "&#10;"
+            + "• Last Update : " + date           + "&#10;"
+            + "• Pcs Cost : "   + pcsCost + " $&#10;&#10;"
+            + "• Recipes Link : " + repolink      + "&#10;"
+            + "Thanks For Using Receta From Kadysoft Ltd. ❤\" "
+            + "style=\"width:" + qrSize + "px !important; height:" + qrSize + "px !important; "
+            + "max-width:none !important; max-height:none !important; border:10px solid white; "
+            + "box-shadow:0 0 0 4pt black;\"/>";
+
+    if (oldQrImg != null) {
+        qrCell.html(qrHtml);
+    } else {
+        qrCell.attr("rowspan", String.valueOf(mergeRows))
+              .attr("style", "border: 3px double #000; padding: 10px; background: #ffffff; "
+                      + "text-align: center; vertical-align: middle;")
+              .html(qrHtml);
+    }
+
+    for (int i = 1; i < mergeRows; i++) {
+        Element cellToRemove = rows.get(i).selectFirst("td:nth-child(9)");
+        if (cellToRemove != null) cellToRemove.remove();
+    }
+
+    writeFile(path, docd.outerHtml());
+    } catch (Exception ex) {
+        System.out.println("تحذير: فشل إدراج QR Code - " + ex.getMessage());
+        ex.printStackTrace();
+    }
+}
+
+/** تشفير الحروف (character obfuscation) وإرجاع النص المشفر */
+private String obfuscateFile(String path) throws Exception {
+    StringBuilder sb = new StringBuilder();
+    try (BufferedReader bi = new BufferedReader(
+            new InputStreamReader(new FileInputStream(path), "UTF-8"))) {
+        String lo;
+        while ((lo = bi.readLine()) != null) {
+            if (lo.contains("data:image") || lo.contains("base64,")) {
+                sb.append("\n").append(lo);
+                continue;
+            }
+            sb.append(obfuscateLine(lo)).append("\n");
+        }
+    }
+    return sb.toString();
+}
+
+/** تشفير سطر واحد - مطابق لدالة browseaction */
+private String obfuscateLine(String lo) {
+    return lo
+        .replace("A","ﬦ").replace("B","ﬧ").replace("C","ﬨ").replace("D","﬩")
+        .replace("E","שׁ").replace("F","שׂ").replace("G","שּׁ").replace("H","שּׂ")
+        .replace("I","אַ").replace("J","אָ").replace("K","אּ").replace("L","בּ")
+        .replace("M","גּ").replace("N","דּ").replace("O","הּ").replace("P","וּ")
+        .replace("Q","זּ").replace("R","טּ").replace("S","יּ").replace("T","ךּ")
+        .replace("U","כּ").replace("V","לּ").replace("W","מּ").replace("X","נּ")
+        .replace("Y","סּ").replace("Z","ףּ")
+        .replace("0","פּ").replace("1","צּ").replace("2","קּ").replace("3","רּ")
+        .replace("4","שּ").replace("5","תּ").replace("6","וֹ").replace("7","בֿ")
+        .replace("8","כֿ").replace("9","פֿ")
+        
+        // lowercase (نفس الـ mapping)
+        .replace("a","ﬦ").replace("b","ﬧ").replace("c","ﬨ").replace("d","﬩")
+        .replace("e","שׁ").replace("f","שׂ").replace("g","שּׁ").replace("h","שּׂ")
+        .replace("i","אַ").replace("j","אָ").replace("k","אּ").replace("l","בּ")
+        .replace("m","גּ").replace("n","דּ").replace("o","הּ").replace("p","וּ")
+        .replace("q","זּ").replace("r","טּ").replace("s","יּ").replace("t","ךּ")
+        .replace("u","כּ").replace("v","לּ").replace("w","מּ").replace("x","נּ")
+        .replace("y","סּ").replace("z","ףּ");
+}
+
+private void decodeFileToTemp(String path) throws Exception {
+    StringBuilder sb = new StringBuilder();
+    try (BufferedReader bi = new BufferedReader(
+            new InputStreamReader(new FileInputStream(path), "UTF-8"))) {
+        String lo;
+        while ((lo = bi.readLine()) != null) {
+            sb.append("\n").append(lo
+                .replace("ﬦ","A").replace("ﬧ","B").replace("ﬨ","C").replace("﬩","D")
+                .replace("שׁ","E").replace("שׂ","F").replace("שּׁ","G").replace("שּׂ","H")
+                .replace("אַ","I").replace("אָ","J").replace("אּ","K").replace("בּ","L")
+                .replace("גּ","M").replace("דּ","N").replace("הּ","O").replace("וּ","P")
+                .replace("זּ","Q").replace("טּ","R").replace("יּ","S").replace("ךּ","T")
+                .replace("כּ","U").replace("לּ","V").replace("מּ","W").replace("נּ","X")
+                .replace("סּ","Y").replace("ףּ","Z")
+                .replace("פּ","0").replace("צּ","1").replace("קּ","2").replace("רּ","3")
+                .replace("שּ","4").replace("תּ","5").replace("וֹ","6").replace("בֿ","7")
+                .replace("כֿ","8").replace("פֿ","9")
+                .replace("&NBSP;",""));
+        }
+    }
+    try (PrintWriter pwe = new PrintWriter(new OutputStreamWriter(
+            new FileOutputStream(System.getProperty("user.home") + "\\r.ks"), "UTF-8"))) {
+        pwe.println(sb.toString());
+    }
+    code.appendText(sb.toString());
+}
+
+/** إيجاد قيمة PCS من الـ Document */
+private String findPcsFromDoc(org.jsoup.nodes.Document doc) {
+    for (Element row : doc.select("tr")) {
+        Elements cells = row.select("td");
+        for (int i = 0; i < cells.size(); i++) {
+            String txt = cells.get(i).text().trim();
+            if ("PCS".equalsIgnoreCase(txt) || txt.contains("PCS")) {
+                if (i + 1 < cells.size()) return cells.get(i + 1).text().trim();
+            }
+        }
+    }
+    return "120";
+}
+
+/** حفظ التكلفة في جدول Cost */
+private void saveCostToDB() {
+    String findo = "";
+    try {
+        pst = conn.prepareStatement("SELECT * FROM Cost WHERE Name LIKE ? AND Model LIKE ?");
+        pst.setString(1, filenammm);
+        pst.setString(2, modeloo);
+        rs = pst.executeQuery();
+        findo = rs.next() ? "found" : "not_found";
+    } catch (Exception ignored) {
+    } finally { closeQuietly(rs, pst); }
+
+    if (findo.equals("found")) {
+        try {
+            pst = conn.prepareStatement("SELECT * FROM Cost WHERE Name=? AND Model=?");
+            pst.setString(1, filenammm); pst.setString(2, modeloo);
+            rs = pst.executeQuery();
+            
+            String valiiu = rs.getString("Total_Cost_New");
+            if (valiiu.equals("Hasnot_Updated_Yet")) {
+                oldtotalcost       = rs.getString("Total_Cost_Old");
+                oldpcs             = rs.getString("PCS_Old");
+                oldonegarmentcost  = rs.getString("One_Garment_Old");
+            }
+            else {
+                oldtotalcost       = rs.getString("Total_Cost_New");
+                oldpcs             = rs.getString("PCS_New");
+                oldonegarmentcost  = rs.getString("One_Garment_New");
+            }
+
+            pst = conn.prepareStatement(
+                    "UPDATE Cost SET Date=?, Total_Cost_Old=?, PCS_Old=?, One_Garment_Old=?, "
+                  + "Total_Cost_New=?, PCS_New=?, One_Garment_New=? WHERE Name=? AND Model=?");
+            pst.setString(1, datevalue);
+            pst.setString(2, oldtotalcost); pst.setString(3, oldpcs);
+            pst.setString(4, oldonegarmentcost);
+            pst.setString(5, Double.toString(summo));
+            pst.setString(6, Double.toString(pcsnum));
+            pst.setString(7, Double.toString(onegar));
+            pst.setString(8, filenammm); pst.setString(9, modeloo);
+            pst.execute();
+            showNotif("Successful", "We have updated the cost successfully.", false);
+        } catch (Exception ignored) {
+        } finally { closeQuietly(rs, pst); }
+    } else {
+        try {
+            pst = conn.prepareStatement(
+                    "INSERT INTO Cost (Date,Model,Name,Total_Cost_Old,PCS_Old,One_Garment_Old,"
+                  + "Total_Cost_New,PCS_New,One_Garment_New) VALUES (?,?,?,?,?,?,?,?,?)");
+            pst.setString(1, datevalue); pst.setString(2, modeloo); pst.setString(3, filenammm);
+            pst.setString(4, Double.toString(summo));
+            pst.setString(5, Double.toString(pcsnum));
+            pst.setString(6, Double.toString(onegar));
+            pst.setString(7, "Hasnot_Updated_Yet");
+            pst.setString(8, "Hasnot_Updated_Yet");
+            pst.setString(9, "Hasnot_Updated_Yet");
+            pst.execute();
+            showNotif("Successful", "We have inserted the new cost successfully.", false);
+        } catch (Exception ignored) {
+        } finally { closeQuietly(rs, pst); }
+    }
+}
+
+/** حفظ التكلفة بالشوت في جدول Cost_By_Shot */
+private void saveCostByShotToDB(List<Shot> shotsy, double pcs, String pcsStr) {
     double totalCost = 0.0;
     List<Double> shotCosts = new ArrayList<>();
-
-    // طباعة تصحيحية مهمة جدًا (شوفها في الـ console)
-    System.out.println("عدد الشوتات المكتشفة: " + shotsy.size());
-
-    for (int i = 0; i < shotsy.size(); i++) {
-        Shot shot = shotsy.get(i);
+    for (Shot shot : shotsy) {
         double cost = shot.calculateCost();
-        
-        // طباعة لكل شوت عشان نتأكد
-        System.out.printf("شوت %d → تكلفة: %.4f   (عدد الكيماويات: %d)%n", 
-                          (i + 1), cost, shot.quantities.size());
-        
         shotCosts.add(cost);
         totalCost += cost;
     }
-
     double oneGarmentCost = pcs > 0 ? totalCost / pcs : 0.0;
-
-    // 4. تحضير القيم للداتابيز
-    String lastUpdate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-    String shotsCount = String.valueOf(shotsy.size());
-
+    String lastUpdate  = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+    String shotsCount  = String.valueOf(shotsy.size());
     String fsCost  = shotsy.size() >= 1 ? String.format("%.4f", shotCosts.get(0)) : "0.0000";
     String ssCost  = shotsy.size() >= 2 ? String.format("%.4f", shotCosts.get(1)) : "undefined";
     String tsCost  = shotsy.size() >= 3 ? String.format("%.4f", shotCosts.get(2)) : "undefined";
     String fosCost = shotsy.size() >= 4 ? String.format("%.4f", shotCosts.get(3)) : "undefined";
+    String totalCostStr  = String.format("%.4f", totalCost);
+    String oneGarmentStr = String.format("%.6f", oneGarmentCost);
 
-    String totalCostStr   = String.format("%.4f", totalCost);
-    String oneGarmentStr  = String.format("%.6f", oneGarmentCost);
-
-    // 5. باقي الكود بتاع الـ check + Update / Insert زي ما هو عندك
-    boolean recordExists = checkIfRecordExists(filenammm, modeloo, stageoo);
-
-    if (recordExists) {
-        // Update
-        String sqlUpdate = "UPDATE Cost_By_Shot SET " +
-                "Last_Update = ?, Shots = ?, FSCost = ?, SSCost = ?, TSCost = ?, FOSCost = ?, " +
-                "Total_Cost = ?, PCS = ?, One_Garment_Cost = ? " +
-                "WHERE Wash_Name = ? AND Model = ? AND Stage = ?";
-
-        pst = conn.prepareStatement(sqlUpdate);
-        pst.setString(1, lastUpdate);
-        pst.setString(2, shotsCount);
-        pst.setString(3, fsCost);
-        pst.setString(4, ssCost);
-        pst.setString(5, tsCost);
-        pst.setString(6, fosCost);
-        pst.setString(7, totalCostStr);
-        pst.setString(8, pcsStr);
-        pst.setString(9, oneGarmentStr);
-        pst.setString(10, filenammm);
-        pst.setString(11, modeloo);
-        pst.setString(12, stageoo);
+    try {
+        boolean exists = checkIfRecordExists(filenammm, modeloo, stageoo);
+        if (exists) {
+            pst = conn.prepareStatement(
+                    "UPDATE Cost_By_Shot SET Last_Update=?,Shots=?,FSCost=?,SSCost=?,TSCost=?,FOSCost=?,"
+                  + "Total_Cost=?,PCS=?,One_Garment_Cost=? WHERE Wash_Name=? AND Model=? AND Stage=?");
+        } else {
+            pst = conn.prepareStatement(
+                    "INSERT INTO Cost_By_Shot (Last_Update,Stage,Model,Wash_Name,Shots,FSCost,SSCost,TSCost,"
+                  + "FOSCost,Total_Cost,PCS,One_Garment_Cost) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+        }
+        if (exists) {
+            pst.setString(1,lastUpdate); pst.setString(2,shotsCount);
+            pst.setString(3,fsCost);    pst.setString(4,ssCost);
+            pst.setString(5,tsCost);    pst.setString(6,fosCost);
+            pst.setString(7,totalCostStr); pst.setString(8,pcsStr);
+            pst.setString(9,oneGarmentStr);
+            pst.setString(10,filenammm); pst.setString(11,modeloo); pst.setString(12,stageoo);
+        } else {
+            pst.setString(1,lastUpdate);   pst.setString(2,stageoo);
+            pst.setString(3,modeloo);      pst.setString(4,filenammm);
+            pst.setString(5,shotsCount);   pst.setString(6,fsCost);
+            pst.setString(7,ssCost);       pst.setString(8,tsCost);
+            pst.setString(9,fosCost);      pst.setString(10,totalCostStr);
+            pst.setString(11,pcsStr);      pst.setString(12,oneGarmentStr);
+        }
         pst.executeUpdate();
+        showNotif(exists ? "تم التحديث" : "تم الإدراج",
+                  (exists ? "تم تحديث" : "تم إضافة") + " تكلفة الريسيبي: " + filenammm, false);
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    } finally { closeQuietly(rs, pst); }
+}
 
-        showNotification("تم التحديث", "تم تحديث تكلفة الريسيبي: " + filenammm, false);
-    } else {
-        // Insert
-        String sqlInsert = "INSERT INTO Cost_By_Shot (" +
-                "Last_Update, Stage, Model, Wash_Name, Shots, FSCost, SSCost, TSCost, FOSCost, " +
-                "Total_Cost, PCS, One_Garment_Cost) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+/** تحديث جدول Timer الموجود */
+private void updateTimerDB() {
+    String ti1 = Double.toString(gdf1), ti2 = Double.toString(gdf2);
+    String mi1 = Double.toString(gmf1), mi2 = Double.toString(gmf2);
+    String ti3 = Integer.toString(shoty), ti4 = Integer.toString(shoty + 1);
 
-        pst = conn.prepareStatement(sqlInsert);
-        pst.setString(1, lastUpdate);
-        pst.setString(2, stageoo);
-        pst.setString(3, modeloo);
-        pst.setString(4, filenammm);
-        pst.setString(5, shotsCount);
-        pst.setString(6, fsCost);
-        pst.setString(7, ssCost);
-        pst.setString(8, tsCost);
-        pst.setString(9, fosCost);
-        pst.setString(10, totalCostStr);
-        pst.setString(11, pcsStr);
-        pst.setString(12, oneGarmentStr);
-        pst.executeUpdate();
+    if (bosbos == 1) {
+        try {
+            pst = conn.prepareStatement("SELECT * FROM Timer WHERE Name=?");
+            pst.setString(1, filenammm);
+            rs = pst.executeQuery();
+            String valii = rs.getString("Time_In_Hour_Updated");
+            if (valii.equals("Hasnot_Updated_Yet")) {
+                oldtimehour = rs.getString("Time_In_Hour");
+                oldtimemin  = rs.getString("Time_In_Min");
+            }
+            else {
+                oldtimehour = rs.getString("Time_In_Hour_Updated");
+                oldtimemin  = rs.getString("Time_In_Min_Updated");
+            }
+            pst = conn.prepareStatement(
+                    "UPDATE Timer SET Date=?,Time_In_Min=?,Time_In_Hour=?,"
+                  + "Time_In_Min_Updated=?,Time_In_Hour_Updated=?,Total_Min=?,Total_Hour=? "
+                  + "WHERE Name=? AND Shot=?");
+            pst.setString(1,datevalue); pst.setString(2,oldtimemin); pst.setString(3,oldtimehour);
+            pst.setString(4,mi1); pst.setString(5,ti1); pst.setString(6,mi1); pst.setString(7,ti1);
+            pst.setString(8,filenammm); pst.setString(9,ti3);
+            pst.execute();
+        } catch (Exception ignored) { } finally { closeQuietly(rs, pst); }
 
-        showNotification("تم الإدراج", "تم إضافة تكلفة الريسيبي الجديد: " + filenammm, false);
+    } else if (bosbos == 2) {
+        // Shot 1
+        try {
+            pst = conn.prepareStatement("SELECT * FROM Timer WHERE Name=? AND Shot=?");
+            pst.setString(1, filenammm); pst.setString(2, ti3); rs = pst.executeQuery();
+            String valii2 = rs.getString("Time_In_Hour_Updated");
+            if (valii2.equals("Hasnot_Updated_Yet")) {
+                oldtimehour = rs.getString("Time_In_Hour");
+                oldtimemin  = rs.getString("Time_In_Min");
+            }
+            else {
+                oldtimehour = rs.getString("Time_In_Hour_Updated");
+                oldtimemin  = rs.getString("Time_In_Min_Updated");
+            }
+            pst = conn.prepareStatement(
+                    "UPDATE Timer SET Date=?,Time_In_Min=?,Time_In_Hour=?,"
+                  + "Time_In_Min_Updated=?,Time_In_Hour_Updated=?,Total_Min=?,Total_Hour=? "
+                  + "WHERE Name=? AND Shot=?");
+            pst.setString(1,datevalue); pst.setString(2,oldtimemin); pst.setString(3,oldtimehour);
+            pst.setString(4,mi1); pst.setString(5,ti1);
+            pst.setString(6, Double.toString(gmf1+gmf2)); pst.setString(7, Double.toString(gdf1+gdf2));
+            pst.setString(8,filenammm); pst.setString(9,ti3);
+            pst.execute();
+        } catch (Exception ignored) { } finally { closeQuietly(rs, pst); }
+        // Shot 2
+        try {
+            pst = conn.prepareStatement("SELECT * FROM Timer WHERE Name=? AND Shot=?");
+            pst.setString(1, filenammm); pst.setString(2, ti4); rs = pst.executeQuery();
+            String valii3 = rs.getString("Time_In_Hour_Updated");
+            if (valii3.equals("Hasnot_Updated_Yet")) {
+                oldtimehour2 = rs.getString("Time_In_Hour");
+                oldtimemin2  = rs.getString("Time_In_Min");
+            }
+            else {
+                oldtimehour2 = rs.getString("Time_In_Hour_Updated");
+                oldtimemin2  = rs.getString("Time_In_Min_Updated");
+            }
+            pst = conn.prepareStatement(
+                    "UPDATE Timer SET Date=?,Time_In_Min=?,Time_In_Hour=?,"
+                  + "Time_In_Min_Updated=?,Time_In_Hour_Updated=?,Total_Min=?,Total_Hour=? "
+                  + "WHERE Name=? AND Shot=?");
+            pst.setString(1,datevalue); pst.setString(2,oldtimemin2); pst.setString(3,oldtimehour2);
+            pst.setString(4,mi2); pst.setString(5,ti2);
+            pst.setString(6, Double.toString(gmf1+gmf2)); pst.setString(7, Double.toString(gdf1+gdf2));
+            pst.setString(8,filenammm); pst.setString(9,ti4);
+            pst.execute();
+        } catch (Exception ignored) { } finally { closeQuietly(rs, pst); }
     }
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** إدراج سجلات Timer جديدة */
+private void insertTimerDB() {
+    String ti1 = Double.toString(gdf1), ti2 = Double.toString(gdf2);
+    String mi1 = Double.toString(gmf1), mi2 = Double.toString(gmf2);
+    String reg = "INSERT INTO Timer (Date,Model,Name,Shot,Time_In_Min,Time_In_Hour,"
+               + "Time_In_Min_Updated,Time_In_Hour_Updated,Total_Min,Total_Hour) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    if (bosbos == 1) {
+        try {
+            pst = conn.prepareStatement(reg);
+            pst.setString(1,datevalue); pst.setString(2,modeloo); pst.setString(3,filenammm);
+            pst.setString(4, Integer.toString(shoty));
+            pst.setString(5,mi1); pst.setString(6,ti1);
+            pst.setString(7,"Hasnot_Updated_Yet"); pst.setString(8,"Hasnot_Updated_Yet");
+            pst.setString(9,mi1); pst.setString(10,ti1);
+            pst.execute();
+        } catch (Exception ignored) { } finally { closeQuietly(rs, pst); }
+    } else if (bosbos == 2) {
+        try {
+            pst = conn.prepareStatement(reg);
+            pst.setString(1,datevalue); pst.setString(2,modeloo); pst.setString(3,filenammm);
+            pst.setString(4, Integer.toString(shoty));
+            pst.setString(5,mi1); pst.setString(6,ti1);
+            pst.setString(7,"Hasnot_Updated_Yet"); pst.setString(8,"Hasnot_Updated_Yet");
+            pst.setString(9, Double.toString(gmf1+gmf2)); pst.setString(10, Double.toString(gdf1+gdf2));
+            pst.execute();
+        } catch (Exception ignored) { } finally { closeQuietly(rs, pst); }
+        try {
+            pst = conn.prepareStatement(reg);
+            pst.setString(1,datevalue); pst.setString(2,modeloo); pst.setString(3,filenammm);
+            pst.setString(4, Integer.toString(shoty + 1));
+            pst.setString(5,mi2); pst.setString(6,ti2);
+            pst.setString(7,"Hasnot_Updated_Yet"); pst.setString(8,"Hasnot_Updated_Yet");
+            pst.setString(9, Double.toString(gmf1+gmf2)); pst.setString(10, Double.toString(gdf1+gdf2));
+            pst.execute();
+        } catch (Exception ignored) { } finally { closeQuietly(rs, pst); }
+    }
+}
 
+/** حفظ أنواع الوصفة في DB */
+private void detectAndSaveRecipeTypes(String dateStr) {
+    String ston="No", fom="No", hypo="No", enzym="No", moon="No";
+    String dryr1="No", dryr2="No", dryr3="No";
+    List<String> shotsList = new ArrayList<>();
 
+    org.jsoup.nodes.Document docy = Jsoup.parse(code.getText());
+    for (Element table : docy.select("table")) {
+        for (Element row : table.select("tr")) {
+            Elements tds = row.select("td");
+            String t7 = tds.get(7).text().toUpperCase();
+            String t3 = tds.get(3).text().toUpperCase();
+            String t8 = tds.get(8).text().toUpperCase();
+            if (t7.contains("STONE") || t7.contains("STON")) ston = "STONE";
+            if (t7.contains("FOAM") || t7.contains("BOOL") || t7.contains("FOM")) fom = "FOAM";
+            if (t7.contains("BLEACH") || t7.contains("HYPO")) hypo = "BLEACH";
+            if (t7.contains("ENZYME") || t7.contains("ENZYM") || t7.contains("ACUDELL") || t7.contains("NSY")) enzym = "ENZYME";
+            if (t3.contains("MOON") || t7.contains("PERMANGANAT") || t8.contains("POTASSIUM PERMANGANATE") || t8.contains("NOVA TEKS MOON")) moon = "MOON WASH";
+            String dalil = tds.get(3).text();
+            if (dalil.toUpperCase().contains("EXTRACT")) shotsList.add(dalil);
+        }
+    }
+    stonn = ston; fomm = fom; hypoo = hypo; enzymm = enzym; moonn = moon;
 
-Alert alertio = new Alert(Alert.AlertType.CONFIRMATION);
-alertio.setTitle("Result");
-alertio.setHeaderText("Cost Result");
-alertio.setContentText("Here is the result of chemicals costs for one garment  :   "+Double.toString(onegar)+"   $.");
-ButtonType buttonTypeOne = new ButtonType("Report");
-ButtonType buttonTypeCancel = new ButtonType("Cancel");
-alertio.getButtonTypes().setAll(buttonTypeOne, buttonTypeCancel);
-DialogPane dialogPaneii = alertio.getDialogPane();
-dialogPaneii.getStylesheets().add(getClass().getResource("cupertino-light.css").toExternalForm());
-Optional<ButtonType> results = alertio.showAndWait();
-if (results.isPresent() && results.get() == buttonTypeOne) {
-//Create Report.  (PDF)
-    ////////////////////////////Start Report//////////////////////////////
-    Date currentDate = GregorianCalendar.getInstance().getTime();
-    DateFormat df = DateFormat.getDateInstance();
-    String dateString = df.format(currentDate);
-    Date d = new Date();
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    String timeString = sdf.format(d);
-    String value0 = timeString;
-    String value00 = value0.replace("/", "_");
-    String repname = "Chemical_Report_Of_"+filenammm;
-    String reppath = System.getProperty("user.home") + "\\Desktop";
-    FileChooser dialog = new FileChooser();
-    dialog.setInitialDirectory(new File(reppath));
-    dialog.setInitialFileName(repname);
-    dialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", new String[] { "*.pdf" }));
-    File dialogResult = dialog.showSaveDialog(null);
-    String filePath = dialogResult.getAbsolutePath().toString();
+    int sh = shotsList.size();
+    dryr11 = sh >= 1 ? "DRYER 1" : "No";
+    dryr22 = sh >= 2 ? "DRYER 2" : "No";
+    dryr33 = sh >= 3 ? "DRYER 3" : "No";
+
+    String fann = checkDBRecord("Recipe_Types", "WashName", "Model");
     try {
-      com.itextpdf.text.Document myDocument = new com.itextpdf.text.Document();
-      PdfWriter myWriter = PdfWriter.getInstance(myDocument, new FileOutputStream(filePath));
-      PdfPTable table = new PdfPTable(5);
-      table.size();
-      //table.setHorizontalAlignment(1);
-      myDocument.open();
-      float[] columnWidths = { 15.0F, 15.0F,15.0F,15.0F,15.0F };
-      table.setWidths(columnWidths);
-      table.setWidthPercentage(100.0F);
-      myDocument.add((com.itextpdf.text.Element)new Paragraph("Cost Report For "+filenammm+" Recipe. ", FontFactory.getFont("Times-Bold", 12.0F, 1)));
-      myDocument.add((com.itextpdf.text.Element)new Paragraph("-------------------------------------------------------------------------------------------"));
-      table.addCell(new PdfPCell((Phrase)new Paragraph("Name", FontFactory.getFont("Times-Roman", 10.0F, 1))));
-      table.addCell(new PdfPCell((Phrase)new Paragraph("Quantity", FontFactory.getFont("Times-Roman", 10.0F, 1))));
-      table.addCell(new PdfPCell((Phrase)new Paragraph("Dilution", FontFactory.getFont("Times-Roman", 10.0F, 1))));
-      table.addCell(new PdfPCell((Phrase)new Paragraph("Price", FontFactory.getFont("Times-Roman", 10.0F, 1))));
-      table.addCell(new PdfPCell((Phrase)new Paragraph("Total", FontFactory.getFont("Times-Roman", 10.0F, 1))));
-      int no=0;
-      int stageno=1;
-      while (no<qua.size()) {                                                                                                                
-      table.addCell(new PdfPCell((Phrase)new Paragraph(nom.get(no), FontFactory.getFont("Times-Roman", 8.0F, 0))));
-      table.addCell(new PdfPCell((Phrase)new Paragraph(Double.toString(qua.get(no)), FontFactory.getFont("Times-Roman", 8.0F, 0))));
-      table.addCell(new PdfPCell((Phrase)new Paragraph(Double.toString(dil.get(no)), FontFactory.getFont("Times-Roman", 8.0F, 0))));
-      table.addCell(new PdfPCell((Phrase)new Paragraph(Double.toString(pri.get(no)), FontFactory.getFont("Times-Roman", 8.0F, 0))));
-      table.addCell(new PdfPCell((Phrase)new Paragraph(Double.toString((qua.get(no)/dil.get(no))*pri.get(no)), FontFactory.getFont("Times-Roman", 8.0F, 0))));
-      no++;
-      } 
-      myDocument.add((com.itextpdf.text.Element)table);
-      myDocument.add((com.itextpdf.text.Element)new Paragraph("-------------------------------"));
-      myDocument.add((com.itextpdf.text.Element)new Paragraph("Total Of Cost (New) :    "+Double.toString(summo)+"          $.", FontFactory.getFont("Times-Bold", 10.0F, 1)));
-      myDocument.add((com.itextpdf.text.Element)new Paragraph("Total Of Garments (New) :    "+Double.toString(pcsnum)+"          PCS.", FontFactory.getFont("Times-Bold", 10.0F, 1)));
-      myDocument.add((com.itextpdf.text.Element)new Paragraph("One Garment Costs (New) :    "+Double.toString(onegar)+"          $.", FontFactory.getFont("Times-Bold", 10.0F, 1)));
-      myDocument.add((com.itextpdf.text.Element)new Paragraph("--------------------------------------------------------------------------------------------"));
-      myDocument.add((com.itextpdf.text.Element)new Paragraph("Total Of Cost (Old) :    "+oldtotalcost+"          $.", FontFactory.getFont("Times-Bold", 10.0F, 1)));
-      myDocument.add((com.itextpdf.text.Element)new Paragraph("Total Of Garments (Old) :    "+oldpcs+"          PCS.", FontFactory.getFont("Times-Bold", 10.0F, 1)));
-      myDocument.add((com.itextpdf.text.Element)new Paragraph("One Garment Costs (Old) :    "+oldonegarmentcost+"          $.", FontFactory.getFont("Times-Bold", 10.0F, 1)));
-      myDocument.add((com.itextpdf.text.Element)new Paragraph("-------------------------------"));
-      myDocument.setPageSize(PageSize.A4.rotate());
-      myDocument.close();
-      Alert alooo = new Alert(Alert.AlertType.CONFIRMATION);
-      alooo.setTitle("Info");
-      alooo.setHeaderText("Info!");
-      alooo.setContentText("Report was generated successfully");
-      alooo.setResizable(true);
-      DialogPane dialogPaneu = alooo.getDialogPane();
-      dialogPaneu.getStylesheets().add(
-      getClass().getResource("cupertino-light.css").toExternalForm());
-      alooo.showAndWait();
+        if (fann.equals("found")) {
+            pst = conn.prepareStatement("UPDATE Recipe_Types SET Date=?,Model=?,WashName=?,Rinse=?,Stone=?,Foam=?,Bleach=?,Enzyme=?,MoonWash=?,Dryer_1=?,Dryer_2=?,Dryer_3=? WHERE WashName=? AND Model=?");
+        } else {
+            pst = conn.prepareStatement("INSERT INTO Recipe_Types (Date,Model,WashName,Rinse,Stone,Foam,Bleach,Enzyme,MoonWash,Dryer_1,Dryer_2,Dryer_3) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+        }
+        pst.setString(1,dateStr); pst.setString(2,modeloo); pst.setString(3,filenammm);
+        pst.setString(4,"RINSE"); pst.setString(5,stonn); pst.setString(6,fomm);
+        pst.setString(7,hypoo); pst.setString(8,enzymm); pst.setString(9,moonn);
+        pst.setString(10,dryr11); pst.setString(11,dryr22); pst.setString(12,dryr33);
+        if (fann.equals("found")) { pst.setString(13,filenammm); pst.setString(14,modeloo); }
+        pst.execute();
+        showNotif("Successful", fann.equals("found") ? "Updated types." : "Inserted new type.", false);
+    } catch (Exception ex) { ex.printStackTrace(); } finally { closeQuietly(rs, pst); }
+}
+
+/** حفظ العمليات في DB */
+private void detectAndSaveProcesses(String dateStr) {
+    StringBuilder stages = new StringBuilder();
+    int ds = 1;
+    org.jsoup.nodes.Document docyi = Jsoup.parse(code.getText());
+    for (Element table : docyi.select("table")) {
+        for (Element row : table.select("tr")) {
+            Elements tds = row.select("td");
+            String t3 = tds.get(3).text();
+            if (t3.contains("/") || t3.contains("\\") || t3.isEmpty()
+                    || t3.contains("TEMP") || t3.contains("OPERATOR")
+                    || t3.contains("temp") || t3.contains("operator")
+                    || t3.matches("[0-9]+") || t3.contains("REMOV") || t3.contains("REMOVE")
+                    || t3.contains("BATH") || t3.contains("SAME") || t3.contains("PATH")
+                    || t3.contains("SAM") || t3.contains("RPM") || t3.contains("KG")
+                    || t3.contains("PCS") || t3.contains("DRAIN") || t3.contains("RIMOV")) continue;
+
+            stages.append("\n").append(t3.toUpperCase().contains("EXTRACT")
+                    ? "WASHING " + ds++ : t3);
+        }
+    }
+
+    String lone = stages.toString().replaceAll("[\\u0600-\\u06FF]+", "\n").replace("null", "\n");
+    StringBuilder result = new StringBuilder();
+    String[] lines = lone.split("\n");
+    int nonEmpty = 0;
+    for (String line : lines) { if (!line.trim().isEmpty()) nonEmpty++; }
+    int cur = 0;
+    for (String line : lines) {
+        if (!line.trim().isEmpty()) {
+            result.append(line);
+            if (++cur < nonEmpty) result.append(" - ");
+        }
+    }
+    procccc = result.toString();
+
+    String fannn = checkDBRecord("Recipe_Processes", "WashName", "Model");
+    try {
+        if (fannn.equals("found")) {
+            pst = conn.prepareStatement("UPDATE Recipe_Processes SET Date=?,Model=?,WashName=?,Processes=? WHERE WashName=? AND Model=?");
+            pst.setString(1,dateStr); pst.setString(2,modeloo); pst.setString(3,filenammm); pst.setString(4,procccc);
+            pst.setString(5,filenammm); pst.setString(6,modeloo);
+        } else {
+            pst = conn.prepareStatement("INSERT INTO Recipe_Processes (Date,Model,WashName,Processes) VALUES (?,?,?,?)");
+            pst.setString(1,dateStr); pst.setString(2,modeloo); pst.setString(3,filenammm); pst.setString(4,procccc);
+        }
+        pst.execute();
+        showNotif("Successful", fannn.equals("found") ? "Updated processes." : "Inserted new processes.", false);
+    } catch (Exception ex) { ex.printStackTrace(); } finally { closeQuietly(rs, pst); }
+}
+
+/** حساب وحفظ وزن الحجر في DB */
+private void detectAndSaveStoneWeight(String dateStr) {
+    sumz = 0.0; ally = 0.0;
+    org.jsoup.nodes.Document docyp = Jsoup.parse(code.getText());
+    for (Element table : docyp.select("table")) {
+        for (Element row : table.select("tr")) {
+            Elements tds = row.select("td");
+            String t7 = tds.get(7).text().toUpperCase();
+            if (t7.contains("NEW STONE") || t7.contains("NEW STON")
+                    || t7.contains("NOW STON") || t7.contains("NOW STONE")) {
+                try { sumz += Double.parseDouble(tds.get(5).text()); } catch (Exception ignored) {}
+            }
+        }
+    }
+    ally   = (sumz / 2) * 25;
+    finall = Double.toString(ally);
+
+    String fannm = checkDBRecord("GetterStone", "Name", "Model");
+    try {
+        if (fannm.equals("found")) {
+            pst = conn.prepareStatement("UPDATE GetterStone SET Date=?,Model=?,Name=?,Stone=? WHERE Name=? AND Model=?");
+            pst.setString(1,dateStr); pst.setString(2,modeloo); pst.setString(3,filenammm); pst.setString(4,finall);
+            pst.setString(5,filenammm); pst.setString(6,modeloo);
+        } else {
+            pst = conn.prepareStatement("INSERT INTO GetterStone (Date,Model,Name,Stone) VALUES (?,?,?,?)");
+            pst.setString(1,dateStr); pst.setString(2,modeloo); pst.setString(3,filenammm); pst.setString(4,finall);
+        }
+        pst.execute();
+        showNotif("Successful", fannm.equals("found") ? "Updated stone." : "Inserted new stone.", false);
+    } catch (Exception ex) { ex.printStackTrace(); } finally { closeQuietly(rs, pst); }
+}
+
+/** فحص وجود سجل في جدول معين */
+private String checkDBRecord(String tableName, String nameCol, String modelCol) {
+    try {
+        pst = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE " + nameCol + "=? AND " + modelCol + "=?");
+        pst.setString(1, filenammm); pst.setString(2, modeloo);
+        rs = pst.executeQuery();
+        return rs.next() ? "found" : "not_found";
+    } catch (Exception ignored) {
+        return "not_found";
+    } finally { closeQuietly(rs, pst); }
+}
+
+
+
+
+/** إرسال الإيميل - تصميم مركز + إنجليزي + تحليل ذكي متقدم */
+private void sendEmailNotification(boolean addTime) {
+    try {
+        String from = "ahmedelkadyteeest@gmail.com";
+        String pass = "lgrj esca tdtz froo";
+        String sub = "Recipe Editor (RECETA) - Update Notification";
+
+        String logoUrl = "https://raw.githubusercontent.com/ProgKady/RecipeMaker/master/washing.png";
+
+        StringBuilder html = new StringBuilder();
+        html.append("<!DOCTYPE html>")
+            .append("<html>")
+            .append("<head>")
+            .append("<meta charset='UTF-8'>")
+            .append("<meta name='viewport' content='width=device-width, initial-scale=1.0'>")
+            .append("<title>RECETA</title>")
+            .append("<link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap' rel='stylesheet'>")
+            .append("<style>")
+            .append("body { font-family: 'Inter', sans-serif; background: #0a0a0a; margin:0; padding:20px; }")
+            .append(".main-table { max-width: 700px; margin: auto; }")
+            .append("</style>")
+            .append("</head>")
+            .append("<body>");
+
+        // Main Table
+        html.append("<table class='main-table' width='100%' align='center' cellpadding='0' cellspacing='0' style='max-width:700px; margin:auto; background:#1a1a1a; border-radius:16px; overflow:hidden;'>");
+
+        // Header
+        html.append("<tr>")
+            .append("<td align='center' style='background: linear-gradient(135deg, #1e3a8a, #3b82f6); padding:35px 20px; text-align:center;'>")
+            .append("<img src='").append(logoUrl).append("' width='95' height='95' style='border-radius:50%; border:4px solid white; margin-bottom:12px;' alt='Kadysoft'/>")
+            .append("<h1 style='margin:10px 0 5px; color:white; font-size:28px;'>RECETA - Recipe Editor</h1>")
+            .append("<p style='margin:0; color:#bae6fd; font-size:16px;'>Powered by Kadysoft Ltd</p>")
+            .append("</td>")
+            .append("</tr>");
+
+        html.append("<tr><td style='padding:30px;' align='center'>");
+
+        // Card 1: Recipe Information
+        html.append("<table width='100%' cellpadding='0' cellspacing='0' style='background:#252525; border-radius:12px; margin-bottom:20px; border:1px solid #374151;'>")
+            .append("<tr><td style='padding:22px;'>")
+            .append("<h3 style='color:#60a5fa; margin:0 0 15px 0; border-bottom:2px solid #3b82f6; padding-bottom:8px;'>📋 Recipe Information</h3>")
+            .append("<p><strong>Date:</strong> ").append(safe(datevalue)).append("</p>")
+            .append("<p><strong>Client - Recipe Name:</strong> ").append(safe(modeloo)).append(" - ").append(safe(filenammm)).append("</p>")
+            .append("<p><strong>Editor:</strong> <span style='background:#1e40af; color:white; padding:5px 12px; border-radius:8px;'>").append(safe(user)).append("</span></p>");
+
+        if (user != null && (user.contains("Ahmed Elkady") || user.contains("KADINIO"))) {
+            html.append("<p style='color:#4ade80; margin-top:10px;'><strong>🆓 Free Editor — For support: +201555266002</strong></p>");
+        }
+
+        if (addTime) {
+            if (bosbos == 1) {
+                html.append("<p><strong>Number of Shots:</strong> 1</p>")
+                   .append("<p><strong>Old Time:</strong> ").append(safe(oldtimehour)).append(" hours</p>")
+                   .append("<p><strong>New Time:</strong> ").append(safe(gdf1)).append(" hours</p>");
+            } else if (bosbos == 2) {
+                html.append("<p><strong>Number of Shots:</strong> 2</p>")
+                   .append("<p><strong>Shot 1:</strong> ").append(safe(oldtimehour)).append(" → ").append(safe(gdf1)).append(" hours</p>")
+                   .append("<p><strong>Shot 2:</strong> ").append(safe(oldtimehour2)).append(" → ").append(safe(gdf2)).append(" hours</p>");
+            }
+        } else {
+            if ("PILOT".equals(stage)) {
+                html.append("<p style='color:#fbbf24;'><strong>⚠️ Pilot Recipe</strong></p>");
+            } else if ("BLANKET".equals(stage)) {
+                html.append("<p style='color:#f87171;'><strong>⚠️ Blanket Recipe</strong></p>");
+            } else {
+                html.append("<p><strong>Number of Shots:</strong> 3 or more (Random Bath)</p>");
+            }
+        }
+        html.append("</td></tr></table>");
+
+        // Card 2: Cost + AI Analysis
+        html.append("<table width='100%' cellpadding='0' cellspacing='0' style='background:#252525; border-radius:12px; margin-bottom:20px; border:1px solid #374151;'>")
+            .append("<tr><td style='padding:22px;'>")
+            .append("<h3 style='color:#60a5fa; margin:0 0 15px 0; border-bottom:2px solid #3b82f6; padding-bottom:8px;'>💰 Cost Information & AI Analysis</h3>");
+
+        // NEW vs OLD Table
+        html.append("<table width='100%' cellpadding='12' style='margin:12px 0; border-collapse:collapse;'>")
+            .append("<tr><th colspan='2' style='background:#1e40af; color:white; text-align:center;'>NEW</th></tr>")
+            .append("<tr><td>Total Cost</td><td><strong>").append(safe(summo)).append(" $</strong></td></tr>")
+            .append("<tr><td>Pieces</td><td>").append(safe(pcsnum)).append(" PCS</td></tr>")
+            .append("<tr><td>Cost per Piece</td><td>").append(safe(onegar)).append(" $</td></tr>")
+            .append("</table>");
+
+        html.append("<table width='100%' cellpadding='12' style='margin:12px 0; border-collapse:collapse;'>")
+            .append("<tr><th colspan='2' style='background:#334155; text-align:center;'>OLD</th></tr>")
+            .append("<tr><td>Total Cost</td><td>").append(safe(oldtotalcost)).append(" $</td></tr>")
+            .append("<tr><td>Pieces</td><td>").append(safe(oldpcs)).append(" PCS</td></tr>")
+            .append("<tr><td>Cost per Piece</td><td>").append(safe(oldonegarmentcost)).append(" $</td></tr>")
+            .append("</table>");
+
+        // ==================== Advanced AI Analysis ====================
+        html.append("<div style='background:#1e2937; padding:22px; border-radius:12px; margin-top:20px; border:1px solid #475569;'>")
+            .append("<h4 style='color:#67e8f9; margin:0 0 16px 0; font-size:18px;'>🤖 AI Analysis & Smart Recommendation</h4>");
+
+        // Time Analysis
+        if (addTime) {
+            html.append("<p><strong>⏱ Time Analysis:</strong> ");
+            if (bosbos == 1) {
+                html.append(safe(oldtimehour)).append(" → ").append(safe(gdf1)).append(" hours");
+            } else if (bosbos == 2) {
+                html.append("Shot 1: ").append(safe(oldtimehour)).append("→").append(safe(gdf1))
+                    .append(" | Shot 2: ").append(safe(oldtimehour2)).append("→").append(safe(gdf2));
+            }
+            html.append("</p>");
+        }
+
+        // Cost Analysis
+        html.append("<p><strong>💵 Cost Analysis:</strong> ")
+            .append(safe(oldtotalcost)).append(" $ → ").append(safe(summo)).append(" $</p>");
+
+        // Smart Recommendation (أكبر وأذكى)
+        html.append("<div style='background:#0f172a; padding:18px; border-radius:10px; margin:18px 0; border-left:4px solid #22d3ee;'>")
+            .append("<p style='margin:0 0 10px 0; font-weight:600; color:#67e8f9;'>📌 AI Recommendation:</p>");
+
+        boolean timeSame = true;
+        boolean costSame = true;
+
+        // بسيط مقارنة (يمكن تحسينه لاحقاً بتحويل لأرقام)
+        if (addTime) {
+            if (bosbos == 1) {
+                if (!safe(oldtimehour).equals(safe(gdf1))) timeSame = false;
+            } else if (bosbos == 2) {
+                if (!safe(oldtimehour).equals(safe(gdf1)) || !safe(oldtimehour2).equals(safe(gdf2))) {
+                    timeSame = false;
+                }
+            }
+        }
+
+        if (!safe(oldtotalcost).equals(safe(summo))) {
+            costSame = false;
+        }
+
+        if (timeSame && costSame) {
+            html.append("<p style='color:#facc15; margin:0;'><strong>No changes detected in time or cost.</strong> Both versions are identical in these aspects.</p>");
+        } else if (timeSame) {
+            html.append("<p style='color:#4ade80; margin:0;'><strong>Time is unchanged.</strong> Cost has been updated. ");
+            html.append(costSame ? "No cost difference." : "Please check if the new cost is better.");
+            html.append("</p>");
+        } else if (costSame) {
+            html.append("<p style='color:#4ade80; margin:0;'><strong>Cost is unchanged.</strong> Processing time has been modified.</p>");
+        } else {
+            html.append("<p style='color:#4ade80; margin:0;'><strong>Both time and cost have changed.</strong> We recommend using the version with <strong>lower time and lower cost</strong>.</p>");
+        }
+
+        html.append("</div>");
+
+        html.append("<p><strong>📝 Change Log:</strong> Recipe updated by <strong>").append(safe(user))
+            .append("</strong>. Please review all changes in the RECETA system.</p>")
+            .append("</div>");
+
+        html.append("</td></tr></table>");
+        html.append("</td></tr>");
+
+        // Footer
+        html.append("<tr>")
+            .append("<td align='center' style='background:#111827; padding:30px; text-align:center; font-size:14px; color:#9ca3af; border-radius:0 0 16px 16px;'>")
+            .append("<div style='font-size:26px; font-weight:700; color:#60a5fa; margin-bottom:12px;'>KADYSOFT LTD</div>")
+            .append("<p>Recipe Editor (RECETA) © 2026 - All Rights Reserved<br>")
+            .append("Ahmed Elkady - CEO & Founder</p>")
+            
+            .append("<div style='margin-top:15px;'>")
+            .append("<a href='https://wa.me/201555266002' target='_blank' style='color:#4ade80; text-decoration:none; margin:0 10px;'>📱 WhatsApp</a>")
+            .append("<a href='https://facebook.com/kadinioo' target='_blank' style='color:#60a5fa; text-decoration:none; margin:0 10px;'>📘 Facebook</a>")
+            .append("<a href='https://github.com/ProgKady' target='_blank' style='color:#e2e8f0; text-decoration:none; margin:0 10px;'>🐙 GitHub</a>")
+            .append("<a href='https://linkedin.com/in/ahmed-elkady-9a4529162' target='_blank' style='color:#3b82f6; text-decoration:none; margin:0 10px;'>💼 LinkedIn</a>")
+            .append("</div>")
+            .append("</td>")
+            .append("</tr>");
+
+        html.append("</table></body></html>");
+
+        String finalHtml = html.toString();
+
+        // Sending Email
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");
+
+        Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(from, pass);
+            }
+        });
+
+        MimeMessage message = new MimeMessage(session);
+
+        String[] mailToId = {
+            "muhammet.eraslan@tcgarments.com", "eyup.karakoyun@tcgarments.com",
+            "hany.emeira@tcgarments.com", "rainforest.tc@tcgarments.com",
+            "yilmaz.bozkir@tcgarments.com", "mostafa.ramadan@tcgarments.com", "ahmed.elkady@tcgarments.com"
+        };
+       
+        for (String recipient : mailToId) {
+            message.addRecipients(Message.RecipientType.TO, recipient);
+        }
+
+        message.setSubject(sub);
+        message.setContent(finalHtml, "text/html; charset=UTF-8");
+        Transport.send(message);
+
+        System.out.println("✅ Email sent successfully (English + Advanced AI Analysis)");
+
     } catch (Exception e) {
-    } finally {
-      try {
-      } catch (Exception e) {
-      } 
-    } 
-    Desktop de = Desktop.getDesktop();
-    de.open(new File(reppath + "\\" + repname + ".pdf"));
-    ////////////////////////////End Report////////////////////////////////
-} 
-else {}
-}   
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-       
-       
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-      
-  ////////////////////Send Mails Here///////////////////////////////////////////////////////////////////////
-   
-   
-    //////////////////////////////////////////////////////////////////////////////////////////
-        
-    
-        
-      try {  
-        
-        
-    new Thread(new Runnable() {
-    @Override
-    public void run() {
-        
-        
-        
-//    ObservableList<String> ite=list.getItems();
-//    
-//    for  (String it : ite) {
-//        
-//        
-       
-    
-          String from,password,to,sub,suby;
-          from="ahmedelkadyteeest@gmail.com";
-          password="lgrj esca tdtz froo";
-          //to=it;
-          sub="Recipe Editor (RECETA).";
-          suby="Recipe Editor (RECETA) Powered By Kadysoft Ltd - All Rights Reserved. Ahmed Elkady - CEO.";
-          
-           if (bosbos==1) {
-               
-               if (user.contains("Ahmed Elkady")||user.contains("KADINIO")) {
-                   
-                msg="Date: "+datevalue+"\nCustomer - Recipe_Name: "+modeloo+" - "+filenammm+"\nEditor_Name: "+user+"   ***- Free Editor At Anytime, Ask For Help On Whatsapp At: +201555266002. -***"+"\nShots: 1\nOld_Time: "+oldtimehour+"   Hours."+"\nNew_Time: "+gdf1+"   Hours."+
-                        
-                        "\n-------------------------------------------------"
-                        + "\nHere is All Info About Cost:"
-                        + "\n---------------NEW----------------"
-                        + "\n"
-                        + "\nTotal Of Cost (New) :    "+Double.toString(summo)+"          $."
-                        + "\nTotal Of Garments (New) :    "+Double.toString(pcsnum)+"          PCS."
-                        + "\nOne Garment Costs (New) :    "+Double.toString(onegar)+"          $."
-                        + "\n---------------OLD----------------"
-                        + "\n"
-                        + "\nTotal Of Cost (Old) :    "+oldtotalcost+"          $."
-                        + "\nTotal Of Garments (Old) :    "+oldpcs+"          PCS."
-                        + "\nOne Garment Costs (Old) :    "+oldonegarmentcost+"          $."
-                        + "\n-------------------------------------------------"+
-                        
-                        "\n\n\n"+suby+"\n\n\n"+
-                        
-"▒█░▄▀ ░█▀▀█ ▒█▀▀▄ ▒█░░▒█ ▒█▀▀▀█ ▒█▀▀▀█ ▒█▀▀▀ ▀▀█▀▀ 　 ▒█░░░ ▀▀█▀▀ ▒█▀▀▄ \n" +
-"▒█▀▄░ ▒█▄▄█ ▒█░▒█ ▒█▄▄▄█ ░▀▀▀▄▄ ▒█░░▒█ ▒█▀▀▀ ░▒█░░ 　 ▒█░░░ ░▒█░░ ▒█░▒█ \n" +
-"▒█░▒█ ▒█░▒█ ▒█▄▄▀ ░░▒█░░ ▒█▄▄▄█ ▒█▄▄▄█ ▒█░░░ ░▒█░░ 　 ▒█▄▄█ ░▒█░░ ▒█▄▄▀";
-   
-                        
-                        
-                        
-                        
-               }
-               
-                   
- 
-                  
-                                                      
-                                                                               
-                                                          
-               
-               else {
-                msg="Date: "+datevalue+"\nCustomer - Recipe_Name: "+modeloo+" - "+filenammm+"\nEditor_Name: "+user+"\nShots: 1\nOld_Time: "+oldtimehour+"   Hours."+"\nNew_Time: "+gdf1+"   Hours."+
-                        
-                       "\n-------------------------------------------------"
-                        + "\nHere is All Info About Cost:"
-                        + "\n---------------NEW----------------"
-                        + "\n"
-                        + "\nTotal Of Cost (New) :    "+Double.toString(summo)+"          $."
-                        + "\nTotal Of Garments (New) :    "+Double.toString(pcsnum)+"          PCS."
-                        + "\nOne Garment Costs (New) :    "+Double.toString(onegar)+"          $."
-                        + "\n---------------OLD----------------"
-                        + "\n"
-                        + "\nTotal Of Cost (Old) :    "+oldtotalcost+"          $."
-                        + "\nTotal Of Garments (Old) :    "+oldpcs+"          PCS."
-                        + "\nOne Garment Costs (Old) :    "+oldonegarmentcost+"          $."
-                        + "\n-------------------------------------------------"+
-                        
-                        "\n\n\n"+suby+"\n\n\n"+
-"▒█░▄▀ ░█▀▀█ ▒█▀▀▄ ▒█░░▒█ ▒█▀▀▀█ ▒█▀▀▀█ ▒█▀▀▀ ▀▀█▀▀ 　 ▒█░░░ ▀▀█▀▀ ▒█▀▀▄ \n" +
-"▒█▀▄░ ▒█▄▄█ ▒█░▒█ ▒█▄▄▄█ ░▀▀▀▄▄ ▒█░░▒█ ▒█▀▀▀ ░▒█░░ 　 ▒█░░░ ░▒█░░ ▒█░▒█ \n" +
-"▒█░▒█ ▒█░▒█ ▒█▄▄▀ ░░▒█░░ ▒█▄▄▄█ ▒█▄▄▄█ ▒█░░░ ░▒█░░ 　 ▒█▄▄█ ░▒█░░ ▒█▄▄▀";
-               }
-               
-              
-           }
-           
-           if (bosbos==2) {
-               
-               
-                if (user.contains("Ahmed Elkady")||user.contains("KADINIO")) {
-                   
-                msg="Date: "+datevalue+"\nCustomer - Recipe_Name: "+modeloo+" - "+filenammm+"\nEditor_Name: "+user+"   ***- Free Editor At Anytime, Ask For Help On Whatsapp At: +201555266002. -***"+"\nShots: 2\nOld_Time_First_Shot: "+oldtimehour+"   Hours."+"\nOld_Time_Second_Shot: "+oldtimehour2+"   Hours."+"\nNew_Time_First_Shot: "+gdf1+"   Hours."+"\nNew_Time_Second_Shot: "+gdf2+"   Hours."+
-                        
-                        
-                        "\n-------------------------------------------------"
-                        + "\nHere is All Info About Cost:"
-                        + "\n---------------NEW----------------"
-                        + "\n"
-                        + "\nTotal Of Cost (New) :    "+Double.toString(summo)+"          $."
-                        + "\nTotal Of Garments (New) :    "+Double.toString(pcsnum)+"          PCS."
-                        + "\nOne Garment Costs (New) :    "+Double.toString(onegar)+"          $."
-                        + "\n---------------OLD----------------"
-                        + "\n"
-                        + "\nTotal Of Cost (Old) :    "+oldtotalcost+"          $."
-                        + "\nTotal Of Garments (Old) :    "+oldpcs+"          PCS."
-                        + "\nOne Garment Costs (Old) :    "+oldonegarmentcost+"          $."
-                        + "\n-------------------------------------------------"+
-                        
-                        
-                        "\n\n\n"+suby+"\n\n\n"+
-"▒█░▄▀ ░█▀▀█ ▒█▀▀▄ ▒█░░▒█ ▒█▀▀▀█ ▒█▀▀▀█ ▒█▀▀▀ ▀▀█▀▀ 　 ▒█░░░ ▀▀█▀▀ ▒█▀▀▄ \n" +
-"▒█▀▄░ ▒█▄▄█ ▒█░▒█ ▒█▄▄▄█ ░▀▀▀▄▄ ▒█░░▒█ ▒█▀▀▀ ░▒█░░ 　 ▒█░░░ ░▒█░░ ▒█░▒█ \n" +
-"▒█░▒█ ▒█░▒█ ▒█▄▄▀ ░░▒█░░ ▒█▄▄▄█ ▒█▄▄▄█ ▒█░░░ ░▒█░░ 　 ▒█▄▄█ ░▒█░░ ▒█▄▄▀";
-           
-               }
-               
-               else {
-                msg="Date: "+datevalue+"\nCustomer - Recipe_Name: "+modeloo+" - "+filenammm+"\nEditor_Name: "+user+"\nShots: 2\nOld_Time_First_Shot: "+oldtimehour+"   Hours."+"\nOld_Time_Second_Shot: "+oldtimehour2+"   Hours."+"\nNew_Time_First_Shot: "+gdf1+"   Hours."+"\nNew_Time_Second_Shot: "+gdf2+"   Hours."+
-                        
-                        
-                        "\n-------------------------------------------------"
-                        + "\nHere is All Info About Cost:"
-                        + "\n---------------NEW----------------"
-                        + "\n"
-                        + "\nTotal Of Cost (New) :    "+Double.toString(summo)+"          $."
-                        + "\nTotal Of Garments (New) :    "+Double.toString(pcsnum)+"          PCS."
-                        + "\nOne Garment Costs (New) :    "+Double.toString(onegar)+"          $."
-                        + "\n---------------OLD----------------"
-                        + "\n"
-                        + "\nTotal Of Cost (Old) :    "+oldtotalcost+"          $."
-                        + "\nTotal Of Garments (Old) :    "+oldpcs+"          PCS."
-                        + "\nOne Garment Costs (Old) :    "+oldonegarmentcost+"          $."
-                        + "\n-------------------------------------------------"+
-                        
-                        
-                        "\n\n\n"+suby+"\n\n\n"+
-"▒█░▄▀ ░█▀▀█ ▒█▀▀▄ ▒█░░▒█ ▒█▀▀▀█ ▒█▀▀▀█ ▒█▀▀▀ ▀▀█▀▀ 　 ▒█░░░ ▀▀█▀▀ ▒█▀▀▄ \n" +
-"▒█▀▄░ ▒█▄▄█ ▒█░▒█ ▒█▄▄▄█ ░▀▀▀▄▄ ▒█░░▒█ ▒█▀▀▀ ░▒█░░ 　 ▒█░░░ ░▒█░░ ▒█░▒█ \n" +
-"▒█░▒█ ▒█░▒█ ▒█▄▄▀ ░░▒█░░ ▒█▄▄▄█ ▒█▄▄▄█ ▒█░░░ ░▒█░░ 　 ▒█▄▄█ ░▒█░░ ▒█▄▄▀";
-           
-               }
-               
-              }
-          
-          
-        
-          Properties props = new Properties();    
-          props.put("mail.smtp.host", "smtp.gmail.com");    
-          props.put("mail.smtp.socketFactory.port", "465");    
-          props.put("mail.smtp.socketFactory.class",    
-          "javax.net.ssl.SSLSocketFactory");    
-          props.put("mail.smtp.auth", "true");    
-          props.put("mail.smtp.port", "465");    
-          Session session = Session.getDefaultInstance(props,    
-          new javax.mail.Authenticator() {    
-          protected PasswordAuthentication getPasswordAuthentication() {    
-          return new PasswordAuthentication(from,password);  
-          }    
-          });       
-          try {    
-          MimeMessage message = new MimeMessage(session);
-          
-          
-          //For mailing by the old method just uncomment codes and comment current method then go straight. 
-          
-          String[] mailToId={"kemal.duman@tcgarments.com","muhammet.eraslan@tcgarments.com","eyup.karakoyun@tcgarments.com","ahmed.nassif@tcgarments.com","hany.emeira@tcgarments.com"/*,"chemical.store@tcgarments.com"*/,"rainforest.tc@tcgarments.com","yilmaz.bozkir@tcgarments.com","ahmed.elkady@tcgarments.com"};
-          for(int i=0;i<mailToId.length;i++){
-           message.addRecipients(Message.RecipientType.TO, mailToId[i]);
-          }
-          
-          //message.addRecipient(Message.RecipientType.TO,new InternetAddress(it));    
-          message.setSubject(sub);    
-          //message.setText(msg, "text/plain; charset=UTF-8");
-          message.setContent(msg, "text/plain; charset=UTF-8");
-          Transport.send(message);  
-          System.out.println("Successful");
-          } catch (MessagingException e) {throw new RuntimeException(e);} 
-        
-        
-//        
-//    }
-//    
-//        try {
-//            Thread.sleep(300);
-//        } catch (InterruptedException ex) {
-//            Logger.getLogger(SaverController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-      
-      
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-         try {
-         String sqla = "INSERT INTO Notifications (Recipient, Sender, Message, Delivered) VALUES (?, ?, ?, 0)";
-          pst = conn.prepareStatement(sqla);
-          pst.setString(1, "Recipe_Maker");
-          pst.setString(2, "Ahmed Elkady");
-          pst.setString(3, "We have updated "+filenammm+" successfully in "+datevalue+" of "+modeloo+" model.");
-          pst.executeUpdate();
-          }
-          catch (Exception e) {
-          } finally {
-          try {
-          rs.close();
-          pst.close();
-          } catch (Exception exception) {}}  
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        
-          }
-}).start();
-    
-      
-      }
-      
-      catch (Exception m) {
-        
-      }
-    
-    
-    
-        //////////////////////////////////////////////////////////////////////////////////////////
-   
-        
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-      }    
-      else if (option.get() == ButtonType.CANCEL) {
-          
-          ////////////////////////////////////////////////////////////////////////////////////////////////////
-          
-             
-   ///////////////////////////////////////Everything Will Go Here///////////////////////////////////////////////////
-   
-   WebEngine engine = codey.getEngine();
-   //Object value=engine.executeScript("document.getElementById('txtBody').value;");
-   Object value=engine.executeScript("tinymce.get('txtBody').getContent();");
-   String thecodee=value.toString();
-   
-   
-   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
-   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
-   if (signme.isSelected()==true) {
-       
-       
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
-   
-   if (fixche.isSelected()==true) {
-       
-       String codee = thecodee;
-      if (!codee.contains("TABLE")) {
-      Notifications noti = Notifications.create();
-      noti.title("Recipe Error");
-      noti.text("Maybe not a recipe, Open a recipe first!.");
-      noti.hideAfter(Duration.seconds(3));
-      noti.position(Pos.CENTER);
-      noti.showError();    
-        }
-        else {
-            Document docj = Jsoup.parse(codee);
-        for (Element table : docj.select("TABLE")) {
-        for (Element row : table.select("TR")) {
-            Elements tds = row.select("TD");
-            if (tds.get(7).text().isEmpty()) {   
-            }
-            else {  
-             ///////////////////////////////////////////////////////////////
-String string=tds.get(7).text();
-BufferedReader buf=new BufferedReader (new FileReader (NewDir.file_dirrrr + "\\Recipe_Indexes\\Chemical_Dictionary.kady"));
-String line;
-String linebeforeequal;
-String lineafterequal;
-while ((line=buf.readLine())!=null) {
-linebeforeequal=line.substring(0,line.indexOf("=")-0);
-lineafterequal=line.substring(line.indexOf("=") + 1 , line.length());
-if (string.equals(lineafterequal)) {
-//System.out.println(string+" = "+linebeforeequal);
-String formattedText = "<b style='display:block; text-align:center;'>" + linebeforeequal + "</b>";
-tds.get(8).html(formattedText); // Use .html() instead of .text()     
-//tds.get(8).text(linebeforeequal);
-//System.out.println(tds.get(8).text());
-break;
-
-    }
-    else {
-        
-    }
-    
-}
-buf.close();
-    
-            }   
-         
-        }}
-       roraa=docj.toString();
-        }
-       
-      
-      ////////////////////////////////////////////////////////////////////////////// 
-org.jsoup.nodes.Document doct = Jsoup.parse(roraa);
-for (Element table : doct.select("TABLE")) {
-for (Element row : table.select("TR")) {
-Elements tds = row.select("TD");
-if (tds.get(8).text().isEmpty()) {   
-}
-else {  
-String string=tds.get(8).text();
-BufferedReader bufi=new BufferedReader (new FileReader (NewDir.file_dirrrr + "\\Recipe_Indexes\\Lot_Numbers.kady"));
-String line;
-String linebeforeequal;//Chemical Name
-String lineafterequal;//Lot Numbers
-boolean found = false;         
-while ((line=bufi.readLine())!=null) {
-linebeforeequal=line.substring(0,line.indexOf("="));//Chemical Name
-lineafterequal=line.substring(line.indexOf("=") + 1);//Lot Numbers
-if (string.equalsIgnoreCase(linebeforeequal)) {
-System.out.println(linebeforeequal);
-String formattedText = "<b style='display:block; text-align:center;'>" + lineafterequal + "</b>";
-tds.get(9).html(formattedText); // Use .html() instead of .text()     
-//tds.get(9).text(lineafterequal);
-found = true;                    
-break;
-    }   
-}
-bufi.close();}}}
-roraa=doct.toString();      
-//////////////////////////////////////////////////////////////////////////////
-      
-       
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
-      
-org.jsoup.nodes.Document doctp = Jsoup.parse(roraa);
-
-// مر على كل جدول
-for (Element table : doctp.select("table")) {
-    for (Element row : table.select("tr")) {
-        Elements tds = row.select("td");
-
-        // اتأكد إن فيه على الأقل 11 عمود (0 → 10)
-        if (tds.size() > 10) {
-            String target = tds.get(8).text().trim();
-
-            if (!target.isEmpty()) {
-                Path mapPath = Paths.get(NewDir.file_dirrrr, "Recipe_Indexes", "Chemical_Translation.kady");
-
-                try (BufferedReader bufi = Files.newBufferedReader(mapPath, StandardCharsets.UTF_8)) {
-                    String line;
-                    boolean found = false;
-
-                    while ((line = bufi.readLine()) != null) {
-                        // اتأكد إن السطر فيه =
-                        if (!line.contains("=")) continue;
-
-                        String linebeforeequal = line.substring(0, line.indexOf("=")).trim();
-                        String lineafterequal = line.substring(line.indexOf("=") + 1).trim();
-
-                        if (target.equalsIgnoreCase(linebeforeequal)) {
-                            System.out.println("Matched: " + linebeforeequal);
-
-                            String formattedText =
-                                    "<b style='display:block; text-align:center;'>" +
-                                            lineafterequal +
-                                            "</b>";
-
-                            // استبدل العمود رقم 10 بالنص الجديد
-                            tds.get(10).html(formattedText);
-
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    if (!found) {
-                        System.out.println("No match for: " + target);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "❌ Failed to send email:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
 
-roraa = doctp.toString();
- 
-       
-       
- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+private String safe(Object obj) {
+    if (obj == null) return "—";
+    return obj.toString();
+}
 
 
 
-
-   }
-   
-   else {
-       
-       //Continue..........
-       roraa=code.getText();
-   }
-    
-   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
-            //String codee=code.getText();
-            String pathtosignature="file://"+NewDir.file_dirrrrr+"\\Mr_Muhammet.png";
-            String modely=model;
-            FileChooser dialog = new FileChooser();
-            dialog.setInitialDirectory(new File(NewDir.file_dir+"\\"+stage+"\\"+model));
-            dialog.setInitialFileName(recipe+".ks");
-            dialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("Kadysoft Files", new String[] { "*.ks" }));
-            dialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("HTML Files", new String[] { "*.html" }));
-            File dialogResult = dialog.showSaveDialog(null);
-            filePath = dialogResult.getAbsolutePath().toString();
-            OutputStream instream=new FileOutputStream(filePath);
-            pw = new PrintWriter(new OutputStreamWriter (instream,"UTF-8"));
-            pw.println("<!DOCTYPE html>\n<html lang=\"ar\">\n<head>\n<title>Kadysoft</title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>td {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}\ntable {\nheight:5px;\nmax-width:100%;\nheight:100%;\nwhite-space:nowrap;\n}\ntr {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}"
-                    + ""
-                    + ""
-                    
-                        + ""
-                + "/* Centered Watermark */\n" +
-"    .watermark {\n" +
-"      position: fixed;\n" +
-"      top: 50%;\n" +
-"      left: 50%;\n" +
-"      transform: translate(-50%, -50%) rotate(-45deg);\n" +
-"      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
-"      background-repeat: no-repeat;\n" +
-"      background-size: contain;\n" +
-"      width: 300px;\n" +
-"      height: 200px;\n" +
-"      opacity: 0.3;\n" +
-"      pointer-events: none;\n" +
-"      z-index: 1000;\n" +
-"    }\n" +
-"    /* Repeated Watermark */\n" +
-"    .watermark-repeated {\n" +
-"      position: fixed;\n" +
-"      top: 0;\n" +
-"      left: 0;\n" +
-"      width: 100%;\n" +
-"      height: 100%;\n" +
-"      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
-"      background-repeat: repeat;\n" +
-"      background-size: 300px 200px;\n" +
-"      opacity: 0.2;\n" +
-"      pointer-events: none;\n" +
-"      z-index: 1000;\n" +
-"    }"
-                + ""
-                + "</STYLE></HEAD>\n" +
-"<BODY><CENTER>\n"
-+ "<div class=\"watermark\"></div>" 
-                
-                    
-                    + ""
-                    + "\n\n");
-            pw.println("<!-- Creating Recipe From Kadysoft Ltd.-->\n\n");
-            pw.println(roraa);
-            pw.println("\n\n</center>\n</body>\n</html>");
-            pw.println("<b id=\"signname\">Mr_Muhammet Signature: "+"</b><img id=\"signimage\" src=\""+pathtosignature+"\" width=\"300\" height=\"90\" alt=\"Developed By Kadysoft Ltd (Ahmed Elkady).\" style=\"border-color:black;border-width:10px;\">");   
-      
-            if (roraa.contains("background-image:")) {
-                
-            }
-            else {
-                pw.println("\n\n<style>\n" +
-"body {\n" +
-"  background-image: url(\""+modely+".bmp\");\n" +
-"  background-position: center;\n" +
-"  height: 170px;\n" +
-"background-position-x:550px;"+
-"  background-repeat: no-repeat;\n" +
-"  background-size: 120px 90px;\n" +
-"}\n" +
-"</style>");             
-          }
-            pw.close();
-            
-            
-    /////////////////////////////////////////////////// 
-    code.clear();
-    InputStream inputinstream=new FileInputStream(filePath);
-    BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
-    //BufferedReader bi=new BufferedReader (new FileReader (pathy));
-    String lo;
-    while ((lo=bi.readLine())!=null) {
-        
-        code.appendText("\n"+lo
-       .replace("A","ﬦ")
-       .replace("B","ﬧ")
-       .replace("C","ﬨ")
-       .replace("D","﬩")
-       .replace("E","שׁ")    
-       .replace("F","שׂ")        
-       .replace("G","שּׁ")         
-       .replace("H","שּׂ")         
-       .replace("I","אַ")         
-       .replace("J","אָ")         
-       .replace("K","אּ")         
-       .replace("L","בּ")         
-       .replace("M","גּ")         
-       .replace("N","דּ")         
-       .replace("O","הּ")         
-       .replace("P","וּ")         
-       .replace("Q","זּ")         
-       .replace("R","טּ")         
-       .replace("S","יּ")         
-       .replace("T","ךּ")         
-       .replace("U","כּ")         
-       .replace("V","לּ")
-       .replace("W","מּ")         
-       .replace("X","נּ")         
-       .replace("Y","סּ")         
-       .replace("Z","ףּ")
-                
-       .replace("0","פּ")         
-       .replace("1","צּ")         
-       .replace("2","קּ")         
-       .replace("3","רּ")         
-       .replace("4","שּ")         
-       .replace("5","תּ")         
-       .replace("6","וֹ")         
-       .replace("7","בֿ")         
-       .replace("8","כֿ")
-       .replace("9","פֿ")
-                
-       .replace("a","ﬦ")
-       .replace("b","ﬧ")
-       .replace("c","ﬨ")
-       .replace("d","﬩")
-       .replace("e","שׁ")    
-       .replace("f","שׂ")        
-       .replace("g","שּׁ")         
-       .replace("h","שּׂ")         
-       .replace("i","אַ")         
-       .replace("j","אָ")         
-       .replace("k","אּ")         
-       .replace("l","בּ")         
-       .replace("m","גּ")         
-       .replace("n","דּ")         
-       .replace("o","הּ")         
-       .replace("p","וּ")         
-       .replace("q","זּ")         
-       .replace("r","טּ")         
-       .replace("s","יּ")         
-       .replace("t","ךּ")         
-       .replace("u","כּ")         
-       .replace("v","לּ")
-       .replace("w","מּ")         
-       .replace("x","נּ")         
-       .replace("y","סּ")         
-       .replace("z","ףּ")                
-      ); 
-
-
-    }
-    bi.close();
-    String gf=code.getText();
-    OutputStream instreamm=new FileOutputStream(filePath);
-    PrintWriter pw = new PrintWriter(new OutputStreamWriter (instreamm,"UTF-8"));
-    //PrintWriter pw=new PrintWriter (new FileWriter (pathy));
-    pw.println(gf);
-    pw.close();
+/** عرض إشعار Notification */
+private void showNotif(String title, String text, boolean isError) {
     Notifications noti = Notifications.create();
-    noti.title("Successful");
-    noti.text("We have encrypted the recipe successfully.");
-    noti.hideAfter(Duration.seconds(3));
+    noti.title(title);
+    noti.text(text);
     noti.position(Pos.CENTER);
-    noti.showInformation();
-    code.clear();
-
-       //////////////////////////////////////////////////
-            
-            
-            //Desktop desk = Desktop.getDesktop();
-            //desk.open(new File (filePath));
-            Stage jk = (Stage)this.save.getScene().getWindow();
-            //jk.close();
-   
-       /////////////////////////////////////////////////// 
-   
-       //////////////////////////////////////////////////
-       
-   }
-   
-   
-   else {
-       
-       
-       
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
-   
-   if (fixche.isSelected()==true) {
-       
-       String codee = code.getText();
-      if (!codee.contains("TABLE")) {
-      Notifications noti = Notifications.create();
-      noti.title("Recipe Error");
-      noti.text("Maybe not a recipe, Open a recipe first!.");
-      noti.hideAfter(Duration.seconds(3));
-      noti.position(Pos.CENTER);
-      noti.showError();    
-        }
-        else {
-            Document docj = Jsoup.parse(codee);
-        for (Element table : docj.select("TABLE")) {
-        for (Element row : table.select("TR")) {
-            Elements tds = row.select("TD");
-            if (tds.get(7).text().isEmpty()) {   
-            }
-            else {  
-             ///////////////////////////////////////////////////////////////
-String string=tds.get(7).text();
-BufferedReader buf=new BufferedReader (new FileReader (NewDir.file_dirrrr + "\\Recipe_Indexes\\Chemical_Dictionary.kady"));
-String line;
-String linebeforeequal;
-String lineafterequal;
-while ((line=buf.readLine())!=null) {
-linebeforeequal=line.substring(0,line.indexOf("=")-0);
-lineafterequal=line.substring(line.indexOf("=") + 1 , line.length());
-if (string.equals(lineafterequal)) {
-//System.out.println(string+" = "+linebeforeequal);
-String formattedText = "<b style='display:block; text-align:center;'>" + linebeforeequal + "</b>";
-tds.get(8).html(formattedText); // Use .html() instead of .text()     
-//tds.get(8).text(linebeforeequal);
-//System.out.println(tds.get(8).text());
-break;
-
-    }
-    else {
-        
-    }
-    
-}
-buf.close();
-    
-            }   
-         
-        }}
-       roraa=docj.toString();
-        }
-      
-      
-      ////////////////////////////////////////////////////////////////////////////// 
-org.jsoup.nodes.Document doct = Jsoup.parse(roraa);
-for (Element table : doct.select("TABLE")) {
-for (Element row : table.select("TR")) {
-Elements tds = row.select("TD");
-if (tds.get(8).text().isEmpty()) {   
-}
-else {  
-String string=tds.get(8).text();
-BufferedReader bufi=new BufferedReader (new FileReader (NewDir.file_dirrrr + "\\Recipe_Indexes\\Lot_Numbers.kady"));
-String line;
-String linebeforeequal;//Chemical Name
-String lineafterequal;//Lot Numbers
-boolean found = false;         
-while ((line=bufi.readLine())!=null) {
-linebeforeequal=line.substring(0,line.indexOf("="));//Chemical Name
-lineafterequal=line.substring(line.indexOf("=") + 1);//Lot Numbers
-if (string.equalsIgnoreCase(linebeforeequal)) {
-System.out.println(linebeforeequal);
-String formattedText = "<b style='display:block; text-align:center;'>" + lineafterequal + "</b>";
-tds.get(9).html(formattedText); // Use .html() instead of .text()     
-//tds.get(9).text(lineafterequal);
-found = true;                    
-break;
-    }   
-}
-bufi.close();}}}
-roraa=doct.toString();      
-//////////////////////////////////////////////////////////////////////////////
-    
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
-      
-org.jsoup.nodes.Document doctp = Jsoup.parse(roraa);
-
-// مر على كل جدول
-for (Element table : doctp.select("table")) {
-    for (Element row : table.select("tr")) {
-        Elements tds = row.select("td");
-
-        // اتأكد إن فيه على الأقل 11 عمود (0 → 10)
-        if (tds.size() > 10) {
-            String target = tds.get(8).text().trim();
-
-            if (!target.isEmpty()) {
-                Path mapPath = Paths.get(NewDir.file_dirrrr, "Recipe_Indexes", "Chemical_Translation.kady");
-
-                try (BufferedReader bufi = Files.newBufferedReader(mapPath, StandardCharsets.UTF_8)) {
-                    String line;
-                    boolean found = false;
-
-                    while ((line = bufi.readLine()) != null) {
-                        // اتأكد إن السطر فيه =
-                        if (!line.contains("=")) continue;
-
-                        String linebeforeequal = line.substring(0, line.indexOf("=")).trim();
-                        String lineafterequal = line.substring(line.indexOf("=") + 1).trim();
-
-                        if (target.equalsIgnoreCase(linebeforeequal)) {
-                            System.out.println("Matched: " + linebeforeequal);
-
-                            String formattedText =
-                                    "<b style='display:block; text-align:center;'>" +
-                                            lineafterequal +
-                                            "</b>";
-
-                            // استبدل العمود رقم 10 بالنص الجديد
-                            tds.get(10).html(formattedText);
-
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    if (!found) {
-                        System.out.println("No match for: " + target);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
+    noti.hideAfter(Duration.seconds(4));
+    if (isError) noti.showError(); else noti.showInformation();
 }
 
-roraa = doctp.toString();
- 
-       
-       
- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** إغلاق ResultSet و PreparedStatement بهدوء */
+private void closeQuietly(ResultSet rs, PreparedStatement pst) {
+    try { if (rs  != null) rs.close();  } catch (Exception ignored) {}
+    try { if (pst != null) pst.close(); } catch (Exception ignored) {}
+}
 
-       
-   }
-   
-   else {
-       
-       //Continue..........
-       roraa=code.getText();
-   }
-    
-   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
-      
-       
-       
-       
-            //String codee=code.getText();
-            String pathtosignature="file://"+NewDir.file_dirrrrr+"\\Mr_Moharam.png";
-            String modely=model;
-            FileChooser dialog = new FileChooser();
-            dialog.setInitialDirectory(new File(NewDir.file_dir+"\\"+stage+"\\"+model));
-            dialog.setInitialFileName(recipe+".ks");
-            dialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("Kadysoft Files", new String[] { "*.ks" }));
-            dialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("HTML Files", new String[] { "*.html" }));
-            File dialogResult = dialog.showSaveDialog(null);
-            filePath = dialogResult.getAbsolutePath().toString();
-            OutputStream instream=new FileOutputStream(filePath);
-            pw = new PrintWriter(new OutputStreamWriter (instream,"UTF-8"));
-            pw.println("<!DOCTYPE html>\n<html lang=\"ar\">\n<head>\n<title>Kadysoft</title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>td {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}\ntable {\nheight:5px;\nmax-width:100%;\nheight:100%;\nwhite-space:nowrap;\n}\ntr {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}"
-                    + ""
-                    + ""
-                    
-                        + ""
-                + "/* Centered Watermark */\n" +
-"    .watermark {\n" +
-"      position: fixed;\n" +
-"      top: 50%;\n" +
-"      left: 50%;\n" +
-"      transform: translate(-50%, -50%) rotate(-45deg);\n" +
-"      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
-"      background-repeat: no-repeat;\n" +
-"      background-size: contain;\n" +
-"      width: 300px;\n" +
-"      height: 200px;\n" +
-"      opacity: 0.3;\n" +
-"      pointer-events: none;\n" +
-"      z-index: 1000;\n" +
-"    }\n" +
-"    /* Repeated Watermark */\n" +
-"    .watermark-repeated {\n" +
-"      position: fixed;\n" +
-"      top: 0;\n" +
-"      left: 0;\n" +
-"      width: 100%;\n" +
-"      height: 100%;\n" +
-"      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
-"      background-repeat: repeat;\n" +
-"      background-size: 300px 200px;\n" +
-"      opacity: 0.2;\n" +
-"      pointer-events: none;\n" +
-"      z-index: 1000;\n" +
-"    }"
-                + ""
-                + "</STYLE></HEAD>\n" +
-"<BODY><CENTER>\n"
-+ "<div class=\"watermark\"></div>" 
-                
-                    
-                    
-                    + ""
-                    + ""
-                    + "\n\n");
-            pw.println("<!-- Creating Recipe From Kadysoft Ltd.-->\n\n");
-            pw.println(roraa);
-            pw.println("\n\n</center>\n</body>\n</html>");
-            //pw.println("<b>Mr_Moharam Signature: "+"</b><img src=\""+pathtosignature+"\" width=\"300\" height=\"90\" alt=\"Developed By Kadysoft Ltd (Ahmed Elkady).\" style=\"border-color:black;border-width:10px;\">");   
-      
-            if (roraa.contains("background-image:")) {
-                
-            }
-            else {
-                pw.println("\n\n<style>\n" +
-"body {\n" +
-"  background-image: url(\""+modely+".bmp\");\n" +
-"  background-position: center;\n" +
-"  height: 170px;\n" +
-"background-position-x:550px;"+
-"  background-repeat: no-repeat;\n" +
-"  background-size: 120px 90px;\n" +
-"}\n" +
-"</style>");             
-          }
-            pw.close();
-            
-            
-               /////////////////////////////////////////////////// 
-   code.clear();
-    InputStream inputinstream=new FileInputStream(filePath);
-    BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
-    //BufferedReader bi=new BufferedReader (new FileReader (pathy));
-    String lo;
-    while ((lo=bi.readLine())!=null) {
-        
-        code.appendText("\n"+lo
-       .replace("A","ﬦ")
-       .replace("B","ﬧ")
-       .replace("C","ﬨ")
-       .replace("D","﬩")
-       .replace("E","שׁ")    
-       .replace("F","שׂ")        
-       .replace("G","שּׁ")         
-       .replace("H","שּׂ")         
-       .replace("I","אַ")         
-       .replace("J","אָ")         
-       .replace("K","אּ")         
-       .replace("L","בּ")         
-       .replace("M","גּ")         
-       .replace("N","דּ")         
-       .replace("O","הּ")         
-       .replace("P","וּ")         
-       .replace("Q","זּ")         
-       .replace("R","טּ")         
-       .replace("S","יּ")         
-       .replace("T","ךּ")         
-       .replace("U","כּ")         
-       .replace("V","לּ")
-       .replace("W","מּ")         
-       .replace("X","נּ")         
-       .replace("Y","סּ")         
-       .replace("Z","ףּ")
-                
-       .replace("0","פּ")         
-       .replace("1","צּ")         
-       .replace("2","קּ")         
-       .replace("3","רּ")         
-       .replace("4","שּ")         
-       .replace("5","תּ")         
-       .replace("6","וֹ")         
-       .replace("7","בֿ")         
-       .replace("8","כֿ")
-       .replace("9","פֿ")
-                
-       .replace("a","ﬦ")
-       .replace("b","ﬧ")
-       .replace("c","ﬨ")
-       .replace("d","﬩")
-       .replace("e","שׁ")    
-       .replace("f","שׂ")        
-       .replace("g","שּׁ")         
-       .replace("h","שּׂ")         
-       .replace("i","אַ")         
-       .replace("j","אָ")         
-       .replace("k","אּ")         
-       .replace("l","בּ")         
-       .replace("m","גּ")         
-       .replace("n","דּ")         
-       .replace("o","הּ")         
-       .replace("p","וּ")         
-       .replace("q","זּ")         
-       .replace("r","טּ")         
-       .replace("s","יּ")         
-       .replace("t","ךּ")         
-       .replace("u","כּ")         
-       .replace("v","לּ")
-       .replace("w","מּ")         
-       .replace("x","נּ")         
-       .replace("y","סּ")         
-       .replace("z","ףּ")                
-      ); 
-
-
-    }
-    bi.close();
-    String gf=code.getText();
-    OutputStream instreamm=new FileOutputStream(filePath);
-    PrintWriter pw = new PrintWriter(new OutputStreamWriter (instreamm,"UTF-8"));
-    //PrintWriter pw=new PrintWriter (new FileWriter (pathy));
-    pw.println(gf);
-    pw.close();
-    Notifications noti = Notifications.create();
-    noti.title("Successful");
-    noti.text("We have encrypted the recipe successfully.");
-    noti.hideAfter(Duration.seconds(3));
-    noti.position(Pos.CENTER);
-    noti.showInformation();
-    //code.clear();
-
-
-            
-            //Desktop desk = Desktop.getDesktop();
-            //desk.open(new File (filePath));
-            Stage jk = (Stage)this.save.getScene().getWindow();
-            //jk.close();
-   
-       /////////////////////////////////////////////////// 
-   
-       ///////////////////////////////////////////////////
-   }
-   
-   
-   
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
-       
-  ////////////////////Send Mails Here///////////////////////////////////////////////////////////////////////
-   
-   
-    //////////////////////////////////////////////////////////////////////////////////////////
-        
-      Date currentDate1 = GregorianCalendar.getInstance().getTime();
-      DateFormat df1 = DateFormat.getDateInstance();
-      String dateString1 = df1.format(currentDate1);
-      Date d1 = new Date();
-      SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
-      String timeString1 = sdf1.format(d1);
-      SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-      String timeString2 = sdf2.format(d1);
-      datevalue = timeString2;                                                          //Date
-      
-      modeloo=model;                 //Model
-      
-      filenammm=filePath.replace(NewDir.file_dir,"").replace("\\PRODUCTION","").replace("\\"+modeloo+"\\","").replace(".ks","").replace(".html","");
-      
-        
-      try {  
-        
-        
-    new Thread(new Runnable() {
-    @Override
-    public void run() {
-        
-        
-        
-//    ObservableList<String> ite=list.getItems();
-//    
-//    for  (String it : ite) {
-//        
-//        
-        
-    
-          String from,password,to,sub,suby;
-          from="ahmedelkadyteeest@gmail.com";
-          password="lgrj esca tdtz froo";
-          //to=it;
-          sub="Recipe Editor (RECETA).";
-          suby="Recipe Editor (RECETA) Powered By Kadysoft Ltd - All Rights Reserved. Ahmed Elkady - CEO.";
-          
-          if (stage.equals("PILOT")) {
-              
-                msg="Date: "+datevalue+"\nCustomer - Recipe_Name: "+modeloo+" - "+nomo.replace(".ks","")+"\nEditor_Name: "+user+"\nThis Recipe Is Maybe A Pilot Recipe (Pilots Can Be Edited By '"+user+"' Only).\n\n\n"+suby+"\n\n\n██╗░░██╗░█████╗░██████╗░██╗░░░██╗░██████╗░█████╗░███████╗████████╗\n" +
-"▒█░▄▀ ░█▀▀█ ▒█▀▀▄ ▒█░░▒█ ▒█▀▀▀█ ▒█▀▀▀█ ▒█▀▀▀ ▀▀█▀▀ 　 ▒█░░░ ▀▀█▀▀ ▒█▀▀▄ \n" +
-"▒█▀▄░ ▒█▄▄█ ▒█░▒█ ▒█▄▄▄█ ░▀▀▀▄▄ ▒█░░▒█ ▒█▀▀▀ ░▒█░░ 　 ▒█░░░ ░▒█░░ ▒█░▒█ \n" +
-"▒█░▒█ ▒█░▒█ ▒█▄▄▀ ░░▒█░░ ▒█▄▄▄█ ▒█▄▄▄█ ▒█░░░ ░▒█░░ 　 ▒█▄▄█ ░▒█░░ ▒█▄▄▀";
-         
-              
-          }
-          
-          else if (stage.equals("BLANKET")) {
-              
-                msg="Date: "+datevalue+"\nCustomer - Recipe_Name: "+modeloo+" - "+nomo.replace(".ks","")+"\nEditor_Name: "+user+"\nThis Recipe Is Maybe A Blanket Recipe (Blankets Can Be Edited By '"+user+"' Only).\n\n\n"+suby+"\n\n\n██╗░░██╗░█████╗░██████╗░██╗░░░██╗░██████╗░█████╗░███████╗████████╗\n" +
-"▒█░▄▀ ░█▀▀█ ▒█▀▀▄ ▒█░░▒█ ▒█▀▀▀█ ▒█▀▀▀█ ▒█▀▀▀ ▀▀█▀▀ 　 ▒█░░░ ▀▀█▀▀ ▒█▀▀▄ \n" +
-"▒█▀▄░ ▒█▄▄█ ▒█░▒█ ▒█▄▄▄█ ░▀▀▀▄▄ ▒█░░▒█ ▒█▀▀▀ ░▒█░░ 　 ▒█░░░ ░▒█░░ ▒█░▒█ \n" +
-"▒█░▒█ ▒█░▒█ ▒█▄▄▀ ░░▒█░░ ▒█▄▄▄█ ▒█▄▄▄█ ▒█░░░ ░▒█░░ 　 ▒█▄▄█ ░▒█░░ ▒█▄▄▀";
-         
-              
-          }
-          
-          else {
-              
-                msg="Date: "+datevalue+"\nCustomer - Recipe_Name: "+modeloo+" - "+nomo.replace(".ks","")+"\nEditor_Name: "+user+"\nShots: This Recipe Maybe Contains 3 or 4 or 5 or 6 Shots ('RANDOM BATH') Or More Than 2 Shots. Ask ('KADINIO') to calculate it for you.\nHe created a new method to calculate from 1 to 6 shots.\nFor more information ask KADINIO or see time reports.\n\nOr tell 'KADINIO' if you have a problem with it.\nWe are working on new features to make it easy to control, if you like it support me.\n\n\n"+suby+"\n\n\n██╗░░██╗░█████╗░██████╗░██╗░░░██╗░██████╗░█████╗░███████╗████████╗\n" +
-"▒█░▄▀ ░█▀▀█ ▒█▀▀▄ ▒█░░▒█ ▒█▀▀▀█ ▒█▀▀▀█ ▒█▀▀▀ ▀▀█▀▀ 　 ▒█░░░ ▀▀█▀▀ ▒█▀▀▄ \n" +
-"▒█▀▄░ ▒█▄▄█ ▒█░▒█ ▒█▄▄▄█ ░▀▀▀▄▄ ▒█░░▒█ ▒█▀▀▀ ░▒█░░ 　 ▒█░░░ ░▒█░░ ▒█░▒█ \n" +
-"▒█░▒█ ▒█░▒█ ▒█▄▄▀ ░░▒█░░ ▒█▄▄▄█ ▒█▄▄▄█ ▒█░░░ ░▒█░░ 　 ▒█▄▄█ ░▒█░░ ▒█▄▄▀";
-         
-              
-          }
-          
-          
-          Properties props = new Properties();    
-          props.put("mail.smtp.host", "smtp.gmail.com");    
-          props.put("mail.smtp.socketFactory.port", "465");    
-          props.put("mail.smtp.socketFactory.class",    
-          "javax.net.ssl.SSLSocketFactory");    
-          props.put("mail.smtp.auth", "true");    
-          props.put("mail.smtp.port", "465");    
-          Session session = Session.getDefaultInstance(props,    
-          new javax.mail.Authenticator() {    
-          protected PasswordAuthentication getPasswordAuthentication() {    
-          return new PasswordAuthentication(from,password);  
-          }    
-          });       
-          try {    
-          MimeMessage message = new MimeMessage(session);  
-          
-          
-          //For mailing by the old method just uncomment codes and comment current method then go straight. 
-          
-          String[] mailToId={"kemal.duman@tcgarments.com","muhammet.eraslan@tcgarments.com","eyup.karakoyun@tcgarments.com","ahmed.nassif@tcgarments.com","hany.emeira@tcgarments.com"/*,"chemical.store@tcgarments.com"*/,"rainforest.tc@tcgarments.com","yilmaz.bozkir@tcgarments.com","ahmed.elkady@tcgarments.com"};
-          for(int i=0;i<mailToId.length;i++){
-           message.addRecipients(Message.RecipientType.TO, mailToId[i]);
-          }
-          
-          //message.addRecipient(Message.RecipientType.TO,new InternetAddress(it));    
-          message.setSubject(sub);
-          //message.setText(msg,"html", "utf-8"); 
-          message.setContent(msg, "text/plain; charset=UTF-8");
-          Transport.send(message);  
-          System.out.println("Successful");
-          } catch (MessagingException e) {throw new RuntimeException(e);} 
-        
-        
-        
-//    }
-//    
-//        try {
-//            Thread.sleep(300);
-//        } catch (InterruptedException ex) {
-//            Logger.getLogger(SaverController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-        
-        
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-         try {
-         String sqla = "INSERT INTO notifications (Recipient, Sender, Message, Delivered) VALUES (?, ?, ?, 0)";
-          pst = conn.prepareStatement(sqla);
-          pst.setString(1, "Recipe_Maker");
-          pst.setString(2, "Ahmed Elkady");
-          pst.setString(3, "We have updated "+filenammm+" successfully in "+datevalue+" of "+modeloo+" model.");
-          pst.executeUpdate();
-          }
-          catch (Exception e) {
-          } finally {
-          try {
-          rs.close();
-          pst.close();
-          } catch (Exception exception) {}}  
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        
-          }
-}).start();
-    
-      
-      }
-      
-      catch (Exception m) {
-        
-      }
-    
-    
-    
-        //////////////////////////////////////////////////////////////////////////////////////////
-   
-  
-  //////////////////////////////////////////////////
-            
-            
-   
-          
-          ////////////////////////////////////////////////////////////////////////////////////////////////////
-          
-          
-          
-          
-      
-      }
-      
-      
-      
-      else {}
-        
-   
-
-
-      
-      ///////////////////////////////////////////////////////////////////////////try here
-        
-      
-        //////////////////////////////////////////////
-
-                           
-        
-       String proco=null;
-       int bathnumzzzz=0;
-       String moduu,commentt;
-       
-       String ston,fom,hypo,enzym,moon,dryr1,dryr2,dryr3;
-       
-       ston="No";
-       fom="No";
-       hypo="No";
-       enzym="No";
-       moon="No";
-       dryr1="No";
-       dryr2="No";
-       dryr3="No";
-       
-       List<String> shots = new ArrayList<>();
-    
-       int bathnum=0;
-       
-        int dss=1;
-                            org.jsoup.nodes.Document docy = Jsoup.parse(code.getText());
-                            for (Element table : docy.select("table")) {
-                            for (Element row : table.select("tr")) {
-                            Elements tds = row.select("td");
-                            
-                            
-                            
-                            
-                            
-                            if (tds.get(7).text().contains("stone")||tds.get(7).text().contains("Stone")||tds.get(7).text().contains("STONE")||tds.get(7).text().contains("STON")||tds.get(7).text().contains("ston")) {
-                                
-                                ston="STONE";
-                                stonn=ston;
-                                
-                            }
-                            
-                             else {
-                                
-                             //   stonn="-";
-                               
-                                stonn=ston;
-                            }
-                            
-                            if (tds.get(7).text().contains("foam")||tds.get(7).text().contains("Foam")||tds.get(7).text().contains("FOAM")||tds.get(7).text().contains("BOOL")||tds.get(7).text().contains("BOOL فوم")||tds.get(7).text().contains("FOM")||tds.get(7).text().contains("fom")) {
-                                
-                                fom="FOAM";
-                                fomm=fom;
-                                
-                            }
-                            
-                             else {
-                                
-                               
-                             //   fomm="-";
-                               
-                                fomm=fom;
-                            }
-                            
-                            if (tds.get(7).text().contains("BLEACH")||tds.get(7).text().contains("HYPO")) {
-                                
-                                hypo="BLEACH";
-                                hypoo=hypo;
-                                
-                            }
-                            
-                             else {
-                                
-                              
-                             //   hypoo="-";
-                              hypoo=hypo;
-                                 
-                                
-                            }
-                            
-                            if (tds.get(7).text().contains("ENZYME")||tds.get(7).text().contains("ENZYM")||tds.get(7).text().contains("ACUDELL")||tds.get(7).text().contains("NSY")) {
-                                
-                                enzym="ENZYME";
-                                enzymm=enzym;
-                                
-                            }
-                            
-                             else {
-                                
-                               
-                             //   enzymm="-";
-                                enzymm=enzym;
-                                
-                            }
-                             
-                            if (tds.get(3).text().contains("MOON WASH")||tds.get(3).text().contains("MOON")||tds.get(3).text().contains("Moon Wash")||tds.get(3).text().contains("MON WASH")||tds.get(7).text().contains("PERMENGANATE")||tds.get(7).text().contains("PERMENGANAT")||tds.get(7).text().contains("PERMANGANATE")||tds.get(7).text().contains("PERMANGANAT")||tds.get(8).text().contains("POTASSIUM PERMANGANATE")||tds.get(8).text().contains("NOVA TEKS MOON")||tds.get(7).text().contains("PERMANGANAT TO2U")) {
-                                
-                                moon="MOON WASH";
-                                moonn=moon;
-                                
-                            }
-                                   
-                          
-                            else {
-                                
-                                
-                              //  moonn="-";
-                                 moonn=moon;
-                            }
-                              
-                            String dalil=tds.get(3).text();
-                            if (dalil.contains("EXTRACT")||dalil.contains("extract")||dalil.contains("Extract")||dalil.contains("EXTRA")||dalil.contains("EXTRACTION")||dalil.contains("extraction")) {
-                            shots.add(dalil);}
-                            else {
-                            
-                            
-                            
-                            }
-                            
-                           
-
-                           }}
-                            
-                            
-                          bathnum=shots.size();
-                          if (shots.size()==1) {
-                          dryr1="DRYER 1";
-                          dryr11=dryr1;
-                          dryr22="No";
-                          dryr33="No";
-                          }
-                          else if (shots.size()==2) {
-                          dryr1="DRYER 1";
-                          dryr2="DRYER 2";
-                          dryr11=dryr1;
-                          dryr22=dryr2;
-                          dryr33="No";
-                          }
-                          else if (shots.size()==3) {
-                          dryr1="DRYER 1";
-                          dryr2="DRYER 2";
-                          dryr3="DRYER 3";
-                          dryr11=dryr1;
-                          dryr22=dryr2;
-                          dryr33=dryr3;
-                          }
-                          else {
-                          dryr1="No";
-                          dryr2="No";
-                          dryr3="No";
-                          dryr11=dryr1;
-                          dryr22=dryr2;
-                          dryr33=dryr3;
-                          }
-                            
-     // Save To DB Here
-    Date currentDate1l = GregorianCalendar.getInstance().getTime();
-    DateFormat df1l = DateFormat.getDateInstance();
-    String dateString1l = df1l.format(currentDate1l);
-    Date d1l = new Date();
-    SimpleDateFormat sdf1l = new SimpleDateFormat("HH:mm:ss");
-    String timeString1l = sdf1l.format(d1l);
-    SimpleDateFormat sdf2l = new SimpleDateFormat("yyyy-MM-dd");
-    String dateString2l = sdf2l.format(d1l);
-
-    String fann = "";
-    
+/** توليد تقرير PDF للتكلفة */
+private void generateCostReport(List<Double> qua, List<Double> dil,
+                                  List<Double> pri, List<String> nom, String savePath) {
     try {
-        String sql0 = "select * from Recipe_Types where WashName = ? and Model = ?";
-        pst = conn.prepareStatement(sql0);
-        pst.setString(1, filenammm);
-        pst.setString(2, modeloo);
-        rs = pst.executeQuery();                    
-        
-        if (rs.next()) {                        
-            fann = "found";   
-        } else {
-            fann = "not_found";   
-        }
-        
-    } catch (Exception exception) {
-        exception.printStackTrace(); // Handle exceptions properly
-    } finally {
-        try {
-            if (rs != null) rs.close();
-            if (pst != null) pst.close();     
-        } catch (Exception exception) {
-            exception.printStackTrace(); // Handle exceptions properly
-        }
-    }
+        String repname = "Chemical_Report_Of_" + filenammm;
+        String reppath = System.getProperty("user.home") + "\\Desktop";
+        FileChooser dialog = new FileChooser();
+        dialog.setInitialDirectory(new File(reppath));
+        dialog.setInitialFileName(repname);
+        dialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+        File dialogResult = dialog.showSaveDialog(null);
+        String filePath = dialogResult.getAbsolutePath();
 
-    if (fann.equals("found")) {
-        try {
-            
-            
-            
-            String sqlp = "update Recipe_Types set Date = ?, Model = ?, WashName = ?, Rinse = ?, Stone = ?, Foam = ?, Bleach = ?, Enzyme = ?, MoonWash = ?, Dryer_1 = ?, Dryer_2 = ?, Dryer_3 = ? where WashName = ? and Model = ?";
-            pst = conn.prepareStatement(sqlp);
-            pst.setString(1, dateString2l);
-            pst.setString(2, modeloo);
-            pst.setString(3, filenammm);
-            pst.setString(4, "RINSE");
-            pst.setString(5, stonn);
-            pst.setString(6, fomm);
-            pst.setString(7, hypoo);
-            pst.setString(8, enzymm);
-            pst.setString(9, moonn);
-            pst.setString(10, dryr11);
-            pst.setString(11, dryr22);
-            pst.setString(12, dryr33);
-            pst.setString(13, filenammm); // WHERE clause parameters
-            pst.setString(14, modeloo);
-            pst.execute();
-            Notifications noti = Notifications.create();
-            noti.title("Successful");
-            noti.text("We have updated the types successfully.");
-            noti.hideAfter(Duration.seconds(3));
-            noti.position(Pos.CENTER);
-            noti.showInformation();
-            
-           
-        } catch (Exception exception) {
-            exception.printStackTrace(); // Handle exceptions properly
-        } finally {
-            try {
-                if (pst != null) pst.close();
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
+        com.itextpdf.text.Document myDocument = new com.itextpdf.text.Document();
+        PdfWriter.getInstance(myDocument, new FileOutputStream(filePath));
+        PdfPTable table = new PdfPTable(5);
+        myDocument.open();
+        table.setWidths(new float[]{15f, 15f, 15f, 15f, 15f});
+        table.setWidthPercentage(100f);
+        myDocument.add(new Paragraph("Cost Report For " + filenammm + " Recipe.",
+                FontFactory.getFont("Times-Bold", 12f, 1)));
+        myDocument.add(new Paragraph("-------------------------------------------------------------------------------------------"));
+        for (String h : new String[]{"Name", "Quantity", "Dilution", "Price", "Total"}) {
+            table.addCell(new PdfPCell(new Paragraph(h, FontFactory.getFont("Times-Roman", 10f, 1))));
         }
-    } else if (fann.equals("not_found")) {
-        try { 
-            
-            
-            
-              String reg = "insert into Recipe_Types (Date, Model, WashName, Rinse, Stone, Foam, Bleach, Enzyme, MoonWash, Dryer_1, Dryer_2, Dryer_3) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            pst = conn.prepareStatement(reg);
-            pst.setString(1, dateString2l);
-            pst.setString(2, modeloo);
-            pst.setString(3, filenammm);
-            
-            pst.setString(4, "RINSE");
-            pst.setString(5, stonn);
-            pst.setString(6, fomm);
-            pst.setString(7, hypoo);
-            pst.setString(8, enzymm);
-            pst.setString(9, moonn);
-            pst.setString(10, dryr11);
-            pst.setString(11, dryr22);
-            pst.setString(12, dryr33);
-            
-            pst.execute(); 
-            
-            Notifications noti = Notifications.create();
-            noti.title("Successful");
-            noti.text("We have inserted the new type successfully.");
-            noti.hideAfter(Duration.seconds(3));
-            noti.position(Pos.CENTER);
-            noti.showInformation();
-            
-            
-            
-        } catch (Exception exception) {
-            exception.printStackTrace(); // Handle exceptions properly
-        } finally {
-            try {
-                if (pst != null) pst.close();
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
+        for (int i = 0; i < qua.size(); i++) {
+            table.addCell(new PdfPCell(new Paragraph(nom.get(i),       FontFactory.getFont("Times-Roman", 8f))));
+            table.addCell(new PdfPCell(new Paragraph(String.valueOf(qua.get(i)), FontFactory.getFont("Times-Roman", 8f))));
+            table.addCell(new PdfPCell(new Paragraph(String.valueOf(dil.get(i)), FontFactory.getFont("Times-Roman", 8f))));
+            table.addCell(new PdfPCell(new Paragraph(String.valueOf(pri.get(i)), FontFactory.getFont("Times-Roman", 8f))));
+            table.addCell(new PdfPCell(new Paragraph(String.valueOf((qua.get(i)/dil.get(i))*pri.get(i)), FontFactory.getFont("Times-Roman", 8f))));
         }
+        myDocument.add(table);
+        myDocument.add(new Paragraph("-------------------------------"));
+        myDocument.add(new Paragraph("Total Of Cost (New) :    " + summo + " $.",         FontFactory.getFont("Times-Bold", 10f, 1)));
+        myDocument.add(new Paragraph("Total Of Garments (New) :    " + pcsnum + " PCS.", FontFactory.getFont("Times-Bold", 10f, 1)));
+        myDocument.add(new Paragraph("One Garment Costs (New) :    " + onegar + " $.",   FontFactory.getFont("Times-Bold", 10f, 1)));
+        myDocument.add(new Paragraph("--------------------------------------------------------------------------------------------"));
+        myDocument.add(new Paragraph("Total Of Cost (Old) :    " + oldtotalcost + " $.",         FontFactory.getFont("Times-Bold", 10f, 1)));
+        myDocument.add(new Paragraph("Total Of Garments (Old) :    " + oldpcs + " PCS.",          FontFactory.getFont("Times-Bold", 10f, 1)));
+        myDocument.add(new Paragraph("One Garment Costs (Old) :    " + oldonegarmentcost + " $.", FontFactory.getFont("Times-Bold", 10f, 1)));
+        myDocument.setPageSize(PageSize.A4.rotate());
+        myDocument.close();
+        Desktop.getDesktop().open(new File(reppath + "\\" + repname + ".pdf"));
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+}
     
     
     
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-      
-       String stages=null;
-       int bathnumzzz=0;
-       String modu,comment;
-    
-        int ds=1;
-                            org.jsoup.nodes.Document docyi = Jsoup.parse(code.getText());
-                            for (Element table : docyi.select("table")) {
-                            for (Element row : table.select("tr")) {
-                            Elements tds = row.select("td");
-                            if (tds.get(3).text().contains("/")||tds.get(3).text().contains("\\")||tds.get(3).text().isEmpty()||tds.get(3).text().contains("TEMP")||tds.get(3).text().contains("OPERATOR")||tds.get(3).text().contains("temp")||tds.get(3).text().contains("operator")/*||tds.get(3).text().contains("extract")||tds.get(3).text().contains("EXTRACT")||tds.get(3).text().contains("extraction")||tds.get(3).text().contains("EXTRACTION")*/||tds.get(3).text().matches("[0-9]+")||tds.get(3).text().contains("REMOV")||tds.get(3).text().contains("REMOVE")||tds.get(3).text().contains("BATH")||tds.get(3).text().contains("SAME")||tds.get(3).text().contains("PATH")||tds.get(3).text().contains("SAM")||tds.get(3).text().contains("RPM")||tds.get(3).text().contains("KG")||tds.get(3).text().contains("PCS")||tds.get(3).text().contains("DRAIN")||tds.get(3).text().contains("RIMOV")||tds.get(3).text().contains("RIMOVE")) {}
-                            else {
-                            String tempo=tds.get(3).text();
-                            if (tempo.contains("EXTRACT")||tempo.contains("Extract")||tempo.contains("extract")) {
-                               
-                                stages=stages+"\n"+"WASHING "+Integer.toString(ds++);
-                                
-                            }
-                            
-                            else {
-                                
-                                stages=stages+"\n"+tempo;
-                                
-                            }
-                            }
-                            
-
-                           }}
-             
-        String arabicRegex = "[\\u0600-\\u06FF]+";
-        Pattern pattern = Pattern.compile(arabicRegex);
-        
-        Matcher matcher = pattern.matcher(stages + "");
-        String modifiedLine = matcher.replaceAll("\n");
-        String lone = modifiedLine.replace("null", "\n");
-        
-        StringBuilder result = new StringBuilder();
-        String[] lines = lone.split("\n");
-        int nonEmptyCount = 0;
-        // Count non-empty lines to handle the last one differently
-        for (String line : lines) {
-            if (!line.trim().isEmpty()) {
-                nonEmptyCount++;
-            }
-        }
-        
-        int currentNonEmpty = 0;
-        for (String line : lines) {
-            if (!line.trim().isEmpty()) {
-                currentNonEmpty++;
-                result.append(line);
-                // Append " - " only if it's not the last non-empty line
-                if (currentNonEmpty < nonEmptyCount) {
-                    result.append(" - ");
-                }
-            }
-        }                                   
-                            
-      procccc=result.toString();         
-        
-        // Save To DB Here
-
-    String fannn = "";
-    
-    try {
-        String sql0 = "select * from Recipe_Processes where WashName = ? and Model = ?";
-        pst = conn.prepareStatement(sql0);
-        pst.setString(1, filenammm);
-        pst.setString(2, modeloo);
-        rs = pst.executeQuery();                    
-        
-        if (rs.next()) {                        
-            fannn = "found";   
-        } else {
-            fannn = "not_found";   
-        }
-        
-    } catch (Exception exception) {
-        exception.printStackTrace(); // Handle exceptions properly
-    } finally {
-        try {
-            if (rs != null) rs.close();
-            if (pst != null) pst.close();     
-        } catch (Exception exception) {
-            exception.printStackTrace(); // Handle exceptions properly
-        }
-    }
-
-    if (fannn.equals("found")) {
-        try {
-            String sqlp = "update Recipe_Processes set Date = ?, Model = ?, WashName = ?, Processes = ? where WashName = ? and Model = ?";
-            pst = conn.prepareStatement(sqlp);
-            pst.setString(1, dateString2l);
-            pst.setString(2, modeloo);
-            pst.setString(3, filenammm);
-            pst.setString(4, procccc);
-            pst.setString(5, filenammm); // WHERE clause parameters
-            pst.setString(6, modeloo);
-            pst.execute();
-            
-            Notifications noti = Notifications.create();
-            noti.title("Successful");
-            noti.text("We have updated the processes successfully.");
-            noti.hideAfter(Duration.seconds(3));
-            noti.position(Pos.CENTER);
-            noti.showInformation();
-            
-        } catch (Exception exception) {
-            exception.printStackTrace(); // Handle exceptions properly
-        } finally {
-            try {
-                if (pst != null) pst.close();
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-        }
-    } else if (fannn.equals("not_found")) {
-        try {                            
-            String reg = "insert into Recipe_Processes (Date, Model, WashName, Processes) values (?, ?, ?, ?)";
-            pst = conn.prepareStatement(reg);
-            pst.setString(1, dateString2l);
-            pst.setString(2, modeloo);
-            pst.setString(3, filenammm);
-            pst.setString(4, procccc);
-            pst.execute(); 
-            
-            Notifications noti = Notifications.create();
-            noti.title("Successful");
-            noti.text("We have inserted the new processes successfully.");
-            noti.hideAfter(Duration.seconds(3));
-            noti.position(Pos.CENTER);
-            noti.showInformation();
-            
-        } catch (Exception exception) {
-            exception.printStackTrace(); // Handle exceptions properly
-        } finally {
-            try {
-                if (pst != null) pst.close();
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-        }
-    }
-        
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-   //Add Here//
    
-   
-   ///////////////////////ooooooooooooooooooooooo////////////////////////////////////////////////////   
-                      
-sumz=0.0;
-ally=0.0;
-
-                            org.jsoup.nodes.Document docyp = Jsoup.parse(code.getText());
-                            for (Element table : docyp.select("table")) {
-                            for (Element row : table.select("tr")) {
-                            Elements tds = row.select("td");
-                            
-                            
-                            if (tds.get(7).text().contains("new stone")||tds.get(7).text().contains("New Stone")||tds.get(7).text().contains("NEW STONE")||tds.get(7).text().contains("NEW STON")||tds.get(7).text().contains("new ston")||tds.get(7).text().contains("now ston")||tds.get(7).text().contains("now stone")||tds.get(7).text().contains("NOW STON")||tds.get(7).text().contains("NOW STONE")) {
-                                
-                                 
-                                stonny=tds.get(5).text().toString();
-                                sto=Double.parseDouble(stonny);
-                                sumz=sumz+sto;
-                                
-                            }
-                            
-                             else {
-                               
-                                sumz=sumz;
-                                
-                            }
-                            
-                            ally=(sumz/2)*25;
-                            finall=Double.toString(ally);
-                            
-                           }}
-                       
-                            
-    // Save To DB Here
-    Date currentDate1 = GregorianCalendar.getInstance().getTime();
-    DateFormat df1 = DateFormat.getDateInstance();
-    String dateString1 = df1.format(currentDate1);
-    Date d1 = new Date();
-    SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
-    String timeString1 = sdf1.format(d1);
-    SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-    String dateString2 = sdf2.format(d1);
-
-    String fannm = "";
-    
-    try {
-        String sql0 = "select * from GetterStone where Name = ? and Model = ?";
-        pst = conn.prepareStatement(sql0);
-        pst.setString(1, filenammm);
-        pst.setString(2, modeloo);
-        rs = pst.executeQuery();                    
-        
-        if (rs.next()) {                        
-            fannm = "found";   
-        } else {
-            fannm = "not_found";   
-        }
-        
-    } catch (Exception exception) {
-        exception.printStackTrace(); // Handle exceptions properly
-    } finally {
-        try {
-            if (rs != null) rs.close();
-            if (pst != null) pst.close();     
-        } catch (Exception exception) {
-            exception.printStackTrace(); // Handle exceptions properly
-        }
-    }
     
     
-
-    if (fannm.equals("found")) {
-        try {
-            String sqlp = "update GetterStone set Date = ?, Model = ?, Name = ?, Stone = ? where Name = ? and Model = ?";
-            pst = conn.prepareStatement(sqlp);
-            pst.setString(1, dateString2);
-            pst.setString(2, modeloo);
-            pst.setString(3, filenammm);
-            pst.setString(4, finall);
-            pst.setString(5, filenammm); // WHERE clause parameters
-            pst.setString(6, modeloo);
-            pst.execute();
-            
-            Notifications noti = Notifications.create();
-            noti.title("Successful");
-            noti.text("We have updated the stone successfully.");
-            noti.hideAfter(Duration.seconds(3));
-            noti.position(Pos.CENTER);
-            noti.showInformation();
-            
-        } catch (Exception exception) {
-            exception.printStackTrace(); // Handle exceptions properly
-        } finally {
-            try {
-                if (pst != null) pst.close();
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-        }
-    } else if (fannm.equals("not_found")) {
-        try {                            
-            String reg = "insert into GetterStone (Date, Model, Name, Stone) values (?, ?, ?, ?)";
-            pst = conn.prepareStatement(reg);
-            pst.setString(1, dateString2);
-            pst.setString(2, modeloo);
-            pst.setString(3, filenammm);
-            pst.setString(4, finall);
-            pst.execute(); 
-            
-            Notifications noti = Notifications.create();
-            noti.title("Successful");
-            noti.text("We have inserted the new stone successfully.");
-            noti.hideAfter(Duration.seconds(3));
-            noti.position(Pos.CENTER);
-            noti.showInformation();
-            
-        } catch (Exception exception) {
-            exception.printStackTrace(); // Handle exceptions properly
-        } finally {
-            try {
-                if (pst != null) pst.close();
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-        }
-    }
-    
-
     
     
-    ///////////////////////////////llllllllllllllllllll/////////////////////////////////////////////
-      
-//   String gfff = code.getText();
-//   System.out.println(gfff);
+    
+    
+    
+//    @FXML
+//    void saveaction(ActionEvent event) throws FileNotFoundException, IOException, WriterException, SQLException, Exception {
 //
-//    Map<String, Object> change = new LinkedHashMap<>();
-//    change.put("type", "edit");
-//    change.put("row", 0);
-//    change.put("column", 0);
-//    change.put("oldValue", ""); // القيمة القديمة لو عندك
-//    change.put("newValue", gfff);
-//    List<Map<String, Object>> changes = new ArrayList<>();
-//    changes.add(change);
-//    saveToHistory(changes);
-//
-//    code.clear();
-    
-    
-    
-// النص القديم قبل التعديل – لو عندك نسخة محفوظة منه
-String oldContent = originalltextt; // أو حمّله من آخر نسخة محفوظة مثلاً
-// النص الجديد بعد التعديل
-String newContent = code.getText();
-// احسب التغييرات الفعلية بين النصين
-List<Map<String, Object>> changes = computeChanges(oldContent, newContent);
-// لو مفيش تغييرات، ما تحفظش حاجة
-if (!changes.isEmpty()) {
-    saveToHistory(changes);
-}
-code.clear();
-
-
-
-
-    
-    
-//    String gffft = code.getText();
-//    
-//    System.out.println();
-//    System.out.println();
-//    System.out.println();System.out.println();
-//    System.out.println();
-//    System.out.println();System.out.println();
-//    System.out.println();
-//    System.out.println();
-//    System.out.println();
-//    
-//    
-//    
+//        //Save Action Goes Here.
+//        
+//            
+//      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+//      alert.setTitle("Add Time?");
+//      alert.setHeaderText("Add Time To Recipe Or Not ...");
+//      alert.setContentText("Please Click 'OK' To Add Time To Recipe Or Click 'Cancel' To Continue Without Time.");
+//      DialogPane dialogPane = alert.getDialogPane();
+//      dialogPane.getStylesheets().add(
+//      getClass().getResource("cupertino-light.css").toExternalForm());
+//      Optional<ButtonType> option = alert.showAndWait();
+//      if (option.get() == null) {
+//          
+//      } else if (option.get() == ButtonType.OK) {
+//      
+//          ////////////////////////////////////////////////////////////////////////////////////////////////////
+//         
+//             
+//   ///////////////////////////////////////Everything Will Go Here///////////////////////////////////////////////////
+//   WebEngine engine = codey.getEngine();
+//   //Object value=engine.executeScript("document.getElementById('txtBody').value;");
+//   Object value=engine.executeScript("tinymce.get('txtBody').getContent();");
+//   String thecodee=/*"<style>\n" +
+//"        body {\n" +
+//"            user-select: none;\n" +
+//"            -webkit-user-select: none;\n" +
+//"            -moz-user-select: none;\n" +
+//"            -ms-user-select: none;\n" +
+//"        }\n" +
+//"    </style>"
+//            
+//          +"<script>\n" +
+//"        document.addEventListener('dragstart', function(event) {\n" +
+//"            event.preventDefault();\n" +
+//"        });\n" +
+//"\n" +
+//"        document.addEventListener('drop', function(event) {\n" +
+//"            event.preventDefault();\n" +
+//"        });\n" +
+//"\n" +
+//"        document.addEventListener('contextmenu', function(event) {\n" +
+//"            event.preventDefault();\n" +
+//"        });\n" +
+//"    </script>"  
+//            
+//            + "<script>\n" +
+//"  \n" +
+//"  window.addEventListener(`contextmenu`, (e) => {\n" +
+//"    e.preventDefault();\n" +
+//"});\n" +
+//"  \n" +
+//"  </script>"
+//             + ""
+//            + "\n<meta charset=\"UTF-8\"/>\n<meta name=\"viewport\" content=\"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\"/>\n\t\t<meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\" />"
+//            + ""
+//            + "<script>\n" +
+//"            \n" +
+//"            document.addEventListener('keydown', event => {\n" +
+//"  console.log(`User pressed: ${event.key}`);\n" +
+//"  event.preventDefault();\n" +
+//"  return false;\n" +
+//"});\n" +
+//"            \n" +
+//"            </script>"
+//            
+//       +"<script>\n" +
+//"        document.addEventListener('keydown', function (event) {\n" +
+//"            // Disable specific keys or key combinations\n" +
+//"            event.preventDefault();\n" +
+//"        });\n" +
+//"    </script>"+*/value.toString();
+//   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   
+//   //Get Time And Shots
+//   
+//   List<Integer> time = new ArrayList<>();
+//   List<Integer> timeSum = new ArrayList<>();
+//   List<String> shots = new ArrayList<>();
+//   int sum = 0, bathnum=0, firstshot=0, secondshot=0,thirdshot=0,forthshot=0;
+//   
+//   Document doc = Jsoup.parse(thecodee);
+//   for (Element table : doc.select("tbody")) {
+//   for (Element row : table.select("tr")) {
+//   Elements tds = row.select("td");
+//   if (tds.get(2).text().isEmpty()||tds.get(2).text().contains("/")||tds.get(2).text().contains("\\")||tds.get(2).text().contains("SPIN")||tds.get(2).text().contains("spin")||tds.get(2).text().contains("TIME")||tds.get(2).text().contains("time")||tds.get(2).text().matches("[a-zA-Z_]+")||tds.get(2).text().contains("PRODUCTION")||tds.get(2).text().contains("RECIPE")||tds.get(2).text().contains("RECIPI")||tds.get(2).text().contains("DATE")||tds.get(2).text().contains("WASH")) {}
+//   else {
+//   String stringg=tds.get(2).text().replace(" CONT","").replace(" CONG","").replace("CONG","").replace(" cont","").replace(" CNTRL","").replace(" control","").replace(" CONTROL","").replace(" con","").replace(" CON","").replace(" CNTRL","").replace(" KONTROL","").replace("CONT","").replace("cont","").replace("CNTRL","").replace("control","").replace("CONTROL","").replace("con","").replace("CON","").replace("CNTRL","").replace("KONTROL","");
+//   
+//   if (stringg.contains("+")) {
+//   String sum1 = stringg;
+//   String[] numbers1 = sum1.split("\\+");
+//   int total1 = 0;
+//   for (String numStr1 : numbers1) {
+//   total1 += Integer.parseInt(numStr1);
+//   }
+//   time.add(total1);
+//   }
+//   
+//   else {
+//   int ioo=Integer.parseInt(stringg);
+//   time.add(ioo);     
+//   }
+//   }
+//                              
+//                            String dalil=tds.get(3).text();
+//                            if (dalil.contains("EXTRACT")||dalil.contains("extract")||dalil.contains("Extract")||dalil.contains("EXTRA")||dalil.contains("EXTRACTION")||dalil.contains("extraction")) {
+//                            for (int i = 0; i < time.size(); i++)
+//                            sum += time.get(i);
+//                            timeSum.add(sum);
+//                            time.clear();
+//                            shots.add(dalil);}else {
+//                            
+//                        
+//                            
+//                            }}}
 //    
 //   
-//    System.out.println(gffft+"hello");
-    
-
-
-Platform.runLater(() -> {
-    try {
-        //////////////////////////////////////////End Save////////////////////////////////////////
-
-        // تنظيف الكود القديم
-        code.clear();
-        // قراءة الملف وفك التشفير
-        InputStream inputinstream = new FileInputStream(link);
-        BufferedReader bi = new BufferedReader(new InputStreamReader(inputinstream, "UTF-8"));
-        String lo;
-        while ((lo = bi.readLine()) != null) {
-            code.appendText("\n" + lo
-                    .replace("ﬦ", "A").replace("ﬧ", "B").replace("ﬨ", "C").replace("﬩", "D").replace("שׁ", "E")
-                    .replace("שׂ", "F").replace("שּׁ", "G").replace("שּׂ", "H").replace("אַ", "I").replace("אָ", "J")
-                    .replace("אּ", "K").replace("בּ", "L").replace("גּ", "M").replace("דּ", "N").replace("הּ", "O")
-                    .replace("וּ", "P").replace("זּ", "Q").replace("טּ", "R").replace("יּ", "S").replace("ךּ", "T")
-                    .replace("כּ", "U").replace("לּ", "V").replace("מּ", "W").replace("נּ", "X").replace("סּ", "Y")
-                    .replace("ףּ", "Z").replace("פּ", "0").replace("צּ", "1").replace("קּ", "2").replace("רּ", "3")
-                    .replace("שּ", "4").replace("תּ", "5").replace("וֹ", "6").replace("בֿ", "7").replace("כֿ", "8")
-                    .replace("פֿ", "9").replace("&NBSP;", ""));
-        }
-        bi.close();
-
-        // كتابة الملف بعد فك التشفير
-        String gf = code.getText();
-        try (PrintWriter pwe = new PrintWriter(new OutputStreamWriter(new FileOutputStream(link), "UTF-8"))) {
-            pwe.println(gf);
-        }
-        code.clear();
-
-        // إعداد بيانات QR
-        Date d = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        String dateString = sdf.format(d);
-        String programmerName = "Ahmed Elkady.";
-        String companyName = "Kadysoft Ltd.";
-        String factoryName = "T&C Garments.";
-        String recipeName = recipe + ".";
-        String clientName = model + ".";
-        int qty = Integer.parseInt(pecoco);
-        String lastEditorName = user + ".";
-        String date = dateString + ".";
-        String repolink = "https://progkady.github.io/RecipesStore/";
-        double pcsCost = onegar;
-
-        String qrText = "★ Recipe Details ★\n" +
-                "-------------------------\n" +
-                "• Programmer : " + programmerName + "\n" +
-                "• Developer : " + companyName + "\n" +
-                "• Factory : " + factoryName + "\n" +
-                "• Recipe : " + recipeName + "\n" +
-                "• Customer : " + clientName + "\n" +
-                "• Quantity : " + qty + "\n" +
-                "• Editor Name : " + lastEditorName + "\n" +
-                "• Last Update : " + date + "\n" +
-                "• Pcs Cost : " + pcsCost + " $\n\n" +
-                "• Recipes Link : " + repolink + "\n" +
-                "Thanks For Using Receta From Kadysoft Ltd. ❤";
-
-        // إنشاء QR بحجم كبير وواضح
-        int qrSize = 250;
-        BufferedImage qrImage = createPrintableQR(qrText, qrSize);
-        String qrBase64 = imageToBase64Png(qrImage);
-
-        // قراءة HTML الأصلي
-        String htmlContent = readFile(link);
-        Document doc = Jsoup.parse(htmlContent);
-        doc.outputSettings().syntax(Document.OutputSettings.Syntax.html);
-        doc.outputSettings().charset("UTF-8");
-
-        Element table = doc.select("table#EXTABLE").first();
-        if (table == null) {
-            System.out.println("خطأ: الجدول #EXTABLE مش موجود!");
-            return;
-        }
-
-        // الحصول على الصفوف
-        Elements rows = table.select("tbody > tr");
-        int mergeRows = Math.min(7, rows.size()); // دمج 7 صفوف
-        int qrColumnIndex = 8; // العمود رقم 9 (index 8)
-
-        // الصف الأول
-        Element firstRow = rows.get(0);
-        Elements cells = firstRow.select("td");
-        if (cells.size() <= qrColumnIndex) {
-            System.out.println("العمود رقم 9 مش موجود في الصف الأول!");
-            return;
-        }
-
-        // خلية QR Code
-        Element qrCell = cells.get(qrColumnIndex);
-
-        // فحص وجود QR CODE قديم
-        Element oldQrImg = qrCell.selectFirst("img[src^=data:image]");
-
-        // HTML الخاص بالـ QR الجديد (مع الـ alt الطويل)
-        String qrHtml =
-    "<img src=\"data:image/png;base64," + qrBase64 + "\" " +
-    "alt=\"★ Recipe Details ★&#10;" +
-    "-------------------------&#10;" +
-    "• Programmer : " + programmerName + "&#10;" +
-    "• Developer : " + companyName + "&#10;" +
-    "• Factory : " + factoryName + "&#10;" +
-    "• Recipe : " + recipeName + "&#10;" +
-    "• Customer : " + clientName + "&#10;" +
-    "• Quantity : " + qty + "&#10;" +
-    "• Editor Name : " + lastEditorName + "&#10;" +
-    "• Last Update : " + date + "&#10;" +
-    "• Pcs Cost : " + pcsCost + " $&#10;&#10;" +
-    "• Recipes Link : " + repolink + "&#10;" +
-    "Thanks For Using Receta From Kadysoft Ltd. ❤\" " +
-    "style=\"width:" + qrSize + "px !important; height:" + qrSize + "px !important; " +
-    "max-width:none !important; max-height:none !important; border:10px solid white; " +
-    "box-shadow:0 0 0 4pt black;\"/>";
-
-        // استبدال أو إضافة QR
-        if (oldQrImg != null) {
-            // موجود QR قديم → نستبدل الـ HTML فقط
-            qrCell.html(qrHtml);
-        } else {
-            // مفيش QR → نضيف الـ rowspan والستايل والـ HTML
-            qrCell.attr("rowspan", String.valueOf(mergeRows))
-                  .attr("style", "border: 3px double #000; padding: 10px; background: #ffffff; " +
-                                 "text-align: center; vertical-align: middle;")
-                  .html(qrHtml);
-        }
-
-        // === التعديل المهم هنا ===
-        // إزالة الخلية من الصفوف الأخرى باستخدام :nth-child(9) بدل الـ index
-        for (int i = 1; i < mergeRows; i++) {
-            Element row = rows.get(i);
-            Element cellToRemove = row.selectFirst("td:nth-child(9)");
-            if (cellToRemove != null) {
-                cellToRemove.remove();
-            }
-        }
-
-        // حفظ HTML بعد دمج QR
-        writeFile(link, doc.outerHtml());
-        code.clear();
-
-        // إعادة تشفير الملف
-        InputStream inputinstreamn = new FileInputStream(link);
-        BufferedReader bin = new BufferedReader(new InputStreamReader(inputinstreamn, "UTF-8"));
-        String lon;
-        while ((lon = bin.readLine()) != null) {
-            if (lon.contains("data:image") || lon.contains("base64,")) {
-                code.appendText("\n" + lon);
-                continue;
-            }
-            String converted = lon
-                    .replace("A","ﬦ").replace("B","ﬧ").replace("C","ﬨ").replace("D","﬩").replace("E","שׁ")
-                    .replace("F","שׂ").replace("G","שּׁ").replace("H","שּׂ").replace("I","אַ").replace("J","אָ")
-                    .replace("K","אּ").replace("L","בּ").replace("M","גּ").replace("N","דּ").replace("O","הּ")
-                    .replace("P","וּ").replace("Q","זּ").replace("R","טּ").replace("S","יּ").replace("T","ךּ")
-                    .replace("U","כּ").replace("V","לּ").replace("W","מּ").replace("X","נּ").replace("Y","סּ")
-                    .replace("Z","ףּ")
-                    .replace("0","פּ").replace("1","צּ").replace("2","קּ").replace("3","רּ").replace("4","שּ")
-                    .replace("5","תּ").replace("6","וֹ").replace("7","בֿ").replace("8","כֿ").replace("9","פֿ")
-                    .replace("a","ﬦ").replace("b","ﬧ").replace("c","ﬨ").replace("d","﬩").replace("e","שׁ")
-                    .replace("f","שׂ").replace("g","שּׁ").replace("h","שּׂ").replace("i","אַ").replace("j","אָ")
-                    .replace("k","אּ").replace("l","בּ").replace("m","גּ").replace("n","דּ").replace("o","הּ")
-                    .replace("p","וּ").replace("q","זּ").replace("r","טּ").replace("s","יּ").replace("t","ךּ")
-                    .replace("u","כּ").replace("v","לּ").replace("w","מּ").replace("x","נּ").replace("y","סּ")
-                    .replace("z","ףּ");
-            code.appendText("\n" + converted);
-        }
-        bin.close();
-
-        try (PrintWriter pwn = new PrintWriter(new OutputStreamWriter(new FileOutputStream(link), "UTF-8"))) {
-            pwn.println(code.getText());
-        }
-        code.clear();
-
-        // Git operations
-        
-        Git.gitCommands();
-        
-//        try {
-//            String repoPath = "X:\\Recipe_System\\Recipes";
-//            runCommand("git add .", repoPath);
-//            runCommand("git commit -m \"Update some data\"", repoPath);
-//            runCommand("git push", repoPath);
-//
-//            Notifications noti = Notifications.create();
-//            noti.title("Successful");
-//            noti.text("✔ Git operations completed successfully!");
-//            noti.position(Pos.CENTER);
-//            noti.show();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
-    } catch (Exception r) {
-        r.printStackTrace();
-    }
-});
-
-
-    
-//
-//Platform.runLater( () -> {
-//        
-//        
-//try {
-//
+//   
+//                          bathnum=shots.size();
+//                          if (shots.size()==1) {
+//                          firstshot=timeSum.get(0);}
+//                          else if (shots.size()==2) {
+//                          firstshot=timeSum.get(0);
+//                          secondshot=timeSum.get(1)-timeSum.get(0);}
+//                         
+//                          else {
+//                          
+//                       
+//                          
+//                          }
+//   
+//   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   
+//   //Get Temp
+//   
+//   try {
+//      BufferedReader buf = new BufferedReader(new FileReader(NewDir.file_dirr + "\\Timer_Temp.kady"));
+//      
+//      timer_temprature=buf.readLine();
+//      
+//      buf.close();
+//      } catch (FileNotFoundException fileNotFoundException) {
+//      } catch (IOException iOException) {}
+//   
+//                            int temp=0;
+//                            int temp2=0;
+//                            int temp3=0;
+//                            String timer_tempra=timer_temprature;
+//                            int timer_temp=Integer.parseInt(timer_tempra);
+//                            
+//                            Document docy = Jsoup.parse(thecodee);
+//                            
+//                            for (Element table : docy.select("table")) {
+//                            for (Element row : table.select("tr")) {
+//                            Elements tds = row.select("td");
+//                            if (tds.get(3).text().contains("/")||tds.get(3).text().contains("\\")||tds.get(3).text().isEmpty()||tds.get(3).text().contains("TEMP")||tds.get(3).text().contains("OPERATOR")||tds.get(3).text().contains("temp")||tds.get(3).text().contains("operator")) {}
+//                            else {
+//                                
+//                            String tempo=tds.get(3).text();
+//                            
+//                            if (tempo.contains("EXTRACT")) {
+//                                
+//                                String pattern = "[a-zA-Z_ _&_.]+";
+//                                tempo = tempo.replaceAll(pattern, "");
+//                                if (tempo.matches("[0-9]+")) {
+//                                int cvd2=Integer.parseInt(tempo); 
+//                                if (cvd2>timer_temp) { 
+//                                temp2+=1;
+//                                }
+//                                else {
+//                                }}break;
+//                             }
+//                            
+//                            else {
+//                           
+//                                String pattern = "[a-zA-Z_ _&_.]+";  
+//                                tempo = tempo.replaceAll(pattern, "");
+//                                if (tempo.matches("[0-9]+")) {
+//                                int cvd=Integer.parseInt(tempo); 
+//                                if (cvd>timer_temp) { 
+//                                temp+=1;
+//                                }else {}}
+//                                
+//                            }}}}
+//                            
+//                            int tempall=0;
+//                            Document docc = Jsoup.parse(thecodee);
+//                            for (Element table : docc.select("table")) {
+//                            for (Element row : table.select("tr")) {
+//                            Elements tds = row.select("td");
+//                            if (tds.get(3).text().contains("/")||tds.get(3).text().contains("\\")||tds.get(3).text().isEmpty()||tds.get(3).text().contains("TEMP")||tds.get(3).text().contains("OPERATOR")||tds.get(3).text().contains("temp")||tds.get(3).text().contains("operator")) {}
+//                            else {
+//                                String tempo=tds.get(3).text();
+//                                String pattern = "[a-zA-Z_ _&_.]+";
+//                                tempo = tempo.replaceAll(pattern, "");
+//                                if (tempo.matches("[0-9]+")) {
+//                                int cvd=Integer.parseInt(tempo); 
+//                                if (cvd>timer_temp) { 
+//                                tempall+=1;}
+//                                else {}}else {}}}}
+//                            
+//                            
+//   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   
+//   //Get Stone Bath   
+//   
+//                            int stonebathh=0;
+//                            Document doccc = Jsoup.parse(thecodee);
+//                            for (Element table : docc.select("table")) {
+//                            for (Element row : table.select("tr")) {
+//                            Elements tds = row.select("td");
+//                            if (tds.get(7).text().isEmpty()||tds.get(7).text().contains("/")||tds.get(7).text().contains("\\")||tds.get(7).text().contains("CHEMICAL")||tds.get(7).text().contains("chemical")||tds.get(7).text().matches("[0-9_-]+")) {}
+//                            else {
+//                            String erw=tds.get(7).text().toString();
+//                            if (erw.contains("STONE")||erw.contains("STON")||erw.contains("BOOL")||erw.contains("FOAM")||erw.contains("BOLL"))  {
+//                            stonebathh+=1;  
+//                            }else {}}}}
+//   
+//                            
+//    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //    
-//       //////////////////////////////////////////End Save//////////////////////////////////////// 
-//       
-//   // تنظيف الكود القديم
-//code.clear();
+//    //Get Water Bath  
+//    
+//    
+//                            
+//        
+//                            int waterbath=0;
+//                            int waterbath2=0;
+//                            Document docu = Jsoup.parse(thecodee);
+//                           
+//                            for (Element table : docu.select("table")) {
+//                            for (Element row : table.select("tr")) {
+//                            Elements tds = row.select("td");
+//                            
+//                            if (tds.get(4).text().contains("'")||tds.get(4).text().contains("DRYER")||tds.get(4).text().contains("LITER")||tds.get(4).text().matches("[a-zA-Z_]+")) {}
+//                            else {
+//                                
+//                            String tempo=tds.get(3).text();
+//                            
+//                            if (tempo.contains("EXTRACT")) {
+//                                if (tds.get(4).text().matches("[0-9]+")) {
+//                                int cvd2=Integer.parseInt(tds.get(4).text()); 
+//                                waterbath2+=1;
+//                                
+//                                }
+//                                
+//                                break;
+//                                
+//                            }
+//                            
+//                            
+//                            else {
+//                           
+//                                if (tds.get(4).text().matches("[0-9]+")) {
+//                                int cvd=Integer.parseInt(tds.get(4).text()); 
+//                               
+//                                waterbath+=1;
+//                                
+//                                }
+//                                
+//                            }
+//                            
+//                           }}}
+//                            
+//        
+//        
+//        
+//                            int waterbathall=0;
+//                            Document dock = Jsoup.parse(thecodee);
+//                            
+//                            for (Element table : dock.select("table")) {
+//                            for (Element row : table.select("tr")) {
+//                            Elements tds = row.select("td");
+//                            if (tds.get(4).text().isEmpty()||tds.get(4).text().contains("'")||tds.get(4).text().contains("DRYER")||tds.get(4).text().contains("LITER")||tds.get(4).text().matches("[a-zA-Z_]+")) {}
+//                            else { 
+//                            String erw=tds.get(4).text().toString();
+//                            waterbathall+=1;
+//                            }}}
+//        
+//                            
+//   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   
+//   //Read Vars From File  
+//   
+//    try {
+//      BufferedReader buf = new BufferedReader(new FileReader(NewDir.file_dirr + "\\Timer.kady"));
+//      
+//      lproduct=buf.readLine().replace("Load_Product=","");
+//      rproduct=buf.readLine().replace("Remove_Product=","");
+//      tempraturee=buf.readLine().replace("Temprature=","");
+//      ftank=buf.readLine().replace("Fill_Tank=","");
+//      etank=buf.readLine().replace("Empty_Tank=","");
+//      cdosage =buf.readLine().replace("Chemical_Dosage=","");
+//      
+//      buf.close();
+//      } catch (FileNotFoundException fileNotFoundException) {
+//      } catch (IOException iOException) {}
+//   
+//    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//    
+//    String lproductt=lproduct;
+//    String rproductt=rproduct;
+//    String tempratureee=tempraturee;
+//    String ftankk=ftank;
+//    String etankk=etank;
+//    String cdosagee=cdosage;
+//    
+//    int bathnumm=bathnum;
+//    
+//    bosbos=bathnum;
+//    
+//    double firstshott=firstshot;
+//    double secondshott=secondshot;
+//    
+//    int tempp=temp;
+//    int tempp2=tempall-temp;
+//    int temppall=tempall;
+//    
+//    int waterbathx=waterbath;
+//    int waterbath2x=waterbathall-waterbath;
+//    int waterbathallx=waterbathall;
+//    
+//    int stonebathhh=stonebathh;
+//    
+//    loadremoveproduct=Double.parseDouble(lproductt)+Double.parseDouble(rproductt);
+//    tempraturetime=tempp*Double.parseDouble(tempratureee);
+//    chemicaldosage=Double.parseDouble(cdosagee);
+//    fillemptytank=waterbathx*(Double.parseDouble(ftankk)+Double.parseDouble(etankk));
+//    
+//    loadremoveproduct2=Double.parseDouble(lproductt)+Double.parseDouble(rproductt);
+//    tempraturetime2=tempp2*Double.parseDouble(tempratureee);
+//    chemicaldosage2=Double.parseDouble(cdosagee);
+//    fillemptytank2=waterbath2x*(Double.parseDouble(ftankk)+Double.parseDouble(etankk));
+//    
+//    loadremoveproductall=Double.parseDouble(lproductt)+Double.parseDouble(rproductt);
+//    tempraturetimeall=temppall*Double.parseDouble(tempratureee);
+//    chemicaldosageall=Double.parseDouble(cdosagee);
+//    fillemptytankall=waterbathallx*(Double.parseDouble(ftankk)+Double.parseDouble(etankk));
+//    
+//    //Alert for Bath Here
+//    
+//    
+//    
+//    if (bathnumm==1) {
+//        
+//      JFXTextField fss=new JFXTextField ("");
+//      fss.setPromptText("Write Stone Baths Number");
+//      fss.setMinSize(300, 30);
+//      fss.setLabelFloat(true);
+//      fss.setStyle("-fx-font-weight:bold;");
+//      fss.setEditable(true);
+//      
+//      JFXTextField fsss=new JFXTextField ("0");
+//      fsss.setPromptText("Addtional Time");
+//      fsss.setMinSize(300, 30);
+//      fsss.setLabelFloat(true);
+//      fsss.setStyle("-fx-font-weight:bold;");
+//      fsss.setEditable(true);
+//      
+//      VBox fewe=new VBox ();
+//      fewe.setSpacing(10);
+//      fewe.getChildren().addAll(fss,fsss);
+//      
+//      Alert alerto = new Alert(Alert.AlertType.INFORMATION);
+//      alerto.setTitle("Stone Bath?");
+//      alerto.setHeaderText("We found stone or foam "+stonebathhh+" times. but 1 shot.");
+//      alerto.setContentText("Hello, Please tell me: Stone Baths Number?.");
+//      alerto.setGraphic(fewe);
+//      alerto.setResizable(false);
+//      DialogPane dialogPaneo = alerto.getDialogPane();
+//      dialogPaneo.getStylesheets().add(
+//    getClass().getResource("cupertino-light.css").toExternalForm());
+//      Optional<ButtonType> optiono = alerto.showAndWait();
+//      passy=fss.getText();
+//      stonabathth=Double.parseDouble(passy);
+//      if (optiono.get() == null) {} 
+//      else if (optiono.get() == ButtonType.OK) {
+//          
+//          /////////////////////////////////Stone Bath////////////////////////////////////////
+//          
+//          if (stonabathth==0) {
+//          loadstone=0;
+//          removestone=0;
+//          cleaningstone=0;
+//          extraction=0;
+//          double dos3=loadstone+removestone;
+//          loadremovestone=dos3;
+//          
+//      }
+//      else if (stonabathth==1){
+//          
+//          loadstone=5.5;
+//          removestone=4.15;
+//          cleaningstone=15;
+//          extraction=20;
+//          double dos3=loadstone+removestone;
+//          loadremovestone=dos3;
+//          
+//      }
+//      
+//      
+//      else if (stonabathth==2){
+//          
+//          
+//          loadstone=16.5;
+//          removestone=8.3;
+//          cleaningstone=20;
+//          extraction=20;
+//          double dos3=loadstone+removestone;
+//          loadremovestone=dos3;
+//          
+//          
+//      }
+//      
+//      
+//      else {
+//          double v=stonabathth;
+//          double v1=v*4.15;
+//          double v2=15+((v-1)*1.5);
+//          
+//          loadstone=v2;
+//          removestone=v1;
+//          cleaningstone=0;
+//          extraction=20;
+//          double dos3=loadstone+removestone;
+//          loadremovestone=dos3;
+//          
+//          
+//      }
+//          
+//          
+//          gmff1=Double.parseDouble(fsss.getText());
+//      
+//          
+//          ////////////////////////////////////////////////////////////////////////////////////
+//      }
+//      
+//      else if (optiono.get() == ButtonType.CANCEL) {
+//      Notifications noti = Notifications.create();
+//      noti.title("Cancel!");
+//      noti.text("Operation Cancelled, Something was wrong.");
+//      noti.position(Pos.CENTER);
+//      noti.hideAfter(Duration.seconds(3));
+//      noti.showInformation();
+//      } else {
+//         
+//      }
+//        
+//    }
+//    
+//    else if (bathnumm==2) {
+//        
+//      JFXTextField fss=new JFXTextField ("");
+//      fss.setPromptText("Write Stone Baths Number");
+//      fss.setMinSize(300, 30);
+//      fss.setLabelFloat(true);
+//      fss.setStyle("-fx-font-weight:bold;");
+//      fss.setEditable(true);
+//      
+//      
+//      JFXTextField fsssy=new JFXTextField ("0");
+//      fsssy.setPromptText("Addtional Time");
+//      fsssy.setMinSize(300, 30);
+//      fsssy.setLabelFloat(true);
+//      fsssy.setStyle("-fx-font-weight:bold;");
+//      fsssy.setEditable(true);
+//      
+//      VBox fewe=new VBox ();
+//      fewe.setSpacing(10);
+//      fewe.getChildren().addAll(fss,fsssy);
+//      
+//      
+//      Alert alerto = new Alert(Alert.AlertType.INFORMATION);
+//      alerto.setTitle("Stone Bath?");
+//      alerto.setHeaderText("We found stone or foam "+stonebathhh+" times. for the first shot.");
+//      alerto.setContentText("Hello, Please tell me: Stone Baths Number?.");
+//      alerto.setGraphic(fewe);
+//      alerto.setResizable(false);
+//      DialogPane dialogPaneo = alerto.getDialogPane();
+//      dialogPaneo.getStylesheets().add(
+//    getClass().getResource("cupertino-light.css").toExternalForm());
+//      Optional<ButtonType> optiono = alerto.showAndWait();
+//      passy=fss.getText();
+//      stonabathth=Double.parseDouble(passy);
+//      if (optiono.get() == null) {} 
+//      else if (optiono.get() == ButtonType.OK) {
+//          
+//          /////////////////////////////////Stone Bath////////////////////////////////////////
+//          
+//          if (stonabathth==0) {
+//          loadstone=0;
+//          removestone=0;
+//          cleaningstone=0;
+//          extraction=0;
+//          double dos3=loadstone+removestone;
+//          loadremovestone=dos3;
+//          
+//      }
+//      else if (stonabathth==1){
+//          
+//          loadstone=5.5;
+//          removestone=4.15;
+//          cleaningstone=15;
+//          extraction=20;
+//          double dos3=loadstone+removestone;
+//          loadremovestone=dos3;
+//          
+//      }
+//      
+//      
+//      else if (stonabathth==2){
+//          
+//          
+//          loadstone=16.5;
+//          removestone=8.3;
+//          cleaningstone=20;
+//          extraction=20;
+//          double dos3=loadstone+removestone;
+//          loadremovestone=dos3;
+//          
+//          
+//      }
+//      
+//      
+//      else {
+//          double v=stonabathth;
+//          double v1=v*4.15;
+//          double v2=15+((v-1)*1.5);
+//          
+//          loadstone=v2;
+//          removestone=v1;
+//          cleaningstone=0;
+//          extraction=20;
+//          double dos3=loadstone+removestone;
+//          loadremovestone=dos3;
+//          
+//          
+//      }
+//          
+//          
+//          gmff1=Double.parseDouble(fsssy.getText());
+//      
+//          
+//          ////////////////////////////////////////////////////////////////////////////////////
+//      }
+//      
+//      else if (optiono.get() == ButtonType.CANCEL) {
+//      Notifications noti = Notifications.create();
+//      noti.title("Cancel!");
+//      noti.text("Operation Cancelled, Something was wrong.");
+//      noti.position(Pos.CENTER);
+//      noti.hideAfter(Duration.seconds(3));
+//      noti.showInformation();
+//      } else {
+//         
+//      }
+//      
+//      ///////////yrtyrty///////////
+//      
+//      JFXTextField fsss=new JFXTextField ("");
+//      fsss.setPromptText("Write Stone Baths Number");
+//      fsss.setMinSize(300, 30);
+//      fsss.setLabelFloat(true);
+//      fsss.setStyle("-fx-font-weight:bold;");
+//      fsss.setEditable(true);
+//      
+//      JFXTextField fssss=new JFXTextField ("0");
+//      fssss.setPromptText("Addtional Time");
+//      fssss.setMinSize(300, 30);
+//      fssss.setLabelFloat(true);
+//      fssss.setStyle("-fx-font-weight:bold;");
+//      fssss.setEditable(true);
+//      
+//      VBox fewer=new VBox ();
+//      fewer.setSpacing(10);
+//      fewer.getChildren().addAll(fsss,fssss);
+//      
+//      
+//      Alert alertoo = new Alert(Alert.AlertType.INFORMATION);
+//      alertoo.setTitle("Stone Bath?");
+//      alertoo.setHeaderText("We found stone or foam "+stonebathhh+" times. for the second shot.");
+//      alertoo.setContentText("Hello, Please tell me: Stone Baths Number?.");
+//      alertoo.setGraphic(fewer);
+//      alertoo.setResizable(false);
+//      DialogPane dialogPaneoo = alertoo.getDialogPane();
+//      dialogPaneoo.getStylesheets().add(
+//    getClass().getResource("cupertino-light.css").toExternalForm());
+//      Optional<ButtonType> optionoio = alertoo.showAndWait();
+//      passyy=fsss.getText();
+//      stonabaththh=Double.parseDouble(passyy);
+//      if (optionoio.get() == null) {} 
+//      else if (optionoio.get() == ButtonType.OK) {
+//         
+//          /////////////////////////////////Stone Bath////////////////////////////////////////
+//          
+//          if (stonabaththh==0) {
+//          loadstone2=0;
+//          removestone2=0;
+//          cleaningstone2=0;
+//          extraction2=0;
+//          double dos3=loadstone2+removestone2;
+//          loadremovestone2=dos3;
+//          
+//      }
+//      else if (stonabaththh==1){
+//          
+//          loadstone2=5.5;
+//          removestone2=4.15;
+//          cleaningstone2=15;
+//          extraction2=20;
+//          double dos3=loadstone2+removestone2;
+//          loadremovestone2=dos3;
+//          
+//      }
+//      
+//      
+//      else if (stonabaththh==2){
+//          
+//          
+//          loadstone2=16.5;
+//          removestone2=8.3;
+//          cleaningstone2=20;
+//          extraction2=20;
+//          double dos3=loadstone2+removestone2;
+//          loadremovestone2=dos3;
+//          
+//          
+//      }
+//      
+//      
+//      else {
+//          double v=stonabaththh;
+//          double v1=v*4.15;
+//          double v2=15+((v-1)*1.5);
+//          
+//          loadstone2=v2;
+//          removestone2=v1;
+//          cleaningstone2=0;
+//          extraction2=20;
+//          double dos3=loadstone2+removestone2;
+//          loadremovestone2=dos3;
+//          
+//          
+//      }
+//          
+//          
+//          gmff2=Double.parseDouble(fssss.getText());
+//      
+//          
+//          ////////////////////////////////////////////////////////////////////////////////////
+//      }
+//      
+//      else if (optionoio.get() == ButtonType.CANCEL) {
+//      Notifications noti = Notifications.create();
+//      noti.title("Cancel!");
+//      noti.text("Operation Cancelled, Something was wrong.");
+//      noti.position(Pos.CENTER);
+//      noti.hideAfter(Duration.seconds(3));
+//      noti.showInformation();
+//      } else {
+//         
+//      }
+//      
+//        
+//    }
+//    
+//      
+//    
+//    
+//    
+//    
+//    /////////////////////////////////////////////Starting//////////////////////////////////////////////////////////
+//    
+//    
+//    if (bathnumm==1) {
+//        
+//        gmf1=stonabathth+firstshott+loadremoveproduct+loadremovestone+tempraturetime+extraction+chemicaldosage+fillemptytank;
+//        gmf1=gmf1+gmff1;
+//        double number1 = gmf1;
+//        String formatted1 = String.format("%.1f", number1);
+//        gmf1=Double.parseDouble(formatted1);
+//        
+//        gdf1=(stonabathth+firstshott+loadremoveproduct+loadremovestone+tempraturetime+extraction+chemicaldosage+fillemptytank)/60.0;
+//        
+//        double number11 = gdf1;
+//        String formatted11 = String.format("%.1f", number11);
+//        gdf1=Double.parseDouble(formatted11);
+//        
+//        //Write to recipe here //////////////////////////////////////////////////////////
+//        
+//Document report = Jsoup.parse(thecodee);
+//domy = report.children();
+//domy.select("tbody").append("<tr>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%; background-color: #f6ff00; border-color: #ff0000; text-align: center;\"><b>Recipe Time :</b> <u><b>"+Double.toString((gmf1))+"</b></u> <b>Mins.</b></td>\n" +
+//"<td style=\"width: 11.1111%; background-color: #f6ff00; border-color: #ff0000; text-align: center;\"><u><b>"+Double.toString((gdf1))+"</b></u> <b>Hours.</b></td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +        
+//"</tr>");
 //
-//// قراءة الملف وفك التشفير
-//InputStream inputinstream = new FileInputStream(link);
-//BufferedReader bi = new BufferedReader(new InputStreamReader(inputinstream, "UTF-8"));
+//        
+//        /////////////////////////////////////////////////////////////////////////////////
+//        
+//    }
+//    
+//    else if (bathnumm==2) {
+//        
+//        gmf1=stonabathth+firstshott+loadremoveproduct+loadremovestone+tempraturetime+extraction+chemicaldosage+fillemptytank;
+//        gmf1=gmf1+gmff1;
+//        double number1 = gmf1;
+//        String formatted1 = String.format("%.1f", number1);
+//        gmf1=Double.parseDouble(formatted1);
+//        
+//        gdf1=(stonabathth+firstshott+loadremoveproduct+loadremovestone+tempraturetime+extraction+chemicaldosage+fillemptytank)/60.0;
+//        
+//        double number11 = gdf1;
+//        String formatted11 = String.format("%.1f", number11);
+//        gdf1=Double.parseDouble(formatted11);
+//        
+//        
+//        
+//        
+//        
+//        gmf2=stonabaththh+secondshott+loadremoveproduct2+loadremovestone2+tempraturetime2+extraction2+chemicaldosage2+fillemptytank2;
+//        gmf2=gmf2+gmff2;
+//        double number2 = gmf2;
+//        String formatted2 = String.format("%.1f", number2);
+//        gmf2=Double.parseDouble(formatted2);
+//        
+//        gdf2=(stonabaththh+secondshott+loadremoveproduct2+loadremovestone2+tempraturetime2+extraction2+chemicaldosage2+fillemptytank2)/60.0;
+//        
+//        double number22 = gdf2;
+//        String formatted22 = String.format("%.1f", number22);
+//        gdf2=Double.parseDouble(formatted22);
+//        
+//        
+//          //Write to recipe here //////////////////////////////////////////////////////////
+//        
+//Document report = Jsoup.parse(thecodee);
+//domy = report.children();
+//domy.select("tbody").append("<tr>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%; background-color: #f6ff00; border-color: #ff0000; text-align: center;\"><b>First Shot :</b> <u><b>"+Double.toString((gmf1))+"</b></u> <b>Mins.</b></td>\n" +
+//"<td style=\"width: 11.1111%; background-color: #f6ff00; border-color: #ff0000; text-align: center;\"><u><b>"+Double.toString((gdf1))+"</b></u> <b>Hours.</b></td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +        
+//"</tr>"
+//        + "<tr>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +
+//"<td style=\"width: 11.1111%; background-color: #f6ff00; border-color: #ff0000; text-align: center;\"><b>Second Shot :</b> <u><b>"+Double.toString((gmf2))+"</b></u> <b>Mins.</b></td>\n" +
+//"<td style=\"width: 11.1111%; background-color: #f6ff00; border-color: #ff0000; text-align: center;\"><u><b>"+Double.toString((gdf2))+"</b></u> <b>Hours.</b></td>\n" +
+//"<td style=\"width: 11.1111%;\">&nbsp;</td>\n" +        
+//"</tr>");
+//
+//        
+//        /////////////////////////////////////////////////////////////////////////////////
+//        
+//        
+//        
+//    }
+//    
+//    
+//    else {
+//        
+//        //Noti
+//        
+//      Notifications noti = Notifications.create();
+//      noti.title("Cancel!");
+//      noti.text("Operation Cancelled, We don't have 3 shots in one recipe.");
+//      noti.position(Pos.CENTER);
+//      noti.hideAfter(Duration.seconds(3));
+//      noti.showError();
+//      
+//      
+//Document report = Jsoup.parse(thecodee);
+//domy = report.children();
+//  
+//      
+//    }
+//    
+//    
+//    
+//    /////////////////////////////////////////////Ending////////////////////////////////////////////////////////////
+//   
+//   
+//   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   
+//   if (signme.isSelected()==true) {
+//       
+//   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   
+//   
+//   if (fixche.isSelected()==true) {
+//       
+//      String codee = domy.toString();
+//      if (!codee.contains("TABLE")) {
+//      Notifications noti = Notifications.create();
+//      noti.title("Recipe Error");
+//      noti.text("Maybe not a recipe, Open a recipe first!.");
+//      noti.hideAfter(Duration.seconds(3));
+//      noti.position(Pos.CENTER);
+//      noti.showError();    
+//        }
+//        else {
+//            Document docj = Jsoup.parse(codee);
+//        for (Element table : docj.select("TABLE")) {
+//        for (Element row : table.select("TR")) {
+//            Elements tds = row.select("TD");
+//            if (tds.get(7).text().isEmpty()) {   
+//            }
+//            else {  
+//             ///////////////////////////////////////////////////////////////
+//String string=tds.get(7).text();
+//BufferedReader buf=new BufferedReader (new FileReader (NewDir.file_dirrrr + "\\Recipe_Indexes\\Chemical_Dictionary.kady"));
+//String line;
+//String linebeforeequal;
+//String lineafterequal;
+//while ((line=buf.readLine())!=null) {
+//    
+//    
+//linebeforeequal=line.substring(0,line.indexOf("=")-0);
+//lineafterequal=line.substring(line.indexOf("=") + 1 , line.length());
+//if (string.equals(lineafterequal)) {
+////System.out.println(string+" = "+linebeforeequal);
+//String formattedText = "<b style='display:block; text-align:center;'>" + linebeforeequal + "</b>";
+//tds.get(8).html(formattedText); // Use .html() instead of .text()     
+////tds.get(8).text(linebeforeequal);
+////System.out.println(tds.get(8).text());
+//break;
+//
+//    }
+//    else {
+//        
+//    }
+//    
+//}
+//buf.close();
+//    
+//            }   
+//         
+//        }}
+//       roraa=docj.toString();
+//        }
+//        ////////////////////////////////////////////////////////////////////////////// 
+//org.jsoup.nodes.Document doct = Jsoup.parse(roraa);
+//for (Element table : doct.select("TABLE")) {
+//for (Element row : table.select("TR")) {
+//Elements tds = row.select("TD");
+//if (tds.get(8).text().isEmpty()) {   
+//}
+//else {  
+//String string=tds.get(8).text();
+//BufferedReader bufi=new BufferedReader (new FileReader (NewDir.file_dirrrr + "\\Recipe_Indexes\\Lot_Numbers.kady"));
+//String line;
+//String linebeforeequal;//Chemical Name
+//String lineafterequal;//Lot Numbers
+//boolean found = false;         
+//while ((line=bufi.readLine())!=null) {
+//linebeforeequal=line.substring(0,line.indexOf("="));//Chemical Name
+//lineafterequal=line.substring(line.indexOf("=") + 1);//Lot Numbers
+//if (string.equalsIgnoreCase(linebeforeequal)) {
+//System.out.println(linebeforeequal);
+//String formattedText = "<b style='display:block; text-align:center;'>" + lineafterequal + "</b>";
+//tds.get(9).html(formattedText); // Use .html() instead of .text()     
+////tds.get(9).text(lineafterequal);
+//found = true;                    
+//break;
+//    }   
+//}
+//bufi.close();}}}
+//roraa=doct.toString();   
+//
+//
+////////////////////////////////////////////////////////////////////////////////
+//
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//         
+//org.jsoup.nodes.Document doctp = Jsoup.parse(roraa);
+//
+//// مر على كل جدول
+//for (Element table : doctp.select("table")) {
+//    for (Element row : table.select("tr")) {
+//        Elements tds = row.select("td");
+//
+//        // اتأكد إن فيه على الأقل 11 عمود (0 → 10)
+//        if (tds.size() > 10) {
+//            String target = tds.get(8).text().trim();
+//
+//            if (!target.isEmpty()) {
+//                Path mapPath = Paths.get(NewDir.file_dirrrr, "Recipe_Indexes", "Chemical_Translation.kady");
+//
+//                try (BufferedReader bufi = Files.newBufferedReader(mapPath, StandardCharsets.UTF_8)) {
+//                    String line;
+//                    boolean found = false;
+//
+//                    while ((line = bufi.readLine()) != null) {
+//                        // اتأكد إن السطر فيه =
+//                        if (!line.contains("=")) continue;
+//
+//                        String linebeforeequal = line.substring(0, line.indexOf("=")).trim();
+//                        String lineafterequal = line.substring(line.indexOf("=") + 1).trim();
+//
+//                        if (target.equalsIgnoreCase(linebeforeequal)) {
+//                            System.out.println("Matched: " + linebeforeequal);
+//
+//                            String formattedText =
+//                                    "<b style='display:block; text-align:center;'>" +
+//                                            lineafterequal +
+//                                            "</b>";
+//
+//                            // استبدل العمود رقم 10 بالنص الجديد
+//                            tds.get(10).html(formattedText);
+//
+//                            found = true;
+//                            break;
+//                        }
+//                    }
+//
+//                    if (!found) {
+//                        System.out.println("No match for: " + target);
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//roraa = doctp.toString();
+//
+//       
+//       
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//
+//       
+//   }
+//   
+//   else {
+//       
+//       //Continue..........
+//       roraa=domy.toString();
+//   }
+//    
+//   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   
+//      
+//   
+//    try {
+//    // =========================================
+//    // كتابة البيانات الجديدة داخل الملف المؤقت
+//    // =========================================
+//    OutputStream instream = new FileOutputStream(link);
+//    pw = new PrintWriter( new OutputStreamWriter(instream, "UTF-8"));
+//    String pathtosignature="file://"+NewDir.file_dirrrrr+"\\Mr_Muhammet.png";
+//    String modely=model;
+//    pw.println("<!DOCTYPE html>\n<html lang=\"ar\">\n<head>\n<title>Kadysoft</title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>td {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}\ntable {\nheight:5px;\nmax-width:100%;\nheight:100%;\nwhite-space:nowrap;\n}\ntr {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}"
+//    + ""
+//    + ""
+//    + ""
+//    + "/* Centered Watermark */\n" +
+//    "    .watermark {\n" +
+//    "      position: fixed;\n" +
+//    "      top: 50%;\n" +
+//    "      left: 50%;\n" +
+//    "      transform: translate(-50%, -50%) rotate(-45deg);\n" +
+//    "      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
+//    "      background-repeat: no-repeat;\n" +
+//    "      background-size: contain;\n" +
+//    "      width: 300px;\n" +
+//    "      height: 200px;\n" +
+//    "      opacity: 0.3;\n" +
+//    "      pointer-events: none;\n" +
+//    "      z-index: 1000;\n" +
+//    "    }\n" +
+//    "    /* Repeated Watermark */\n" +
+//    "    .watermark-repeated {\n" +
+//    "      position: fixed;\n" +
+//    "      top: 0;\n" +
+//    "      left: 0;\n" +
+//    "      width: 100%;\n" +
+//    "      height: 100%;\n" +
+//    "      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
+//    "      background-repeat: repeat;\n" +
+//    "      background-size: 300px 200px;\n" +
+//    "      opacity: 0.2;\n" +
+//    "      pointer-events: none;\n" +
+//    "      z-index: 1000;\n" +
+//    "    }"
+//    + ""
+//    + "</STYLE></HEAD>\n" +
+//    "<BODY><CENTER>\n"
+//    + "<div class=\"watermark\"></div>" 
+//    + ""
+//    + "\n\n");
+//    pw.println("<!-- Creating Recipe From Kadysoft Ltd.-->\n\n");
+//    pw.println(roraa);
+//    pw.println("\n\n</center>\n</body>\n</html>");
+//    pw.println("<b id=\"signname\">Mr_Muhammet Signature: "+"</b><img id=\"signimage\" src=\""+pathtosignature+"\" width=\"300\" height=\"90\" alt=\"Developed By Kadysoft Ltd (Ahmed Elkady).\" style=\"border-color:black;border-width:10px;\">");   
+//    if (roraa.contains("background-image:")) {     
+//    }
+//    else {
+//    pw.println("\n\n<style>\n" +
+//    "body {\n" +
+//    "  background-image: url(\""+modely+".bmp\");\n" +
+//    "  background-position: center;\n" +
+//    "  height: 170px;\n" +
+//    "background-position-x:550px;"+
+//    "  background-repeat: no-repeat;\n" +
+//    "  background-size: 120px 90px;\n" +
+//    "}\n" +
+//    "</style>");             
+//    }
+//    
+//    
+//    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//        Date d = new Date();
+//        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+//        String dateString = sdf.format(d);
+//        String programmerName = "Ahmed Elkady.";
+//        String companyName = "Kadysoft Ltd.";
+//        String factoryName = "T&C Garments.";
+//        String recipeName = recipe + ".";
+//        String clientName = model + ".";
+//        int qty = Integer.parseInt(pecoco);
+//        String lastEditorName = user + ".";
+//        String date = dateString + ".";
+//        String repolink = "https://progkady.github.io/RecipesStore/";
+//        double pcsCost = onegar;
+//        String qrText = "★ Recipe Details ★\n" +
+//                "-------------------------\n" +
+//                "• Programmer : " + programmerName + "\n" +
+//                "• Developer : " + companyName + "\n" +
+//                "• Factory : " + factoryName + "\n" +
+//                "• Recipe : " + recipeName + "\n" +
+//                "• Customer : " + clientName + "\n" +
+//                "• Quantity : " + qty + "\n" +
+//                "• Editor Name : " + lastEditorName + "\n" +
+//                "• Last Update : " + date + "\n" +
+//                "• Pcs Cost : " + pcsCost + " $\n\n" +
+//                "• Recipes Link : " + repolink + "\n" +
+//                "Thanks For Using Receta From Kadysoft Ltd. ❤";
+//        int qrSize = 250;
+//        BufferedImage qrImage = createPrintableQR(qrText, qrSize);
+//        String qrBase64 = imageToBase64Png(qrImage);
+//        String htmlContent = readFile(link);
+//        Document docd = Jsoup.parse(htmlContent);
+//        docd.outputSettings().syntax(Document.OutputSettings.Syntax.html);
+//        docd.outputSettings().charset("UTF-8");
+//        Element table = docd.select("table#EXTABLE").first();
+//        if (table == null) {
+//            System.out.println("خطأ: الجدول #EXTABLE مش موجود!");
+//            return;
+//        }
+//        Elements rows = table.select("tbody > tr");
+//        int mergeRows = Math.min(7, rows.size()); // دمج 7 صفوف
+//        int qrColumnIndex = 8; // العمود رقم 9 (index 8)
+//        Element firstRow = rows.get(0);
+//        Elements cells = firstRow.select("td");
+//        if (cells.size() <= qrColumnIndex) {
+//            System.out.println("العمود رقم 9 مش موجود في الصف الأول!");
+//            return;
+//        }
+//        Element qrCell = cells.get(qrColumnIndex);
+//        Element oldQrImg = qrCell.selectFirst("img[src^=data:image]");
+//        String qrHtml =
+//    "<img src=\"data:image/png;base64," + qrBase64 + "\" " +
+//    "alt=\"★ Recipe Details ★&#10;" +
+//    "-------------------------&#10;" +
+//    "• Programmer : " + programmerName + "&#10;" +
+//    "• Developer : " + companyName + "&#10;" +
+//    "• Factory : " + factoryName + "&#10;" +
+//    "• Recipe : " + recipeName + "&#10;" +
+//    "• Customer : " + clientName + "&#10;" +
+//    "• Quantity : " + qty + "&#10;" +
+//    "• Editor Name : " + lastEditorName + "&#10;" +
+//    "• Last Update : " + date + "&#10;" +
+//    "• Pcs Cost : " + pcsCost + " $&#10;&#10;" +
+//    "• Recipes Link : " + repolink + "&#10;" +
+//    "Thanks For Using Receta From Kadysoft Ltd. ❤\" " +
+//    "style=\"width:" + qrSize + "px !important; height:" + qrSize + "px !important; " +
+//    "max-width:none !important; max-height:none !important; border:10px solid white; " +
+//    "box-shadow:0 0 0 4pt black;\"/>";
+//        if (oldQrImg != null) {
+//            qrCell.html(qrHtml);
+//        } else {
+//            qrCell.attr("rowspan", String.valueOf(mergeRows))
+//                  .attr("style", "border: 3px double #000; padding: 10px; background: #ffffff; " +
+//                                 "text-align: center; vertical-align: middle;")
+//                  .html(qrHtml);
+//        }
+//        for (int i = 1; i < mergeRows; i++) {
+//            Element row = rows.get(i);
+//            Element cellToRemove = row.selectFirst("td:nth-child(9)");
+//            if (cellToRemove != null) {
+//                cellToRemove.remove();
+//            }
+//        }
+//    writeFile(link, docd.outerHtml());
+//    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//    
+//    
+//    pw.close();
+//    code.clear();
+//    // =========================================
+//    // قراءة الملف المؤقت وعمل تشفير الحروف
+//    // =========================================
+//    StringBuilder encryptedText = new StringBuilder();
+//    BufferedReader bi = new BufferedReader(
+//    new InputStreamReader(
+//    new FileInputStream(link),
+//    "UTF-8"));
+//    String lo;
+//    while ((lo = bi.readLine()) != null) {
+//        if (lo.contains("data:image") || lo.contains("base64,")) {
+//                encryptedText.append("\n" + lo);
+//                continue;
+//            }
+//    encryptedText.append(
+//    lo
+//    .replace("A","ﬦ")
+//    .replace("B","ﬧ")
+//    .replace("C","ﬨ")
+//    .replace("D","﬩")
+//    .replace("E","שׁ")    
+//    .replace("F","שׂ")        
+//    .replace("G","שּׁ")         
+//    .replace("H","שּׂ")         
+//    .replace("I","אַ")         
+//    .replace("J","אָ")         
+//    .replace("K","אּ")         
+//    .replace("L","בּ")         
+//    .replace("M","גּ")         
+//    .replace("N","דּ")         
+//    .replace("O","הּ")         
+//    .replace("P","וּ")         
+//    .replace("Q","זּ")         
+//    .replace("R","טּ")         
+//    .replace("S","יּ")         
+//    .replace("T","ךּ")         
+//    .replace("U","כּ")         
+//    .replace("V","לּ")
+//    .replace("W","מּ")         
+//    .replace("X","נּ")         
+//    .replace("Y","סּ")         
+//    .replace("Z","ףּ") 
+//    .replace("0","פּ")         
+//    .replace("1","צּ")         
+//    .replace("2","קּ")         
+//    .replace("3","רּ")         
+//    .replace("4","שּ")         
+//    .replace("5","תּ")         
+//    .replace("6","וֹ")         
+//    .replace("7","בֿ")         
+//    .replace("8","כֿ")
+//    .replace("9","פֿ")
+//    .replace("a","ﬦ")
+//    .replace("b","ﬧ")
+//    .replace("c","ﬨ")
+//    .replace("d","﬩")
+//    .replace("e","שׁ")    
+//    .replace("f","שׂ")        
+//    .replace("g","שּׁ")         
+//    .replace("h","שּׂ")         
+//    .replace("i","אַ")         
+//    .replace("j","אָ")         
+//    .replace("k","אּ")         
+//    .replace("l","בּ")         
+//    .replace("m","גּ")         
+//    .replace("n","דּ")         
+//    .replace("o","הּ")         
+//    .replace("p","וּ")         
+//    .replace("q","זּ")         
+//    .replace("r","טּ")         
+//    .replace("s","יּ")         
+//    .replace("t","ךּ")         
+//    .replace("u","כּ")         
+//    .replace("v","לּ")
+//    .replace("w","מּ")         
+//    .replace("x","נּ")         
+//    .replace("y","סּ")         
+//    .replace("z","ףּ")
+//    );
+//    encryptedText.append("\n");
+//    }
+//    bi.close();
+//    // =========================================
+//    // إعادة كتابة النص المشفر داخل temp
+//    // =========================================
+//    PrintWriter pw2 = new PrintWriter(
+//    new OutputStreamWriter(
+//    new FileOutputStream(link),
+//    "UTF-8"));
+//    pw2.print(encryptedText.toString());
+//    pw2.close();
+//    // =========================================
+//    // تشفير بالباسورد
+//    // =========================================
+//    String longKey;
+//    try (BufferedReader reader =
+//    new BufferedReader(
+//    new FileReader("lib\\java.dat"))) {
+//    longKey = reader.readLine();
+//    }
+//    String password =
+//    KeyDecoder.extractData(longKey.trim());
+//    String encryptedTemp =
+//    link + ".enc";
+//    FileEncryptor.encrypt(
+//    link,
+//    encryptedTemp,
+//    password);
+//    // =========================================
+//    // اختيار مكان الحفظ
+//    // =========================================
+//    FileChooser dialog = new FileChooser();
+//    dialog.setInitialDirectory(new File(NewDir.file_dir+"\\"+stage+"\\"+model));
+//    dialog.setInitialFileName(recipe + ".ks");
+//    dialog.getExtensionFilters().add(
+//    new FileChooser.ExtensionFilter(
+//    "Kadysoft Files",
+//    "*.ks"));
+//    File dialogResult =
+//    dialog.showSaveDialog(null);
+//    if (dialogResult == null) {
+//    return;
+//    }
+//    // =========================================
+//    // استبدال الملف إن وجد
+//    // =========================================
+//    File finalFile = dialogResult;
+//    java.nio.file.Files.move(
+//    new File(encryptedTemp).toPath(),
+//    finalFile.toPath(),
+//    java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+//    // =========================================
+//    // حذف الملفات المؤقتة
+//    // =========================================
+//    //new File(link).delete();
+//    // لو موجود أي temp إضافي
+//    File encTempFile = new File(encryptedTemp);
+//    if (encTempFile.exists()) {
+//    //encTempFile.delete();
+//    }
+//    // =========================================
+//    // نجاح
+//    // =========================================
+//    Notifications noti = Notifications.create();
+//    noti.title("Success!");
+//    noti.text("File saved and encrypted successfully.");
+//    noti.position(Pos.CENTER);
+//    noti.hideAfter(Duration.seconds(4));
+//    noti.showInformation();
+//    }
+//    catch (Exception ex) {
+//    ex.printStackTrace();
+//    Notifications noti = Notifications.create();
+//    noti.title("Save Failed!");
+//    noti.text("Error while saving encrypted file.");
+//    noti.position(Pos.CENTER);
+//    noti.hideAfter(Duration.seconds(5));
+//    noti.showError();
+//    }
+//   
+//   
+//   
+//   
+//      
+//       
+//       
+//       
+////            //String codee=code.getText();
+////            String pathtosignature="file://"+NewDir.file_dirrrrr+"\\Mr_Muhammet.png";
+////            String modely=model;
+////            FileChooser dialog = new FileChooser();
+////            dialog.setInitialDirectory(new File(NewDir.file_dir+"\\"+stage+"\\"+model));
+////            dialog.setInitialFileName(recipe+".ks");
+////            dialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("Kadysoft Files", new String[] { "*.ks" }));
+////            dialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("HTML Files", new String[] { "*.html" }));
+////            File dialogResult = dialog.showSaveDialog(null);
+////            filePath = dialogResult.getAbsolutePath().toString();
+////            OutputStream instream=new FileOutputStream(filePath);
+////            pw = new PrintWriter(new OutputStreamWriter (instream,"UTF-8"));
+////            pw.println("<!DOCTYPE html>\n<html lang=\"ar\">\n<head>\n<title>Kadysoft</title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>td {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}\ntable {\nheight:5px;\nmax-width:100%;\nheight:100%;\nwhite-space:nowrap;\n}\ntr {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}"
+////                    + ""
+////                    + ""
+////                    
+////                        + ""
+////                + "/* Centered Watermark */\n" +
+////"    .watermark {\n" +
+////"      position: fixed;\n" +
+////"      top: 50%;\n" +
+////"      left: 50%;\n" +
+////"      transform: translate(-50%, -50%) rotate(-45deg);\n" +
+////"      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
+////"      background-repeat: no-repeat;\n" +
+////"      background-size: contain;\n" +
+////"      width: 300px;\n" +
+////"      height: 200px;\n" +
+////"      opacity: 0.3;\n" +
+////"      pointer-events: none;\n" +
+////"      z-index: 1000;\n" +
+////"    }\n" +
+////"    /* Repeated Watermark */\n" +
+////"    .watermark-repeated {\n" +
+////"      position: fixed;\n" +
+////"      top: 0;\n" +
+////"      left: 0;\n" +
+////"      width: 100%;\n" +
+////"      height: 100%;\n" +
+////"      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
+////"      background-repeat: repeat;\n" +
+////"      background-size: 300px 200px;\n" +
+////"      opacity: 0.2;\n" +
+////"      pointer-events: none;\n" +
+////"      z-index: 1000;\n" +
+////"    }"
+////                + ""
+////                + "</STYLE></HEAD>\n" +
+////"<BODY><CENTER>\n"
+////+ "<div class=\"watermark\"></div>" 
+////                
+////                    
+////                    + ""
+////                    + "\n\n");
+////            pw.println("<!-- Creating Recipe From Kadysoft Ltd.-->\n\n");
+////            pw.println(roraa);
+////            pw.println("\n\n</center>\n</body>\n</html>");
+////            pw.println("<b id=\"signname\">Mr_Muhammet Signature: "+"</b><img id=\"signimage\" src=\""+pathtosignature+"\" width=\"300\" height=\"90\" alt=\"Developed By Kadysoft Ltd (Ahmed Elkady).\" style=\"border-color:black;border-width:10px;\">");   
+////      
+////            if (roraa.contains("background-image:")) {
+////                
+////            }
+////            else {
+////                pw.println("\n\n<style>\n" +
+////"body {\n" +
+////"  background-image: url(\""+modely+".bmp\");\n" +
+////"  background-position: center;\n" +
+////"  height: 170px;\n" +
+////"background-position-x:550px;"+
+////"  background-repeat: no-repeat;\n" +
+////"  background-size: 120px 90px;\n" +
+////"}\n" +
+////"</style>");             
+////          }
+////            pw.close();
+////            
+////            
+////       /////////////////////////////////////////////////// 
+////    code.clear();
+////    InputStream inputinstream=new FileInputStream(filePath);
+////    BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
+////    //BufferedReader bi=new BufferedReader (new FileReader (pathy));
+////    String lo;
+////    while ((lo=bi.readLine())!=null) {
+////        
+////        code.appendText("\n"+lo
+////       .replace("A","ﬦ")
+////       .replace("B","ﬧ")
+////       .replace("C","ﬨ")
+////       .replace("D","﬩")
+////       .replace("E","שׁ")    
+////       .replace("F","שׂ")        
+////       .replace("G","שּׁ")         
+////       .replace("H","שּׂ")         
+////       .replace("I","אַ")         
+////       .replace("J","אָ")         
+////       .replace("K","אּ")         
+////       .replace("L","בּ")         
+////       .replace("M","גּ")         
+////       .replace("N","דּ")         
+////       .replace("O","הּ")         
+////       .replace("P","וּ")         
+////       .replace("Q","זּ")         
+////       .replace("R","טּ")         
+////       .replace("S","יּ")         
+////       .replace("T","ךּ")         
+////       .replace("U","כּ")         
+////       .replace("V","לּ")
+////       .replace("W","מּ")         
+////       .replace("X","נּ")         
+////       .replace("Y","סּ")         
+////       .replace("Z","ףּ")
+////                
+////       .replace("0","פּ")         
+////       .replace("1","צּ")         
+////       .replace("2","קּ")         
+////       .replace("3","רּ")         
+////       .replace("4","שּ")         
+////       .replace("5","תּ")         
+////       .replace("6","וֹ")         
+////       .replace("7","בֿ")         
+////       .replace("8","כֿ")
+////       .replace("9","פֿ")
+////                
+////       .replace("a","ﬦ")
+////       .replace("b","ﬧ")
+////       .replace("c","ﬨ")
+////       .replace("d","﬩")
+////       .replace("e","שׁ")    
+////       .replace("f","שׂ")        
+////       .replace("g","שּׁ")         
+////       .replace("h","שּׂ")         
+////       .replace("i","אַ")         
+////       .replace("j","אָ")         
+////       .replace("k","אּ")         
+////       .replace("l","בּ")         
+////       .replace("m","גּ")         
+////       .replace("n","דּ")         
+////       .replace("o","הּ")         
+////       .replace("p","וּ")         
+////       .replace("q","זּ")         
+////       .replace("r","טּ")         
+////       .replace("s","יּ")         
+////       .replace("t","ךּ")         
+////       .replace("u","כּ")         
+////       .replace("v","לּ")
+////       .replace("w","מּ")         
+////       .replace("x","נּ")         
+////       .replace("y","סּ")         
+////       .replace("z","ףּ")                
+////      ); 
+////
+////
+////    }
+////    bi.close();
+////    String gf=code.getText();
+////    OutputStream instreamm=new FileOutputStream(filePath);
+////    PrintWriter pw = new PrintWriter(new OutputStreamWriter (instreamm,"UTF-8"));
+////    //PrintWriter pw=new PrintWriter (new FileWriter (pathy));
+////    pw.println(gf);
+////    pw.close();
+////    
+////    //
+////    
+////    
+////    Notifications noti = Notifications.create();
+////    noti.title("Successful");
+////    noti.text("We have encrypted the recipe successfully.");
+////    noti.hideAfter(Duration.seconds(3));
+////    noti.position(Pos.CENTER);
+////    noti.showInformation();
+////    code.clear();
+//
+//       //////////////////////////////////////////////////
+//        
+//       //////////////////////////////////////////////////
+//            //Desktop desk = Desktop.getDesktop();
+//            //desk.open(new File (filePath));
+//            Stage jk = (Stage)this.save.getScene().getWindow();
+//            //jk.close();
+//   
+//       /////////////////////////////////////////////////// 
+//   
+//       //////////////////////////////////////////////////
+//       
+//   }
+//   
+//   
+//   else {
+//       
+//       
+//        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   
+//   
+//   if (fixche.isSelected()==true) {
+//       
+//       String codee = domy.toString();
+//      if (!codee.contains("TABLE")) {
+//      Notifications noti = Notifications.create();
+//      noti.title("Recipe Error");
+//      noti.text("Maybe not a recipe, Open a recipe first!.");
+//      noti.hideAfter(Duration.seconds(3));
+//      noti.position(Pos.CENTER);
+//      noti.showError();    
+//        }
+//        else {
+//            Document docj = Jsoup.parse(codee);
+//        for (Element table : docj.select("TABLE")) {
+//        for (Element row : table.select("TR")) {
+//            Elements tds = row.select("TD");
+//            if (tds.get(7).text().isEmpty()) {   
+//            }
+//            else {  
+//             ///////////////////////////////////////////////////////////////
+//String string=tds.get(7).text();
+//BufferedReader buf=new BufferedReader (new FileReader (NewDir.file_dirrrr + "\\Recipe_Indexes\\Chemical_Dictionary.kady"));
+//String line;
+//String linebeforeequal;
+//String lineafterequal;
+//while ((line=buf.readLine())!=null) {
+//linebeforeequal=line.substring(0,line.indexOf("=")-0);
+//lineafterequal=line.substring(line.indexOf("=") + 1 , line.length());
+//if (string.equals(lineafterequal)) {
+////System.out.println(string+" = "+linebeforeequal);
+//String formattedText = "<b style='display:block; text-align:center;'>" + linebeforeequal + "</b>";
+//tds.get(8).html(formattedText); // Use .html() instead of .text()     
+////tds.get(8).text(linebeforeequal);
+////System.out.println(tds.get(8).text());
+//break;
+//
+//    }
+//    else {
+//        
+//    }
+//    
+//}
+//
+//buf.close();
+//    
+//            }   
+//         
+//        }}
+//       roraa=docj.toString();
+//        }
+//        
+//////////////////////////////////////////////////////////////////////////////// 
+//org.jsoup.nodes.Document doct = Jsoup.parse(roraa);
+//for (Element table : doct.select("TABLE")) {
+//for (Element row : table.select("TR")) {
+//Elements tds = row.select("TD");
+//if (tds.get(8).text().isEmpty()) {   
+//}
+//else {  
+//String string=tds.get(8).text();
+//BufferedReader bufi=new BufferedReader (new FileReader (NewDir.file_dirrrr + "\\Recipe_Indexes\\Lot_Numbers.kady"));
+//String line;
+//String linebeforeequal;//Chemical Name
+//String lineafterequal;//Lot Numbers
+//boolean found = false;         
+//while ((line=bufi.readLine())!=null) {
+//linebeforeequal=line.substring(0,line.indexOf("="));//Chemical Name
+//lineafterequal=line.substring(line.indexOf("=") + 1);//Lot Numbers
+//if (string.equalsIgnoreCase(linebeforeequal)) {
+//System.out.println(linebeforeequal);
+//String formattedText = "<b style='display:block; text-align:center;'>" + lineafterequal + "</b>";
+//tds.get(9).html(formattedText); // Use .html() instead of .text()     
+////tds.get(9).text(lineafterequal);
+//found = true;                    
+//break;
+//    }   
+//}
+//bufi.close();}}}
+//roraa=doct.toString();      
+////////////////////////////////////////////////////////////////////////////////
+//    
+//
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   
+//      
+//org.jsoup.nodes.Document doctp = Jsoup.parse(roraa);
+//
+//// مر على كل جدول
+//for (Element table : doctp.select("table")) {
+//    for (Element row : table.select("tr")) {
+//        Elements tds = row.select("td");
+//
+//        // اتأكد إن فيه على الأقل 11 عمود (0 → 10)
+//        if (tds.size() > 10) {
+//            String target = tds.get(8).text().trim();
+//
+//            if (!target.isEmpty()) {
+//                Path mapPath = Paths.get(NewDir.file_dirrrr, "Recipe_Indexes", "Chemical_Translation.kady");
+//
+//                try (BufferedReader bufi = Files.newBufferedReader(mapPath, StandardCharsets.UTF_8)) {
+//                    String line;
+//                    boolean found = false;
+//
+//                    while ((line = bufi.readLine()) != null) {
+//                        // اتأكد إن السطر فيه =
+//                        if (!line.contains("=")) continue;
+//
+//                        String linebeforeequal = line.substring(0, line.indexOf("=")).trim();
+//                        String lineafterequal = line.substring(line.indexOf("=") + 1).trim();
+//
+//                        if (target.equalsIgnoreCase(linebeforeequal)) {
+//                            System.out.println("Matched: " + linebeforeequal);
+//
+//                            String formattedText =
+//                                    "<b style='display:block; text-align:center;'>" +
+//                                            lineafterequal +
+//                                            "</b>";
+//
+//                            // استبدل العمود رقم 10 بالنص الجديد
+//                            tds.get(10).html(formattedText);
+//
+//                            found = true;
+//                            break;
+//                        }
+//                    }
+//
+//                    if (!found) {
+//                        System.out.println("No match for: " + target);
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//roraa = doctp.toString();
+//  
+//       
+//       
+// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//
+//
+//
+//   }
+//   
+//   else {
+//       
+//       //Continue..........
+//       roraa=domy.toString();
+//   }
+//    
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   
+//
+//   
+//   try {
+//
+//    // =========================================
+//    // كتابة البيانات الجديدة داخل الملف المؤقت
+//    // =========================================
+//
+//    OutputStream instream = new FileOutputStream(link);
+//    pw = new PrintWriter( new OutputStreamWriter(instream, "UTF-8"));
+//    String pathtosignature="file://"+NewDir.file_dirrrrr+"\\Mr_Muhammet.png";
+//    String modely=model;
+//    pw.println("<!DOCTYPE html>\n<html lang=\"ar\">\n<head>\n<title>Kadysoft</title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>td {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}\ntable {\nheight:5px;\nmax-width:100%;\nheight:100%;\nwhite-space:nowrap;\n}\ntr {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}"
+//    + ""
+//    + ""
+//    + ""
+//    + "/* Centered Watermark */\n" +
+//    "    .watermark {\n" +
+//    "      position: fixed;\n" +
+//    "      top: 50%;\n" +
+//    "      left: 50%;\n" +
+//    "      transform: translate(-50%, -50%) rotate(-45deg);\n" +
+//    "      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
+//    "      background-repeat: no-repeat;\n" +
+//    "      background-size: contain;\n" +
+//    "      width: 300px;\n" +
+//    "      height: 200px;\n" +
+//    "      opacity: 0.3;\n" +
+//    "      pointer-events: none;\n" +
+//    "      z-index: 1000;\n" +
+//    "    }\n" +
+//    "    /* Repeated Watermark */\n" +
+//    "    .watermark-repeated {\n" +
+//    "      position: fixed;\n" +
+//    "      top: 0;\n" +
+//    "      left: 0;\n" +
+//    "      width: 100%;\n" +
+//    "      height: 100%;\n" +
+//    "      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
+//    "      background-repeat: repeat;\n" +
+//    "      background-size: 300px 200px;\n" +
+//    "      opacity: 0.2;\n" +
+//    "      pointer-events: none;\n" +
+//    "      z-index: 1000;\n" +
+//    "    }"
+//    + ""
+//    + "</STYLE></HEAD>\n" +
+//    "<BODY><CENTER>\n"
+//    + "<div class=\"watermark\"></div>" 
+//    + ""
+//    + "\n\n");
+//    pw.println("<!-- Creating Recipe From Kadysoft Ltd.-->\n\n");
+//    pw.println(roraa);
+//    pw.println("\n\n</center>\n</body>\n</html>");
+//    pw.println("<b id=\"signname\">Mr_Muhammet Signature: "+"</b><img id=\"signimage\" src=\""+pathtosignature+"\" width=\"300\" height=\"90\" alt=\"Developed By Kadysoft Ltd (Ahmed Elkady).\" style=\"border-color:black;border-width:10px;\">");   
+//    if (roraa.contains("background-image:")) {     
+//    }
+//    else {
+//    pw.println("\n\n<style>\n" +
+//    "body {\n" +
+//    "  background-image: url(\""+modely+".bmp\");\n" +
+//    "  background-position: center;\n" +
+//    "  height: 170px;\n" +
+//    "background-position-x:550px;"+
+//    "  background-repeat: no-repeat;\n" +
+//    "  background-size: 120px 90px;\n" +
+//    "}\n" +
+//    "</style>");             
+//    }
+//    
+//    
+//    
+//    
+// 
+//    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//        Date d = new Date();
+//        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+//        String dateString = sdf.format(d);
+//        String programmerName = "Ahmed Elkady.";
+//        String companyName = "Kadysoft Ltd.";
+//        String factoryName = "T&C Garments.";
+//        String recipeName = recipe + ".";
+//        String clientName = model + ".";
+//        int qty = Integer.parseInt(pecoco);
+//        String lastEditorName = user + ".";
+//        String date = dateString + ".";
+//        String repolink = "https://progkady.github.io/RecipesStore/";
+//        double pcsCost = onegar;
+//        String qrText = "★ Recipe Details ★\n" +
+//                "-------------------------\n" +
+//                "• Programmer : " + programmerName + "\n" +
+//                "• Developer : " + companyName + "\n" +
+//                "• Factory : " + factoryName + "\n" +
+//                "• Recipe : " + recipeName + "\n" +
+//                "• Customer : " + clientName + "\n" +
+//                "• Quantity : " + qty + "\n" +
+//                "• Editor Name : " + lastEditorName + "\n" +
+//                "• Last Update : " + date + "\n" +
+//                "• Pcs Cost : " + pcsCost + " $\n\n" +
+//                "• Recipes Link : " + repolink + "\n" +
+//                "Thanks For Using Receta From Kadysoft Ltd. ❤";
+//        int qrSize = 250;
+//        BufferedImage qrImage = createPrintableQR(qrText, qrSize);
+//        String qrBase64 = imageToBase64Png(qrImage);
+//        String htmlContent = readFile(link);
+//        Document docd = Jsoup.parse(htmlContent);
+//        docd.outputSettings().syntax(Document.OutputSettings.Syntax.html);
+//        docd.outputSettings().charset("UTF-8");
+//        Element table = docd.select("table#EXTABLE").first();
+//        if (table == null) {
+//            System.out.println("خطأ: الجدول #EXTABLE مش موجود!");
+//            return;
+//        }
+//        Elements rows = table.select("tbody > tr");
+//        int mergeRows = Math.min(7, rows.size()); // دمج 7 صفوف
+//        int qrColumnIndex = 8; // العمود رقم 9 (index 8)
+//        Element firstRow = rows.get(0);
+//        Elements cells = firstRow.select("td");
+//        if (cells.size() <= qrColumnIndex) {
+//            System.out.println("العمود رقم 9 مش موجود في الصف الأول!");
+//            return;
+//        }
+//        Element qrCell = cells.get(qrColumnIndex);
+//        Element oldQrImg = qrCell.selectFirst("img[src^=data:image]");
+//        String qrHtml =
+//    "<img src=\"data:image/png;base64," + qrBase64 + "\" " +
+//    "alt=\"★ Recipe Details ★&#10;" +
+//    "-------------------------&#10;" +
+//    "• Programmer : " + programmerName + "&#10;" +
+//    "• Developer : " + companyName + "&#10;" +
+//    "• Factory : " + factoryName + "&#10;" +
+//    "• Recipe : " + recipeName + "&#10;" +
+//    "• Customer : " + clientName + "&#10;" +
+//    "• Quantity : " + qty + "&#10;" +
+//    "• Editor Name : " + lastEditorName + "&#10;" +
+//    "• Last Update : " + date + "&#10;" +
+//    "• Pcs Cost : " + pcsCost + " $&#10;&#10;" +
+//    "• Recipes Link : " + repolink + "&#10;" +
+//    "Thanks For Using Receta From Kadysoft Ltd. ❤\" " +
+//    "style=\"width:" + qrSize + "px !important; height:" + qrSize + "px !important; " +
+//    "max-width:none !important; max-height:none !important; border:10px solid white; " +
+//    "box-shadow:0 0 0 4pt black;\"/>";
+//        if (oldQrImg != null) {
+//            qrCell.html(qrHtml);
+//        } else {
+//            qrCell.attr("rowspan", String.valueOf(mergeRows))
+//                  .attr("style", "border: 3px double #000; padding: 10px; background: #ffffff; " +
+//                                 "text-align: center; vertical-align: middle;")
+//                  .html(qrHtml);
+//        }
+//        for (int i = 1; i < mergeRows; i++) {
+//            Element row = rows.get(i);
+//            Element cellToRemove = row.selectFirst("td:nth-child(9)");
+//            if (cellToRemove != null) {
+//                cellToRemove.remove();
+//            }
+//        }
+//    writeFile(link, docd.outerHtml());
+//    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//    
+//    
+//    pw.close();
+//    code.clear();
+//    // =========================================
+//    // قراءة الملف المؤقت وعمل تشفير الحروف
+//    // =========================================
+//    StringBuilder encryptedText = new StringBuilder();
+//    BufferedReader bi = new BufferedReader(
+//    new InputStreamReader(
+//    new FileInputStream(link),
+//    "UTF-8"));
+//    String lo;
+//    while ((lo = bi.readLine()) != null) {
+//        if (lo.contains("data:image") || lo.contains("base64,")) {
+//                encryptedText.append("\n" + lo);
+//                continue;
+//            }
+//    encryptedText.append(
+//    lo
+//    .replace("A","ﬦ")
+//    .replace("B","ﬧ")
+//    .replace("C","ﬨ")
+//    .replace("D","﬩")
+//    .replace("E","שׁ")    
+//    .replace("F","שׂ")        
+//    .replace("G","שּׁ")         
+//    .replace("H","שּׂ")         
+//    .replace("I","אַ")         
+//    .replace("J","אָ")         
+//    .replace("K","אּ")         
+//    .replace("L","בּ")         
+//    .replace("M","גּ")         
+//    .replace("N","דּ")         
+//    .replace("O","הּ")         
+//    .replace("P","וּ")         
+//    .replace("Q","זּ")         
+//    .replace("R","טּ")         
+//    .replace("S","יּ")         
+//    .replace("T","ךּ")         
+//    .replace("U","כּ")         
+//    .replace("V","לּ")
+//    .replace("W","מּ")         
+//    .replace("X","נּ")         
+//    .replace("Y","סּ")         
+//    .replace("Z","ףּ") 
+//    .replace("0","פּ")         
+//    .replace("1","צּ")         
+//    .replace("2","קּ")         
+//    .replace("3","רּ")         
+//    .replace("4","שּ")         
+//    .replace("5","תּ")         
+//    .replace("6","וֹ")         
+//    .replace("7","בֿ")         
+//    .replace("8","כֿ")
+//    .replace("9","פֿ")
+//    .replace("a","ﬦ")
+//    .replace("b","ﬧ")
+//    .replace("c","ﬨ")
+//    .replace("d","﬩")
+//    .replace("e","שׁ")    
+//    .replace("f","שׂ")        
+//    .replace("g","שּׁ")         
+//    .replace("h","שּׂ")         
+//    .replace("i","אַ")         
+//    .replace("j","אָ")         
+//    .replace("k","אּ")         
+//    .replace("l","בּ")         
+//    .replace("m","גּ")         
+//    .replace("n","דּ")         
+//    .replace("o","הּ")         
+//    .replace("p","וּ")         
+//    .replace("q","זּ")         
+//    .replace("r","טּ")         
+//    .replace("s","יּ")         
+//    .replace("t","ךּ")         
+//    .replace("u","כּ")         
+//    .replace("v","לּ")
+//    .replace("w","מּ")         
+//    .replace("x","נּ")         
+//    .replace("y","סּ")         
+//    .replace("z","ףּ")
+//    );
+//    encryptedText.append("\n");
+//    }
+//    bi.close();
+//    // =========================================
+//    // إعادة كتابة النص المشفر داخل temp
+//    // =========================================
+//    PrintWriter pw2 = new PrintWriter(
+//    new OutputStreamWriter(
+//    new FileOutputStream(link),
+//    "UTF-8"));
+//    pw2.print(encryptedText.toString());
+//    pw2.close();
+//    // =========================================
+//    // تشفير بالباسورد
+//    // =========================================
+//    String longKey;
+//    try (BufferedReader reader =
+//    new BufferedReader(
+//    new FileReader("lib\\java.dat"))) {
+//    longKey = reader.readLine();
+//    }
+//    String password =
+//    KeyDecoder.extractData(longKey.trim());
+//    String encryptedTemp =
+//    link + ".enc";
+//    FileEncryptor.encrypt(
+//    link,
+//    encryptedTemp,
+//    password);
+//    // =========================================
+//    // اختيار مكان الحفظ
+//    // =========================================
+//    FileChooser dialog = new FileChooser();
+//    dialog.setInitialDirectory(new File(NewDir.file_dir+"\\"+stage+"\\"+model));
+//    dialog.setInitialFileName(recipe + ".ks");
+//    dialog.getExtensionFilters().add(
+//    new FileChooser.ExtensionFilter(
+//    "Kadysoft Files",
+//    "*.ks"));
+//    File dialogResult =
+//    dialog.showSaveDialog(null);
+//    if (dialogResult == null) {
+//    return;
+//    }
+//    // =========================================
+//    // استبدال الملف إن وجد
+//    // =========================================
+//    File finalFile = dialogResult;
+//    java.nio.file.Files.move(
+//    new File(encryptedTemp).toPath(),
+//    finalFile.toPath(),
+//    java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+//    // =========================================
+//    // حذف الملفات المؤقتة
+//    // =========================================
+//    //new File(link).delete();
+//    // لو موجود أي temp إضافي
+//    File encTempFile = new File(encryptedTemp);
+//    if (encTempFile.exists()) {
+//    //encTempFile.delete();
+//    }
+//    // =========================================
+//    // نجاح
+//    // =========================================
+//    Notifications noti = Notifications.create();
+//    noti.title("Success!");
+//    noti.text("File saved and encrypted successfully.");
+//    noti.position(Pos.CENTER);
+//    noti.hideAfter(Duration.seconds(4));
+//    noti.showInformation();
+//    }
+//    catch (Exception ex) {
+//    ex.printStackTrace();
+//    Notifications noti = Notifications.create();
+//    noti.title("Save Failed!");
+//    noti.text("Error while saving encrypted file.");
+//    noti.position(Pos.CENTER);
+//    noti.hideAfter(Duration.seconds(5));
+//    noti.showError();
+//    }
+//   
+//
+//      
+//       
+//       
+////            //String codee=code.getText();
+////            String pathtosignature="file://"+NewDir.file_dirrrrr+"\\Mr_Moharam.png";
+////            String modely=model;
+////            FileChooser dialog = new FileChooser();
+////            dialog.setInitialDirectory(new File(NewDir.file_dir+"\\"+stage+"\\"+model));
+////            dialog.setInitialFileName(recipe+".ks");
+////            dialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("Kadysoft Files", new String[] { "*.ks" }));
+////            dialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("HTML Files", new String[] { "*.html" }));
+////            File dialogResult = dialog.showSaveDialog(null);
+////            filePath = dialogResult.getAbsolutePath().toString();
+////            OutputStream instream=new FileOutputStream(filePath);
+////            pw = new PrintWriter(new OutputStreamWriter (instream,"UTF-8"));
+////            pw.println("<!DOCTYPE html>\n<html lang=\"ar\">\n<head>\n<title>Kadysoft</title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>td {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}\ntable {\nheight:5px;\nmax-width:100%;\nheight:100%;\nwhite-space:nowrap;\n}\ntr {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}"
+////                    + ""
+////                    + ""
+////                    
+////                        + ""
+////                + "/* Centered Watermark */\n" +
+////"    .watermark {\n" +
+////"      position: fixed;\n" +
+////"      top: 50%;\n" +
+////"      left: 50%;\n" +
+////"      transform: translate(-50%, -50%) rotate(-45deg);\n" +
+////"      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
+////"      background-repeat: no-repeat;\n" +
+////"      background-size: contain;\n" +
+////"      width: 300px;\n" +
+////"      height: 200px;\n" +
+////"      opacity: 0.3;\n" +
+////"      pointer-events: none;\n" +
+////"      z-index: 1000;\n" +
+////"    }\n" +
+////"    /* Repeated Watermark */\n" +
+////"    .watermark-repeated {\n" +
+////"      position: fixed;\n" +
+////"      top: 0;\n" +
+////"      left: 0;\n" +
+////"      width: 100%;\n" +
+////"      height: 100%;\n" +
+////"      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
+////"      background-repeat: repeat;\n" +
+////"      background-size: 300px 200px;\n" +
+////"      opacity: 0.2;\n" +
+////"      pointer-events: none;\n" +
+////"      z-index: 1000;\n" +
+////"    }"
+////                + ""
+////                + "</STYLE></HEAD>\n" +
+////"<BODY><CENTER>\n"
+////+ "<div class=\"watermark\"></div>" 
+////                
+////                    
+////                    + ""
+////                    + "\n\n");
+////            pw.println("<!-- Creating Recipe From Kadysoft Ltd.-->\n\n");
+////            pw.println(roraa);
+////            pw.println("\n\n</center>\n</body>\n</html>");
+////            //pw.println("<b>Mr_Moharam Signature: "+"</b><img src=\""+pathtosignature+"\" width=\"300\" height=\"90\" alt=\"Developed By Kadysoft Ltd (Ahmed Elkady).\" style=\"border-color:black;border-width:10px;\">");   
+////      
+////            if (roraa.contains("background-image:")) {
+////                
+////            }
+////            else {
+////                pw.println("\n\n<style>\n" +
+////"body {\n" +
+////"  background-image: url(\""+modely+".bmp\");\n" +
+////"  background-position: center;\n" +
+////"  height: 170px;\n" +
+////"background-position-x:550px;"+
+////"  background-repeat: no-repeat;\n" +
+////"  background-size: 120px 90px;\n" +
+////"}\n" +
+////"</style>");             
+////          }
+////            pw.close();
+////            
+////            
+////               /////////////////////////////////////////////////// 
+////   code.clear();
+////    InputStream inputinstream=new FileInputStream(filePath);
+////    BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
+////    //BufferedReader bi=new BufferedReader (new FileReader (pathy));
+////    String lo;
+////    while ((lo=bi.readLine())!=null) {
+////        
+////        code.appendText("\n"+lo
+////       .replace("A","ﬦ")
+////       .replace("B","ﬧ")
+////       .replace("C","ﬨ")
+////       .replace("D","﬩")
+////       .replace("E","שׁ")    
+////       .replace("F","שׂ")        
+////       .replace("G","שּׁ")         
+////       .replace("H","שּׂ")         
+////       .replace("I","אַ")         
+////       .replace("J","אָ")         
+////       .replace("K","אּ")         
+////       .replace("L","בּ")         
+////       .replace("M","גּ")         
+////       .replace("N","דּ")         
+////       .replace("O","הּ")         
+////       .replace("P","וּ")         
+////       .replace("Q","זּ")         
+////       .replace("R","טּ")         
+////       .replace("S","יּ")         
+////       .replace("T","ךּ")         
+////       .replace("U","כּ")         
+////       .replace("V","לּ")
+////       .replace("W","מּ")         
+////       .replace("X","נּ")         
+////       .replace("Y","סּ")         
+////       .replace("Z","ףּ")
+////                
+////       .replace("0","פּ")         
+////       .replace("1","צּ")         
+////       .replace("2","קּ")         
+////       .replace("3","רּ")         
+////       .replace("4","שּ")         
+////       .replace("5","תּ")         
+////       .replace("6","וֹ")         
+////       .replace("7","בֿ")         
+////       .replace("8","כֿ")
+////       .replace("9","פֿ")
+////                
+////       .replace("a","ﬦ")
+////       .replace("b","ﬧ")
+////       .replace("c","ﬨ")
+////       .replace("d","﬩")
+////       .replace("e","שׁ")    
+////       .replace("f","שׂ")        
+////       .replace("g","שּׁ")         
+////       .replace("h","שּׂ")         
+////       .replace("i","אַ")         
+////       .replace("j","אָ")         
+////       .replace("k","אּ")         
+////       .replace("l","בּ")         
+////       .replace("m","גּ")         
+////       .replace("n","דּ")         
+////       .replace("o","הּ")         
+////       .replace("p","וּ")         
+////       .replace("q","זּ")         
+////       .replace("r","טּ")         
+////       .replace("s","יּ")         
+////       .replace("t","ךּ")         
+////       .replace("u","כּ")         
+////       .replace("v","לּ")
+////       .replace("w","מּ")         
+////       .replace("x","נּ")         
+////       .replace("y","סּ")         
+////       .replace("z","ףּ")                
+////      ); 
+////
+////
+////    }
+////    bi.close();
+////    String gf=code.getText();
+////    OutputStream instreamm=new FileOutputStream(filePath);
+////    PrintWriter pw = new PrintWriter(new OutputStreamWriter (instreamm,"UTF-8"));
+////    //PrintWriter pw=new PrintWriter (new FileWriter (pathy));
+////    pw.println(gf);
+////    pw.close();
+////    
+////    
+////    
+////    
+////    Notifications noti = Notifications.create();
+////    noti.title("Successful");
+////    noti.text("We have encrypted the recipe successfully.");
+////    noti.hideAfter(Duration.seconds(3));
+////    noti.position(Pos.CENTER);
+////    noti.showInformation();
+////    code.clear();
+//
+//
+//       //////////////////////////////////////////////////
+//            
+//            
+//            
+//            //Desktop desk = Desktop.getDesktop();
+//            //desk.open(new File (filePath));
+//            Stage jk = (Stage)this.save.getScene().getWindow();
+//            //jk.close();
+//   
+//       /////////////////////////////////////////////////// 
+//   
+//       ///////////////////////////////////////////////////
+//   }
+//   
+//   
+//   //////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   
+//   
+//  //////////////////////////////////////////////////
+//  //Here Will Write To DB...........................
+//  
+//      
+//      Date currentDate1 = GregorianCalendar.getInstance().getTime();
+//      DateFormat df1 = DateFormat.getDateInstance();
+//      String dateString1 = df1.format(currentDate1);
+//      Date d1 = new Date();
+//      SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
+//      String timeString1 = sdf1.format(d1);
+//      SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+//      String timeString2 = sdf2.format(d1);
+//      datevalue = timeString2;                                                          //Date
+//      modeloo=model;                 //Model
+//      filenammm=recipe;
+//      
+//      
+//      shoty=1;
+//      
+//
+//       try {
+//           
+//                    String sql0 = "select * from Timer where Name like '" + filenammm + "' and Model like '" + modeloo + "' ";
+//                    pst = conn.prepareStatement(sql0);
+//                    rs = pst.executeQuery();
+//
+//                    
+//                    if (rs.next()) {
+//                        
+//                       //Update
+//                       
+//                       find.setText("found");
+//                       
+//                   ///////    
+//                       
+//                    }
+//                    
+//    ///////////////////////////////////////////////////////////////////////////////////                
+//                    
+//                    
+//                    else {
+//                        
+//                       //Insert
+//                       
+//                   find.setText("not_found");
+//                  
+//      //////////////////////////////////////////                  
+//                        
+//
+//                    }
+//      
+//                    
+//    }
+//        
+//        catch (Exception exception) {
+//    } 
+//        finally {
+//      try {
+//        rs.close();
+//        pst.close();
+//      
+//      } catch (Exception exception) {}
+//    } 
+//     
+//       
+//       
+//       
+//       
+//     String fifi=find.getText();
+//     
+//     
+//     if (fifi.equals("found")) {
+//         
+//         //////////////////////////ppppppppppppppppppppp///////////////////////////////////////
+//         
+//                             
+//                          if (bosbos==1) {
+//                              
+//                           String ti1,ti2;
+//                           String ti3,ti4;
+//                           ti4=Integer.toString(shoty+1);
+//                           ti3=Integer.toString(shoty);
+//                           ti1=Double.toString(gdf1);
+//                           ti2=Double.toString(gdf2);
+//                           String mi1=Double.toString(gmf1);
+//                           String mi2=Double.toString(gmf2);
+//                           
+//                                 try {
+//       
+//                                     
+//                                                 
+//      String sqlm = "select * from Timer where Name=?";
+//      pst = conn.prepareStatement(sqlm);
+//      pst.setString(1, filenammm);
+//      rs = pst.executeQuery();
+//      
+//      String add1 = rs.getString("Time_In_Min");
+//      oldtimemin=add1;  //OLD TIME IN MINUTES.
+//      
+//      String add2 = rs.getString("Time_In_Hour");
+//      oldtimehour=add2;  //OLD TIME IN HOUR.
+//      
+//      
+//             
+//                                     
+//                String sqlp= "update Timer set Date='"+datevalue+"', Time_In_Min='"+oldtimemin+"', Time_In_Hour='"+oldtimehour+"', Time_In_Min_Updated='"+mi1+"', Time_In_Hour_Updated='"+ti1+"', Total_Min='"+(mi1)+"', Total_Hour='"+(ti1)+"' where Name='"+filenammm+"' and Shot='"+ti3+"' ";
+//                pst=conn.prepareStatement(sqlp);
+//                pst.execute();
+//                                     
+//     
+//                
+//                
+//                        }
+//                        
+//                     catch (Exception exception) {
+//    } 
+//        finally {
+//      try {
+//        rs.close();
+//        pst.close();
+//      
+//      } catch (Exception exception) {}
+//    }    
+//                           
+//                           
+//                           
+//                           
+//                       }
+//                       
+//                       if (bosbos==2) {
+//                           
+//                               
+//                           String ti1,ti2;
+//                           String ti3,ti4;
+//                           ti4=Integer.toString(shoty+1);
+//                           ti3=Integer.toString(shoty);
+//                           ti1=Double.toString(gdf1);
+//                           ti2=Double.toString(gdf2);
+//                           String mi1=Double.toString(gmf1);
+//                           String mi2=Double.toString(gmf2);
+//                           
+//                           
+//                              try {
+//                                  
+//                                  
+//      String sqlm = "select * from Timer where Name=? and Shot=?";
+//      pst = conn.prepareStatement(sqlm);
+//      pst.setString(1, filenammm);
+//      pst.setString(2, ti3);
+//      rs = pst.executeQuery();
+//      
+//      String add1 = rs.getString("Time_In_Min");
+//      oldtimemin=add1;  //OLD TIME IN MINUTES.
+//      
+//      String add2 = rs.getString("Time_In_Hour");
+//      oldtimehour=add2;  //OLD TIME IN HOUR.
+//      
+//   //   pst.execute();
+//                            
+//         
+//                String sqlp= "update Timer set Date='"+datevalue+"', Time_In_Min='"+oldtimemin+"', Time_In_Hour='"+oldtimehour+"', Time_In_Min_Updated='"+mi1+"', Time_In_Hour_Updated='"+ti1+"', Total_Min='"+(Double.toString(gmf1+gmf2))+"', Total_Hour='"+(Double.toString(gdf1+gdf2))+"'  where Name='"+filenammm+"' and Shot='"+ti3+"' ";
+//                pst=conn.prepareStatement(sqlp);
+//                pst.execute();    
+//                            
+//                            
+//                        }
+//                        
+//                     catch (Exception exception) {
+//    } 
+//        finally {
+//      try {
+//        rs.close();
+//        pst.close();
+//      
+//      } catch (Exception exception) {}
+//    }    
+//                           
+//                              
+//                                 try {
+//                            
+//                                    
+//      String sqlm = "select * from Timer where Name=? and Shot=?";
+//      pst = conn.prepareStatement(sqlm);
+//      pst.setString(1, filenammm);
+//      pst.setString(2, ti4);
+//      rs = pst.executeQuery();
+//      
+//      String add1 = rs.getString("Time_In_Min");
+//      oldtimemin2=add1;  //OLD TIME IN MINUTES.
+//      
+//      String add2 = rs.getString("Time_In_Hour");
+//      oldtimehour2=add2;  //OLD TIME IN HOUR.
+//      
+//     // pst.execute();
+//                                     
+//          
+//                String sqlp= "update Timer set Date='"+datevalue+"', Time_In_Min='"+oldtimemin2+"', Time_In_Hour='"+oldtimehour2+"', Time_In_Min_Updated='"+mi2+"', Time_In_Hour_Updated='"+ti2+"', Total_Min='"+(Double.toString(gmf1+gmf2))+"', Total_Hour='"+(Double.toString(gdf1+gdf2))+"'  where Name='"+filenammm+"' and Shot='"+ti4+"' ";
+//                pst=conn.prepareStatement(sqlp);
+//                pst.execute();         
+//                                     
+//                            
+//                            
+//                        }
+//                        
+//                     catch (Exception exception) {
+//    } 
+//        finally {
+//      try {
+//        rs.close();
+//        pst.close();
+//      
+//      } catch (Exception exception) {}
+//    }    
+//                           
+//                           
+//                           
+//                           
+//                       }
+//                       
+//         
+//
+//
+//         
+//         //////////////////////////ppppppppppppppppppppp///////////////////////////////////////
+//     }
+//       
+//       
+//     else if (fifi.equals("not_found")) {
+//         
+//         
+//         //////////////////////////ppppppppppppppppppppp///////////////////////////////////////
+//         
+//         
+//         
+//                       if (bosbos==1) {
+//                           
+//                           
+//                                 try {
+//                            
+//          String reg = "insert into Timer (Date, Model, Name, Shot, Time_In_Min, Time_In_Hour, Time_In_Min_Updated, Time_In_Hour_Updated, Total_Min, Total_Hour) values (?,?,?,?,?,?,?,?,?,?)";
+//          pst = conn.prepareStatement(reg);
+//          pst.setString(1,datevalue);
+//          pst.setString(2,modeloo);
+//          pst.setString(3,filenammm);
+//          pst.setString(4,Integer.toString(shoty));
+//          pst.setString(5,Double.toString(gmf1));
+//          pst.setString(6,Double.toString(gdf1));
+//          pst.setString(7,"Hasnot_Updated_Yet");
+//          pst.setString(8,"Hasnot_Updated_Yet");
+//          pst.setString(9,Double.toString(gmf1));
+//          pst.setString(10,Double.toString(gdf1));
+//          pst.execute();
+//                            
+//                            
+//                        }
+//                        
+//                     catch (Exception exception) {
+//    } 
+//        finally {
+//      try {
+//        rs.close();
+//        pst.close();
+//      
+//      } catch (Exception exception) {}
+//    }    
+//                           
+//                           
+//                           
+//                           
+//                       }
+//                       
+//                       if (bosbos==2) {
+//                           
+//                              try {
+//                            
+//          String reg = "insert into Timer (Date, Model, Name, Shot, Time_In_Min, Time_In_Hour, Time_In_Min_Updated, Time_In_Hour_Updated, Total_Min, Total_Hour) values (?,?,?,?,?,?,?,?,?,?)";
+//          pst = conn.prepareStatement(reg);
+//          pst.setString(1,datevalue);
+//          pst.setString(2,modeloo);
+//          pst.setString(3,filenammm);
+//          pst.setString(4,Integer.toString(shoty));
+//          pst.setString(5,Double.toString(gmf1));
+//          pst.setString(6,Double.toString(gdf1));
+//          pst.setString(7,"Hasnot_Updated_Yet");
+//          pst.setString(8,"Hasnot_Updated_Yet");
+//          pst.setString(9,Double.toString(gmf1+gmf2));
+//          pst.setString(10,Double.toString(gdf1+gdf2));
+//          pst.execute();
+//                            
+//                       
+//          
+//          
+////          pst.setString(9,Double.toString(gmf1+gmf2));
+////          pst.setString(10,Double.toString(gdf1+gdf2));
+////          
+////          , Total_Min='"+(mi1+mi2)+"', Total_Hour='"+(ti1+ti2)+"'
+//          
+//          
+//                        }
+//                        
+//                     catch (Exception exception) {
+//    } 
+//        finally {
+//      try {
+//        rs.close();
+//        pst.close();
+//      
+//      } catch (Exception exception) {}
+//    }    
+//                           
+//                              
+//                                 try {
+//                            
+//          String reg = "insert into Timer (Date, Model, Name, Shot, Time_In_Min, Time_In_Hour, Time_In_Min_Updated, Time_In_Hour_Updated, Total_Min, Total_Hour) values (?,?,?,?,?,?,?,?,?,?)";
+//          pst = conn.prepareStatement(reg);
+//          pst.setString(1,datevalue);
+//          pst.setString(2,modeloo);
+//          pst.setString(3,filenammm);
+//          pst.setString(4,Integer.toString(shoty+1));
+//          pst.setString(5,Double.toString(gmf2));
+//          pst.setString(6,Double.toString(gdf2));
+//          pst.setString(7,"Hasnot_Updated_Yet");
+//          pst.setString(8,"Hasnot_Updated_Yet");
+//          pst.setString(9,Double.toString(gmf1+gmf2));
+//          pst.setString(10,Double.toString(gdf1+gdf2));
+//          pst.execute();
+//                            
+//                            
+//                        }
+//                        
+//                     catch (Exception exception) {
+//    } 
+//        finally {
+//      try {
+//        rs.close();
+//        pst.close();
+//      
+//      } catch (Exception exception) {}
+//    }    
+//                           
+//                           
+//                           
+//                           
+//                       }
+//                       
+//        
+//         
+//         
+//         //////////////////////////ppppppppppppppppppppp///////////////////////////////////////
+//         
+//         
+//     }
+//       
+//     
+//     else {}
+//       
+//       
+//       
+/////////////////////////////////Calculate Cost/////////////////////////////////////////////////////////////   
+//InputStream inputinstream=new FileInputStream(link);       
+////InputStream inputinstream=new FileInputStream(filePath);
+//BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
 //String lo;
-//while ((lo = bi.readLine()) != null) {
-//    code.appendText("\n" + lo
-//            .replace("ﬦ", "A").replace("ﬧ", "B").replace("ﬨ", "C").replace("﬩", "D").replace("שׁ", "E")
-//            .replace("שׂ", "F").replace("שּׁ", "G").replace("שּׂ", "H").replace("אַ", "I").replace("אָ", "J")
-//            .replace("אּ", "K").replace("בּ", "L").replace("גּ", "M").replace("דּ", "N").replace("הּ", "O")
-//            .replace("וּ", "P").replace("זּ", "Q").replace("טּ", "R").replace("יּ", "S").replace("ךּ", "T")
-//            .replace("כּ", "U").replace("לּ", "V").replace("מּ", "W").replace("נּ", "X").replace("סּ", "Y")
-//            .replace("ףּ", "Z").replace("פּ", "0").replace("צּ", "1").replace("קּ", "2").replace("רּ", "3")
-//            .replace("שּ", "4").replace("תּ", "5").replace("וֹ", "6").replace("בֿ", "7").replace("כֿ", "8")
-//            .replace("פֿ", "9").replace("&NBSP;", ""));
+//code.clear();
+//while ((lo=bi.readLine())!=null) {     
+//code.appendText("\n"+lo
+//.replace("ﬦ","A")
+//.replace("ﬧ","B")
+//.replace("ﬨ","C")
+//.replace("﬩","D")
+//.replace("שׁ","E")    
+//.replace("שׂ","F")        
+//.replace("שּׁ","G")         
+//.replace("שּׂ","H")         
+//.replace("אַ","I")         
+//.replace("אָ","J")         
+//.replace("אּ","K")         
+//.replace("בּ","L")         
+//.replace("גּ","M")         
+//.replace("דּ","N")         
+//.replace("הּ","O")         
+//.replace("וּ","P")         
+//.replace("זּ","Q")         
+//.replace("טּ","R")         
+//.replace("יּ","S")         
+//.replace("ךּ","T")         
+//.replace("כּ","U")         
+//.replace("לּ","V")
+//.replace("מּ","W")         
+//.replace("נּ","X")         
+//.replace("סּ","Y")         
+//.replace("ףּ","Z")         
+//.replace("פּ","0")         
+//.replace("צּ","1")         
+//.replace("קּ","2")         
+//.replace("רּ","3")         
+//.replace("שּ","4")         
+//.replace("תּ","5")         
+//.replace("וֹ","6")         
+//.replace("בֿ","7")         
+//.replace("כֿ","8")
+//.replace("פֿ","9")
+//.replace("&NBSP;","")                       
+//); 
 //}
 //bi.close();
+//String gf=code.getText();
+//OutputStream instreamm=new FileOutputStream(System.getProperty("user.home")+"\\r.ks");
+//PrintWriter pwe = new PrintWriter(new OutputStreamWriter (instreamm,"UTF-8"));
+//pwe.println(gf);
+//pwe.close();
+
 //
-//// كتابة الملف بعد فك التشفير
-//String gf = code.getText();
-//try (PrintWriter pwe = new PrintWriter(new OutputStreamWriter(new FileOutputStream(link), "UTF-8"))) {
-//    pwe.println(gf);
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////   
+//List<Double> pri = new ArrayList<>();
+//List<Double> qua = new ArrayList<>();
+//List<Double> dil = new ArrayList<>();
+//List<String> nom = new ArrayList<>();
+//String except=null;
+//////////////////////////////////////////////////
+////Document docj = Jsoup.parse(roraa);
+//File inputFile = new File(System.getProperty("user.home")+"\\r.ks"); //
+//org.jsoup.nodes.Document docj = Jsoup.parse(inputFile, "UTF-8"); //
+//for (Element table : docj.select("TABLE")) {
+//for (Element row : table.select("TR")) {
+//Elements tds = row.select("TD");
+//if (tds.get(8).text().isEmpty()||tds.get(8).text().contains("OLD STONE")) {   
+//}
+//else {  
+//String string=tds.get(8).text();
+//BufferedReader buf=new BufferedReader (new FileReader (NewDir.file_dirrrr + "\\Recipe_Indexes\\Prices.kady"));
+//String line;
+//String linebeforeequal;
+//String lineafterequal;
+//while ((line=buf.readLine())!=null) {       
+//linebeforeequal=line.substring(0,line.indexOf("=$")-0);  //Item
+//lineafterequal=line.substring(line.indexOf("=$") + 2 , line.length());  //Price
+//if (string.equals(linebeforeequal)) {
+//double number1 = Double.parseDouble(lineafterequal);
+//pri.add(number1);
+//String itaam = linebeforeequal;
+//nom.add(itaam); 
+//break;
+//}
+////else {
+////except=except+"\n"+tds.get(8).text();
+////}
+//}
+//buf.close();
+//}          
+////////////////////////KG//////////////////////////
+//String skip=tds.get(8).text();
+//if (skip.equals("OLD STONE")) {   
+//}
+//else {
+//if (tds.get(5).text().isEmpty()||tds.get(5).text().contains("/")||tds.get(5).text().contains("\\")||tds.get(5).text().contains("OPERATPR")||tds.get(5).text().contains("OPERATOR")||tds.get(5).text().contains("AMOUNT")||tds.get(5).text().contains("AMT")||tds.get(5).text().contains("-")||tds.get(5).text().contains("DATE")||tds.get(5).text().contains("WASH")||tds.get(5).text().contains("WASH NAME")) {}
+//else if (tds.get(6).text().contains("GR")||tds.get(6).text().contains("Gr")||tds.get(6).text().contains("gr")) {
+//double am=(Double.parseDouble(tds.get(5).text().replace(",","."))/1000);
+//String amm=Double.toString(am);
+//if (amm.contains("E")) { 
+//BigDecimal bd = new BigDecimal(amm);
+//double val = bd.doubleValue();
+//qua.add(val);   
+//}
+//else {
+//qua.add(am);
+//}
+//}
+//
+//else if (tds.get(6).text().contains("GARDAL")||tds.get(6).text().contains("GARDEL")
+//||tds.get(6).text().contains("Gardal")||tds.get(6).text().contains("Gardel")||tds.get(6).text().contains("gardal")||tds.get(6).text().contains("gardel")) {
+//String sky=tds.get(8).text();
+//if (sky.equals("FOAM")) {
+//double am=4.0/5.0;
+//qua.add(am);   
+//}
+//else {
+//double am=Double.parseDouble(tds.get(5).text().replace(",","."))*12;
+//qua.add(am);    
+//}
+//}
+//else {
+//double number2 = Double.parseDouble(tds.get(5).text());
+//qua.add(number2);
+//}    
+//}
+////////////////////////////////////////////////
+//if (tds.get(8).text().isEmpty()||tds.get(8).text().contains("/")||tds.get(8).text().contains("\\")||tds.get(8).text().contains("CHEMICAL")||tds.get(8).text().contains("chemical")||tds.get(8).text().matches("[0-9_-]+")||tds.get(8).text().contains("TIME")||tds.get(8).text().contains("HOURS")||tds.get(8).text().contains("MINS")||tds.get(8).text().contains("SHOT")||tds.get(8).text().contains("OLD STONE")) {    
+//}
+//else {  
+//String string = tds.get(8).text();
+//BufferedReader buf = new BufferedReader(new FileReader(NewDir.file_dirrrr + "\\Recipe_Indexes\\Dilution.kady"));
+//String line;
+//boolean found = false;
+//while ((line = buf.readLine()) != null) {
+//String linebeforeequal = line.substring(0, line.indexOf("=")).trim();  // Item
+//String lineafterequal = line.substring(line.indexOf("=") + 1).trim();  // Dilution
+//if (string.equals(linebeforeequal)) {
+//double number3 = Double.parseDouble(lineafterequal);
+//dil.add(number3);
+//found = true;
+//break;
+//}
+//}
+//if (!found) {
+//double number3 = Double.parseDouble("1.0");
+//dil.add(number3);
+//}
+//buf.close();
+//}
+/////////////////////////////////////////////////
+//}}    
+//if (qua.size()!=pri.size()||qua.size()!=dil.size()) { 
+//Notifications noti = Notifications.create();
+//noti.title("Fatal Error!");
+//noti.text("We found that all chemicals names weren't set.\nWe suggest to fix chemicals again.");
+//noti.position(Pos.CENTER);
+//noti.hideAfter(Duration.seconds(5));
+//noti.showError();
+//}
+//else {
+////Show alert to write pcs.    
+//List<Double> result = new ArrayList<>();
+//for (int i = 0; i < qua.size(); i++) {
+//result.add((qua.get(i) / dil.get(i))* pri.get(i));
+//}
+//
+//summo = 0.0;
+//for (double number : result) {
+//summo += number;
+//}
+//////////////////////////////////////////////////////////////////////////////////////////////
+//            // Parse the HTML file
+//            Document docv = Jsoup.parse(inputFile, "UTF-8");
+//            // Find all table rows
+//            Elements rows = docv.select("tr");
+//            boolean pcsFound = false;
+//            for (Element row : rows) {
+//                Elements cells = row.select("td");
+//                for (int i = 0; i < cells.size(); i++) {
+//                    if ("PCS".equalsIgnoreCase(cells.get(i).text().trim())) {
+//                        if (i + 1 < cells.size()) {
+//                            String nextValue = cells.get(i + 1).text().trim();
+//                            System.out.println("Next value after PCS: " + nextValue);
+//                            pecoco=nextValue;
+//                        } else {
+//                            System.out.println("PCS found but no next cell.");
+//                            pecoco="120";
+//                        }
+//                        pcsFound = true;
+//                        break;
+//                    }
+//                    
+//                    else if (cells.get(i).text().trim().contains("PCS")) {
+//                        if (i + 1 < cells.size()) {
+//                            String nextValue = cells.get(i + 1).text().trim();
+//                            System.out.println("Next value after PCS: " + nextValue);
+//                            pecoco=nextValue;
+//                        } else {
+//                            System.out.println("PCS found but no next cell.");
+//                            pecoco="120";
+//                        }
+//                        pcsFound = true;
+//                        break;
+//                    }
+//                    
+//                }
+//
+//                if (pcsFound) break;
+//            }
+//
+//            if (!pcsFound) {
+//                System.out.println("PCS not found");
+//                pecoco="";
+//            }
+///////////////////////////////////////////////////////////////////////////////////////////////
+//JFXTextField grr = new JFXTextField(pecoco);
+//grr.setStyle("-fx-font-size:15;-fx-font-weight:bold;");
+//grr.setLabelFloat(true);
+//grr.setPromptText("Add PCS Number ...");
+//grr.setMinSize(300.0D, 25.0D);
+//Alert aloo = new Alert(Alert.AlertType.INFORMATION);
+//aloo.setTitle("PCS Number?");
+//aloo.setGraphic((Node)grr);
+//aloo.setResizable(false);
+//DialogPane dialogPanej = aloo.getDialogPane();
+//dialogPanej.getStylesheets().add(
+//getClass().getResource("cupertino-light.css").toExternalForm());
+//aloo.showAndWait();
+//pcsnum=Double.parseDouble(grr.getText());
+//onegar=summo/pcsnum;
+////Save To DB Here.
+//
+//try {
+//String sql0 = "select * from Cost where Name like '" + filenammm + "' and Model like '" + modeloo + "' ";
+//pst = conn.prepareStatement(sql0);
+//rs = pst.executeQuery();                    
+//if (rs.next()) {                        
+////Update
+//findo="found";   
+//}                    
+//else {
+////Insert
+//findo="not_found";   
+//}        
+//}catch (Exception exception) {
+//} 
+//finally {
+//try {
+//rs.close();
+//pst.close();     
+//} catch (Exception exception) {}
+//}
+//if (findo.equals("found")) {
+//try {    
+//String sqlm = "select * from Cost where Name=? and Model=?";
+//pst = conn.prepareStatement(sqlm);
+//pst.setString(1, filenammm);
+//pst.setString(2, modeloo);
+//rs = pst.executeQuery();      
+//String addd1 = rs.getString("Total_Cost_Old");
+//oldtotalcost=addd1;
+//String addd2 = rs.getString("PCS_Old");
+//oldpcs=addd2;      
+//String addd3 = rs.getString("One_Garment_Old");
+//oldonegarmentcost=addd3;
+//
+//String sqlp= "update Cost set Date='"+datevalue+"', Total_Cost_Old='"+oldtotalcost+"', PCS_Old='"+oldpcs+"', One_Garment_Old='"+oldonegarmentcost+"', Total_Cost_New='"+Double.toString(summo)+"', PCS_New='"+Double.toString(pcsnum)+"', One_Garment_New='"+Double.toString(onegar)+"' where Name='"+filenammm+"' and Model='"+modeloo+"'";
+//pst=conn.prepareStatement(sqlp);
+//pst.execute();
+//}                        
+//catch (Exception exception) {
+//} 
+//finally {
+//try {
+//rs.close();
+//pst.close();
+//Notifications noti = Notifications.create();
+//noti.title("Successful");
+//noti.text("We have updated the cost successfully.");
+//noti.hideAfter(Duration.seconds(3));
+//noti.position(Pos.CENTER);
+//noti.showInformation();
+//} catch (Exception exception) {}
+//}                               
+//}
+//else if (findo.equals("not_found")) {
+//try {                            
+//String reg = "insert into Cost (Date, Model, Name, Total_Cost_Old, PCS_Old, One_Garment_Old, Total_Cost_New, PCS_New, One_Garment_New) values (?,?,?,?,?,?,?,?,?)";
+//pst = conn.prepareStatement(reg);
+//pst.setString(1,datevalue);
+//pst.setString(2,modeloo);
+//pst.setString(3,filenammm);
+//
+//pst.setString(4,Double.toString(summo));
+//pst.setString(5,Double.toString(pcsnum));
+//pst.setString(6,Double.toString(onegar));
+//
+//pst.setString(7,"Hasnot_Updated_Yet");
+//pst.setString(8,"Hasnot_Updated_Yet");
+//pst.setString(9,"Hasnot_Updated_Yet");
+//
+//pst.execute();                                        
+//}                                            
+//catch (Exception exception) {
+//} 
+//finally {
+//try {
+//rs.close();
+//pst.close();
+//Notifications noti = Notifications.create();
+//noti.title("Successful");
+//noti.text("We have inserted the new cost successfully.");
+//noti.hideAfter(Duration.seconds(3));
+//noti.position(Pos.CENTER);
+//noti.showInformation();
+//} catch (Exception exception) {}
+//}                               
+//}
+//else{}
+//
+//
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//// CODE GOES HERE - ابدأ من هنا
+//
+//
+//
+//// 2. باقي الكود اللي عندك (تنظيف الملف، Jsoup، إلخ) ...
+//Document docm = Jsoup.parse(inputFile, "UTF-8");
+//String pcsStr = extractPCS(docm);
+//double pcs = parsePCS(pcsStr);
+//
+//// استخراج الشوتات
+//List<Shot> shotsy = extractShotsAndCosts(docm);
+//
+//if (shotsy.isEmpty()) {
+//    showNotification("تحذير", "لم يتم العثور على كيماويات صالحة في: " + filenammm, true);
+//    // اختياري: return; لو عايز توقف التنفيذ هنا
+//} else {
+//    // 3. حساب التكاليف بشكل صحيح
+//    double totalCost = 0.0;
+//    List<Double> shotCosts = new ArrayList<>();
+//
+//    // طباعة تصحيحية مهمة جدًا (شوفها في الـ console)
+//    System.out.println("عدد الشوتات المكتشفة: " + shotsy.size());
+//
+//    for (int i = 0; i < shotsy.size(); i++) {
+//        Shot shot = shotsy.get(i);
+//        double cost = shot.calculateCost();
+//        
+//        // طباعة لكل شوت عشان نتأكد
+//        System.out.printf("شوت %d → تكلفة: %.4f   (عدد الكيماويات: %d)%n", 
+//                          (i + 1), cost, shot.quantities.size());
+//        
+//        shotCosts.add(cost);
+//        totalCost += cost;
+//    }
+//
+//    double oneGarmentCost = pcs > 0 ? totalCost / pcs : 0.0;
+//
+//    // 4. تحضير القيم للداتابيز
+//    String lastUpdate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+//    String shotsCount = String.valueOf(shotsy.size());
+//
+//    String fsCost  = shotsy.size() >= 1 ? String.format("%.4f", shotCosts.get(0)) : "0.0000";
+//    String ssCost  = shotsy.size() >= 2 ? String.format("%.4f", shotCosts.get(1)) : "undefined";
+//    String tsCost  = shotsy.size() >= 3 ? String.format("%.4f", shotCosts.get(2)) : "undefined";
+//    String fosCost = shotsy.size() >= 4 ? String.format("%.4f", shotCosts.get(3)) : "undefined";
+//
+//    String totalCostStr   = String.format("%.4f", totalCost);
+//    String oneGarmentStr  = String.format("%.6f", oneGarmentCost);
+//
+//    // 5. باقي الكود بتاع الـ check + Update / Insert زي ما هو عندك
+//    boolean recordExists = checkIfRecordExists(filenammm, modeloo, stageoo);
+//
+//    if (recordExists) {
+//        // Update
+//        String sqlUpdate = "UPDATE Cost_By_Shot SET " +
+//                "Last_Update = ?, Shots = ?, FSCost = ?, SSCost = ?, TSCost = ?, FOSCost = ?, " +
+//                "Total_Cost = ?, PCS = ?, One_Garment_Cost = ? " +
+//                "WHERE Wash_Name = ? AND Model = ? AND Stage = ?";
+//
+//        pst = conn.prepareStatement(sqlUpdate);
+//        pst.setString(1, lastUpdate);
+//        pst.setString(2, shotsCount);
+//        pst.setString(3, fsCost);
+//        pst.setString(4, ssCost);
+//        pst.setString(5, tsCost);
+//        pst.setString(6, fosCost);
+//        pst.setString(7, totalCostStr);
+//        pst.setString(8, pcsStr);
+//        pst.setString(9, oneGarmentStr);
+//        pst.setString(10, filenammm);
+//        pst.setString(11, modeloo);
+//        pst.setString(12, stageoo);
+//        pst.executeUpdate();
+//
+//        showNotification("تم التحديث", "تم تحديث تكلفة الريسيبي: " + filenammm, false);
+//    } else {
+//        // Insert
+//        String sqlInsert = "INSERT INTO Cost_By_Shot (" +
+//                "Last_Update, Stage, Model, Wash_Name, Shots, FSCost, SSCost, TSCost, FOSCost, " +
+//                "Total_Cost, PCS, One_Garment_Cost) " +
+//                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+//
+//        pst = conn.prepareStatement(sqlInsert);
+//        pst.setString(1, lastUpdate);
+//        pst.setString(2, stageoo);
+//        pst.setString(3, modeloo);
+//        pst.setString(4, filenammm);
+//        pst.setString(5, shotsCount);
+//        pst.setString(6, fsCost);
+//        pst.setString(7, ssCost);
+//        pst.setString(8, tsCost);
+//        pst.setString(9, fosCost);
+//        pst.setString(10, totalCostStr);
+//        pst.setString(11, pcsStr);
+//        pst.setString(12, oneGarmentStr);
+//        pst.executeUpdate();
+//
+//        showNotification("تم الإدراج", "تم إضافة تكلفة الريسيبي الجديد: " + filenammm, false);
+//    }
+//}
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//
+//
+//Alert alertio = new Alert(Alert.AlertType.CONFIRMATION);
+//alertio.setTitle("Result");
+//alertio.setHeaderText("Cost Result");
+//alertio.setContentText("Here is the result of chemicals costs for one garment  :   "+Double.toString(onegar)+"   $.");
+//ButtonType buttonTypeOne = new ButtonType("Report");
+//ButtonType buttonTypeCancel = new ButtonType("Cancel");
+//alertio.getButtonTypes().setAll(buttonTypeOne, buttonTypeCancel);
+//DialogPane dialogPaneii = alertio.getDialogPane();
+//dialogPaneii.getStylesheets().add(getClass().getResource("cupertino-light.css").toExternalForm());
+//Optional<ButtonType> results = alertio.showAndWait();
+//if (results.isPresent() && results.get() == buttonTypeOne) {
+////Create Report.  (PDF)
+//    ////////////////////////////Start Report//////////////////////////////
+//    Date currentDate = GregorianCalendar.getInstance().getTime();
+//    DateFormat df = DateFormat.getDateInstance();
+//    String dateString = df.format(currentDate);
+//    Date d = new Date();
+//    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//    String timeString = sdf.format(d);
+//    String value0 = timeString;
+//    String value00 = value0.replace("/", "_");
+//    String repname = "Chemical_Report_Of_"+filenammm;
+//    String reppath = System.getProperty("user.home") + "\\Desktop";
+//    FileChooser dialog = new FileChooser();
+//    dialog.setInitialDirectory(new File(reppath));
+//    dialog.setInitialFileName(repname);
+//    dialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", new String[] { "*.pdf" }));
+//    File dialogResult = dialog.showSaveDialog(null);
+//    String filePath = dialogResult.getAbsolutePath().toString();
+//    try {
+//      com.itextpdf.text.Document myDocument = new com.itextpdf.text.Document();
+//      PdfWriter myWriter = PdfWriter.getInstance(myDocument, new FileOutputStream(filePath));
+//      PdfPTable table = new PdfPTable(5);
+//      table.size();
+//      //table.setHorizontalAlignment(1);
+//      myDocument.open();
+//      float[] columnWidths = { 15.0F, 15.0F,15.0F,15.0F,15.0F };
+//      table.setWidths(columnWidths);
+//      table.setWidthPercentage(100.0F);
+//      myDocument.add((com.itextpdf.text.Element)new Paragraph("Cost Report For "+filenammm+" Recipe. ", FontFactory.getFont("Times-Bold", 12.0F, 1)));
+//      myDocument.add((com.itextpdf.text.Element)new Paragraph("-------------------------------------------------------------------------------------------"));
+//      table.addCell(new PdfPCell((Phrase)new Paragraph("Name", FontFactory.getFont("Times-Roman", 10.0F, 1))));
+//      table.addCell(new PdfPCell((Phrase)new Paragraph("Quantity", FontFactory.getFont("Times-Roman", 10.0F, 1))));
+//      table.addCell(new PdfPCell((Phrase)new Paragraph("Dilution", FontFactory.getFont("Times-Roman", 10.0F, 1))));
+//      table.addCell(new PdfPCell((Phrase)new Paragraph("Price", FontFactory.getFont("Times-Roman", 10.0F, 1))));
+//      table.addCell(new PdfPCell((Phrase)new Paragraph("Total", FontFactory.getFont("Times-Roman", 10.0F, 1))));
+//      int no=0;
+//      int stageno=1;
+//      while (no<qua.size()) {                                                                                                                
+//      table.addCell(new PdfPCell((Phrase)new Paragraph(nom.get(no), FontFactory.getFont("Times-Roman", 8.0F, 0))));
+//      table.addCell(new PdfPCell((Phrase)new Paragraph(Double.toString(qua.get(no)), FontFactory.getFont("Times-Roman", 8.0F, 0))));
+//      table.addCell(new PdfPCell((Phrase)new Paragraph(Double.toString(dil.get(no)), FontFactory.getFont("Times-Roman", 8.0F, 0))));
+//      table.addCell(new PdfPCell((Phrase)new Paragraph(Double.toString(pri.get(no)), FontFactory.getFont("Times-Roman", 8.0F, 0))));
+//      table.addCell(new PdfPCell((Phrase)new Paragraph(Double.toString((qua.get(no)/dil.get(no))*pri.get(no)), FontFactory.getFont("Times-Roman", 8.0F, 0))));
+//      no++;
+//      } 
+//      myDocument.add((com.itextpdf.text.Element)table);
+//      myDocument.add((com.itextpdf.text.Element)new Paragraph("-------------------------------"));
+//      myDocument.add((com.itextpdf.text.Element)new Paragraph("Total Of Cost (New) :    "+Double.toString(summo)+"          $.", FontFactory.getFont("Times-Bold", 10.0F, 1)));
+//      myDocument.add((com.itextpdf.text.Element)new Paragraph("Total Of Garments (New) :    "+Double.toString(pcsnum)+"          PCS.", FontFactory.getFont("Times-Bold", 10.0F, 1)));
+//      myDocument.add((com.itextpdf.text.Element)new Paragraph("One Garment Costs (New) :    "+Double.toString(onegar)+"          $.", FontFactory.getFont("Times-Bold", 10.0F, 1)));
+//      myDocument.add((com.itextpdf.text.Element)new Paragraph("--------------------------------------------------------------------------------------------"));
+//      myDocument.add((com.itextpdf.text.Element)new Paragraph("Total Of Cost (Old) :    "+oldtotalcost+"          $.", FontFactory.getFont("Times-Bold", 10.0F, 1)));
+//      myDocument.add((com.itextpdf.text.Element)new Paragraph("Total Of Garments (Old) :    "+oldpcs+"          PCS.", FontFactory.getFont("Times-Bold", 10.0F, 1)));
+//      myDocument.add((com.itextpdf.text.Element)new Paragraph("One Garment Costs (Old) :    "+oldonegarmentcost+"          $.", FontFactory.getFont("Times-Bold", 10.0F, 1)));
+//      myDocument.add((com.itextpdf.text.Element)new Paragraph("-------------------------------"));
+//      myDocument.setPageSize(PageSize.A4.rotate());
+//      myDocument.close();
+//      Alert alooo = new Alert(Alert.AlertType.CONFIRMATION);
+//      alooo.setTitle("Info");
+//      alooo.setHeaderText("Info!");
+//      alooo.setContentText("Report was generated successfully");
+//      alooo.setResizable(true);
+//      DialogPane dialogPaneu = alooo.getDialogPane();
+//      dialogPaneu.getStylesheets().add(
+//      getClass().getResource("cupertino-light.css").toExternalForm());
+//      alooo.showAndWait();
+//    } catch (Exception e) {
+//    } finally {
+//      try {
+//      } catch (Exception e) {
+//      } 
+//    } 
+//    Desktop de = Desktop.getDesktop();
+//    de.open(new File(reppath + "\\" + repname + ".pdf"));
+//    ////////////////////////////End Report////////////////////////////////
+//} 
+//else {}
+//}   
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//      
+//
+//new File(link).delete();
+//String encryptedTemp =
+//link + ".enc";
+//File encTempFile = new File(encryptedTemp);
+//if (encTempFile.exists()) {
+//encTempFile.delete();
+//}
+//
+//       
+//  ////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+//      
+//  ////////////////////Send Mails Here///////////////////////////////////////////////////////////////////////
+//   
+//   
+//    //////////////////////////////////////////////////////////////////////////////////////////
+//        
+//    
+//        
+//      try {  
+//        
+//        
+//    new Thread(new Runnable() {
+//    @Override
+//    public void run() {
+//        
+//        
+//        
+////    ObservableList<String> ite=list.getItems();
+////    
+////    for  (String it : ite) {
+////        
+////        
+//       
+//    
+//          String from,password,to,sub,suby;
+//          from="ahmedelkadyteeest@gmail.com";
+//          password="lgrj esca tdtz froo";
+//          //to=it;
+//          sub="Recipe Editor (RECETA).";
+//          suby="Recipe Editor (RECETA) Powered By Kadysoft Ltd - All Rights Reserved. Ahmed Elkady - CEO.";
+//          
+//           if (bosbos==1) {
+//               
+//               if (user.contains("Ahmed Elkady")||user.contains("KADINIO")) {
+//                   
+//                msg="Date: "+datevalue+"\nCustomer - Recipe_Name: "+modeloo+" - "+filenammm+"\nEditor_Name: "+user+"   ***- Free Editor At Anytime, Ask For Help On Whatsapp At: +201555266002. -***"+"\nShots: 1\nOld_Time: "+oldtimehour+"   Hours."+"\nNew_Time: "+gdf1+"   Hours."+
+//                        
+//                        "\n-------------------------------------------------"
+//                        + "\nHere is All Info About Cost:"
+//                        + "\n---------------NEW----------------"
+//                        + "\n"
+//                        + "\nTotal Of Cost (New) :    "+Double.toString(summo)+"          $."
+//                        + "\nTotal Of Garments (New) :    "+Double.toString(pcsnum)+"          PCS."
+//                        + "\nOne Garment Costs (New) :    "+Double.toString(onegar)+"          $."
+//                        + "\n---------------OLD----------------"
+//                        + "\n"
+//                        + "\nTotal Of Cost (Old) :    "+oldtotalcost+"          $."
+//                        + "\nTotal Of Garments (Old) :    "+oldpcs+"          PCS."
+//                        + "\nOne Garment Costs (Old) :    "+oldonegarmentcost+"          $."
+//                        + "\n-------------------------------------------------"+
+//                        
+//                        "\n\n\n"+suby+"\n\n\n"+
+//                        
+//"▒█░▄▀ ░█▀▀█ ▒█▀▀▄ ▒█░░▒█ ▒█▀▀▀█ ▒█▀▀▀█ ▒█▀▀▀ ▀▀█▀▀ 　 ▒█░░░ ▀▀█▀▀ ▒█▀▀▄ \n" +
+//"▒█▀▄░ ▒█▄▄█ ▒█░▒█ ▒█▄▄▄█ ░▀▀▀▄▄ ▒█░░▒█ ▒█▀▀▀ ░▒█░░ 　 ▒█░░░ ░▒█░░ ▒█░▒█ \n" +
+//"▒█░▒█ ▒█░▒█ ▒█▄▄▀ ░░▒█░░ ▒█▄▄▄█ ▒█▄▄▄█ ▒█░░░ ░▒█░░ 　 ▒█▄▄█ ░▒█░░ ▒█▄▄▀";
+//   
+//                        
+//                        
+//                        
+//                        
+//               }
+//               
+//                   
+// 
+//                  
+//                                                      
+//                                                                               
+//                                                          
+//               
+//               else {
+//                msg="Date: "+datevalue+"\nCustomer - Recipe_Name: "+modeloo+" - "+filenammm+"\nEditor_Name: "+user+"\nShots: 1\nOld_Time: "+oldtimehour+"   Hours."+"\nNew_Time: "+gdf1+"   Hours."+
+//                        
+//                       "\n-------------------------------------------------"
+//                        + "\nHere is All Info About Cost:"
+//                        + "\n---------------NEW----------------"
+//                        + "\n"
+//                        + "\nTotal Of Cost (New) :    "+Double.toString(summo)+"          $."
+//                        + "\nTotal Of Garments (New) :    "+Double.toString(pcsnum)+"          PCS."
+//                        + "\nOne Garment Costs (New) :    "+Double.toString(onegar)+"          $."
+//                        + "\n---------------OLD----------------"
+//                        + "\n"
+//                        + "\nTotal Of Cost (Old) :    "+oldtotalcost+"          $."
+//                        + "\nTotal Of Garments (Old) :    "+oldpcs+"          PCS."
+//                        + "\nOne Garment Costs (Old) :    "+oldonegarmentcost+"          $."
+//                        + "\n-------------------------------------------------"+
+//                        
+//                        "\n\n\n"+suby+"\n\n\n"+
+//"▒█░▄▀ ░█▀▀█ ▒█▀▀▄ ▒█░░▒█ ▒█▀▀▀█ ▒█▀▀▀█ ▒█▀▀▀ ▀▀█▀▀ 　 ▒█░░░ ▀▀█▀▀ ▒█▀▀▄ \n" +
+//"▒█▀▄░ ▒█▄▄█ ▒█░▒█ ▒█▄▄▄█ ░▀▀▀▄▄ ▒█░░▒█ ▒█▀▀▀ ░▒█░░ 　 ▒█░░░ ░▒█░░ ▒█░▒█ \n" +
+//"▒█░▒█ ▒█░▒█ ▒█▄▄▀ ░░▒█░░ ▒█▄▄▄█ ▒█▄▄▄█ ▒█░░░ ░▒█░░ 　 ▒█▄▄█ ░▒█░░ ▒█▄▄▀";
+//               }
+//               
+//              
+//           }
+//           
+//           if (bosbos==2) {
+//               
+//               
+//                if (user.contains("Ahmed Elkady")||user.contains("KADINIO")) {
+//                   
+//                msg="Date: "+datevalue+"\nCustomer - Recipe_Name: "+modeloo+" - "+filenammm+"\nEditor_Name: "+user+"   ***- Free Editor At Anytime, Ask For Help On Whatsapp At: +201555266002. -***"+"\nShots: 2\nOld_Time_First_Shot: "+oldtimehour+"   Hours."+"\nOld_Time_Second_Shot: "+oldtimehour2+"   Hours."+"\nNew_Time_First_Shot: "+gdf1+"   Hours."+"\nNew_Time_Second_Shot: "+gdf2+"   Hours."+
+//                        
+//                        
+//                        "\n-------------------------------------------------"
+//                        + "\nHere is All Info About Cost:"
+//                        + "\n---------------NEW----------------"
+//                        + "\n"
+//                        + "\nTotal Of Cost (New) :    "+Double.toString(summo)+"          $."
+//                        + "\nTotal Of Garments (New) :    "+Double.toString(pcsnum)+"          PCS."
+//                        + "\nOne Garment Costs (New) :    "+Double.toString(onegar)+"          $."
+//                        + "\n---------------OLD----------------"
+//                        + "\n"
+//                        + "\nTotal Of Cost (Old) :    "+oldtotalcost+"          $."
+//                        + "\nTotal Of Garments (Old) :    "+oldpcs+"          PCS."
+//                        + "\nOne Garment Costs (Old) :    "+oldonegarmentcost+"          $."
+//                        + "\n-------------------------------------------------"+
+//                        
+//                        
+//                        "\n\n\n"+suby+"\n\n\n"+
+//"▒█░▄▀ ░█▀▀█ ▒█▀▀▄ ▒█░░▒█ ▒█▀▀▀█ ▒█▀▀▀█ ▒█▀▀▀ ▀▀█▀▀ 　 ▒█░░░ ▀▀█▀▀ ▒█▀▀▄ \n" +
+//"▒█▀▄░ ▒█▄▄█ ▒█░▒█ ▒█▄▄▄█ ░▀▀▀▄▄ ▒█░░▒█ ▒█▀▀▀ ░▒█░░ 　 ▒█░░░ ░▒█░░ ▒█░▒█ \n" +
+//"▒█░▒█ ▒█░▒█ ▒█▄▄▀ ░░▒█░░ ▒█▄▄▄█ ▒█▄▄▄█ ▒█░░░ ░▒█░░ 　 ▒█▄▄█ ░▒█░░ ▒█▄▄▀";
+//           
+//               }
+//               
+//               else {
+//                msg="Date: "+datevalue+"\nCustomer - Recipe_Name: "+modeloo+" - "+filenammm+"\nEditor_Name: "+user+"\nShots: 2\nOld_Time_First_Shot: "+oldtimehour+"   Hours."+"\nOld_Time_Second_Shot: "+oldtimehour2+"   Hours."+"\nNew_Time_First_Shot: "+gdf1+"   Hours."+"\nNew_Time_Second_Shot: "+gdf2+"   Hours."+
+//                        
+//                        
+//                        "\n-------------------------------------------------"
+//                        + "\nHere is All Info About Cost:"
+//                        + "\n---------------NEW----------------"
+//                        + "\n"
+//                        + "\nTotal Of Cost (New) :    "+Double.toString(summo)+"          $."
+//                        + "\nTotal Of Garments (New) :    "+Double.toString(pcsnum)+"          PCS."
+//                        + "\nOne Garment Costs (New) :    "+Double.toString(onegar)+"          $."
+//                        + "\n---------------OLD----------------"
+//                        + "\n"
+//                        + "\nTotal Of Cost (Old) :    "+oldtotalcost+"          $."
+//                        + "\nTotal Of Garments (Old) :    "+oldpcs+"          PCS."
+//                        + "\nOne Garment Costs (Old) :    "+oldonegarmentcost+"          $."
+//                        + "\n-------------------------------------------------"+
+//                        
+//                        
+//                        "\n\n\n"+suby+"\n\n\n"+
+//"▒█░▄▀ ░█▀▀█ ▒█▀▀▄ ▒█░░▒█ ▒█▀▀▀█ ▒█▀▀▀█ ▒█▀▀▀ ▀▀█▀▀ 　 ▒█░░░ ▀▀█▀▀ ▒█▀▀▄ \n" +
+//"▒█▀▄░ ▒█▄▄█ ▒█░▒█ ▒█▄▄▄█ ░▀▀▀▄▄ ▒█░░▒█ ▒█▀▀▀ ░▒█░░ 　 ▒█░░░ ░▒█░░ ▒█░▒█ \n" +
+//"▒█░▒█ ▒█░▒█ ▒█▄▄▀ ░░▒█░░ ▒█▄▄▄█ ▒█▄▄▄█ ▒█░░░ ░▒█░░ 　 ▒█▄▄█ ░▒█░░ ▒█▄▄▀";
+//           
+//               }
+//               
+//              }
+//          
+//          
+//        
+//          Properties props = new Properties();    
+//          props.put("mail.smtp.host", "smtp.gmail.com");    
+//          props.put("mail.smtp.socketFactory.port", "465");    
+//          props.put("mail.smtp.socketFactory.class",    
+//          "javax.net.ssl.SSLSocketFactory");    
+//          props.put("mail.smtp.auth", "true");    
+//          props.put("mail.smtp.port", "465");    
+//          Session session = Session.getDefaultInstance(props,    
+//          new javax.mail.Authenticator() {    
+//          protected PasswordAuthentication getPasswordAuthentication() {    
+//          return new PasswordAuthentication(from,password);  
+//          }    
+//          });       
+//          try {    
+//          MimeMessage message = new MimeMessage(session);
+//          
+//          
+//          //For mailing by the old method just uncomment codes and comment current method then go straight. 
+//          
+//          String[] mailToId={"kemal.duman@tcgarments.com","muhammet.eraslan@tcgarments.com","eyup.karakoyun@tcgarments.com","ahmed.nassif@tcgarments.com","hany.emeira@tcgarments.com"/*,"chemical.store@tcgarments.com"*/,"rainforest.tc@tcgarments.com","yilmaz.bozkir@tcgarments.com","ahmed.elkady@tcgarments.com"};
+//          for(int i=0;i<mailToId.length;i++){
+//           message.addRecipients(Message.RecipientType.TO, mailToId[i]);
+//          }
+//          
+//          //message.addRecipient(Message.RecipientType.TO,new InternetAddress(it));    
+//          message.setSubject(sub);    
+//          //message.setText(msg, "text/plain; charset=UTF-8");
+//          message.setContent(msg, "text/plain; charset=UTF-8");
+//          Transport.send(message);  
+//          System.out.println("Successful");
+//          } catch (MessagingException e) {throw new RuntimeException(e);} 
+//        
+//        
+////        
+////    }
+////    
+////        try {
+////            Thread.sleep(300);
+////        } catch (InterruptedException ex) {
+////            Logger.getLogger(SaverController.class.getName()).log(Level.SEVERE, null, ex);
+////        }
+//      
+//      
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//         try {
+//         String sqla = "INSERT INTO Notifications (Recipient, Sender, Message, Delivered) VALUES (?, ?, ?, 0)";
+//          pst = conn.prepareStatement(sqla);
+//          pst.setString(1, "Recipe_Maker");
+//          pst.setString(2, "Ahmed Elkady");
+//          pst.setString(3, "We have updated "+filenammm+" successfully in "+datevalue+" of "+modeloo+" model.");
+//          pst.executeUpdate();
+//          }
+//          catch (Exception e) {
+//          } finally {
+//          try {
+//          rs.close();
+//          pst.close();
+//          } catch (Exception exception) {}}  
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//        
+//          }
+//}).start();
+//    
+//      
+//      }
+//      
+//      catch (Exception m) {
+//        
+//      }
+//    
+//    
+//    
+//        //////////////////////////////////////////////////////////////////////////////////////////
+//   
+//        
+//  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+//      }    
+//      else if (option.get() == ButtonType.CANCEL) {
+//          
+//          ////////////////////////////////////////////////////////////////////////////////////////////////////
+//          
+//             
+//   ///////////////////////////////////////Everything Will Go Here///////////////////////////////////////////////////
+//   
+//   WebEngine engine = codey.getEngine();
+//   //Object value=engine.executeScript("document.getElementById('txtBody').value;");
+//   Object value=engine.executeScript("tinymce.get('txtBody').getContent();");
+//   String thecodee=value.toString();
+//   
+//   
+//   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   
+//   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   
+//   if (signme.isSelected()==true) {
+//       
+//       
+//        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   
+//   
+//   if (fixche.isSelected()==true) {
+//       
+//       String codee = thecodee;
+//      if (!codee.contains("TABLE")) {
+//      Notifications noti = Notifications.create();
+//      noti.title("Recipe Error");
+//      noti.text("Maybe not a recipe, Open a recipe first!.");
+//      noti.hideAfter(Duration.seconds(3));
+//      noti.position(Pos.CENTER);
+//      noti.showError();    
+//        }
+//        else {
+//            Document docj = Jsoup.parse(codee);
+//        for (Element table : docj.select("TABLE")) {
+//        for (Element row : table.select("TR")) {
+//            Elements tds = row.select("TD");
+//            if (tds.get(7).text().isEmpty()) {   
+//            }
+//            else {  
+//             ///////////////////////////////////////////////////////////////
+//String string=tds.get(7).text();
+//BufferedReader buf=new BufferedReader (new FileReader (NewDir.file_dirrrr + "\\Recipe_Indexes\\Chemical_Dictionary.kady"));
+//String line;
+//String linebeforeequal;
+//String lineafterequal;
+//while ((line=buf.readLine())!=null) {
+//linebeforeequal=line.substring(0,line.indexOf("=")-0);
+//lineafterequal=line.substring(line.indexOf("=") + 1 , line.length());
+//if (string.equals(lineafterequal)) {
+////System.out.println(string+" = "+linebeforeequal);
+//String formattedText = "<b style='display:block; text-align:center;'>" + linebeforeequal + "</b>";
+//tds.get(8).html(formattedText); // Use .html() instead of .text()     
+////tds.get(8).text(linebeforeequal);
+////System.out.println(tds.get(8).text());
+//break;
+//
+//    }
+//    else {
+//        
+//    }
+//    
+//}
+//buf.close();
+//    
+//            }   
+//         
+//        }}
+//       roraa=docj.toString();
+//        }
+//       
+//      
+//      ////////////////////////////////////////////////////////////////////////////// 
+//org.jsoup.nodes.Document doct = Jsoup.parse(roraa);
+//for (Element table : doct.select("TABLE")) {
+//for (Element row : table.select("TR")) {
+//Elements tds = row.select("TD");
+//if (tds.get(8).text().isEmpty()) {   
+//}
+//else {  
+//String string=tds.get(8).text();
+//BufferedReader bufi=new BufferedReader (new FileReader (NewDir.file_dirrrr + "\\Recipe_Indexes\\Lot_Numbers.kady"));
+//String line;
+//String linebeforeequal;//Chemical Name
+//String lineafterequal;//Lot Numbers
+//boolean found = false;         
+//while ((line=bufi.readLine())!=null) {
+//linebeforeequal=line.substring(0,line.indexOf("="));//Chemical Name
+//lineafterequal=line.substring(line.indexOf("=") + 1);//Lot Numbers
+//if (string.equalsIgnoreCase(linebeforeequal)) {
+//System.out.println(linebeforeequal);
+//String formattedText = "<b style='display:block; text-align:center;'>" + lineafterequal + "</b>";
+//tds.get(9).html(formattedText); // Use .html() instead of .text()     
+////tds.get(9).text(lineafterequal);
+//found = true;                    
+//break;
+//    }   
+//}
+//bufi.close();}}}
+//roraa=doct.toString();      
+////////////////////////////////////////////////////////////////////////////////
+//      
+//       
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   
+//      
+//org.jsoup.nodes.Document doctp = Jsoup.parse(roraa);
+//
+//// مر على كل جدول
+//for (Element table : doctp.select("table")) {
+//    for (Element row : table.select("tr")) {
+//        Elements tds = row.select("td");
+//
+//        // اتأكد إن فيه على الأقل 11 عمود (0 → 10)
+//        if (tds.size() > 10) {
+//            String target = tds.get(8).text().trim();
+//
+//            if (!target.isEmpty()) {
+//                Path mapPath = Paths.get(NewDir.file_dirrrr, "Recipe_Indexes", "Chemical_Translation.kady");
+//
+//                try (BufferedReader bufi = Files.newBufferedReader(mapPath, StandardCharsets.UTF_8)) {
+//                    String line;
+//                    boolean found = false;
+//
+//                    while ((line = bufi.readLine()) != null) {
+//                        // اتأكد إن السطر فيه =
+//                        if (!line.contains("=")) continue;
+//
+//                        String linebeforeequal = line.substring(0, line.indexOf("=")).trim();
+//                        String lineafterequal = line.substring(line.indexOf("=") + 1).trim();
+//
+//                        if (target.equalsIgnoreCase(linebeforeequal)) {
+//                            System.out.println("Matched: " + linebeforeequal);
+//
+//                            String formattedText =
+//                                    "<b style='display:block; text-align:center;'>" +
+//                                            lineafterequal +
+//                                            "</b>";
+//
+//                            // استبدل العمود رقم 10 بالنص الجديد
+//                            tds.get(10).html(formattedText);
+//
+//                            found = true;
+//                            break;
+//                        }
+//                    }
+//
+//                    if (!found) {
+//                        System.out.println("No match for: " + target);
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//roraa = doctp.toString();
+// 
+//       
+//       
+// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//
+//
+//
+//   }
+//   
+//   else {
+//       
+//       //Continue..........
+//       roraa=code.getText();
+//   }
+//    
+//   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   
+//   
+//   
+//   
+//   
+//      
+//   try {
+//
+//    // =========================================
+//    // كتابة البيانات الجديدة داخل الملف المؤقت
+//    // =========================================
+//
+//    OutputStream instream = new FileOutputStream(link);
+//    pw = new PrintWriter( new OutputStreamWriter(instream, "UTF-8"));
+//    String pathtosignature="file://"+NewDir.file_dirrrrr+"\\Mr_Muhammet.png";
+//    String modely=model;
+//    pw.println("<!DOCTYPE html>\n<html lang=\"ar\">\n<head>\n<title>Kadysoft</title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>td {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}\ntable {\nheight:5px;\nmax-width:100%;\nheight:100%;\nwhite-space:nowrap;\n}\ntr {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}"
+//    + ""
+//    + ""
+//    + ""
+//    + "/* Centered Watermark */\n" +
+//    "    .watermark {\n" +
+//    "      position: fixed;\n" +
+//    "      top: 50%;\n" +
+//    "      left: 50%;\n" +
+//    "      transform: translate(-50%, -50%) rotate(-45deg);\n" +
+//    "      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
+//    "      background-repeat: no-repeat;\n" +
+//    "      background-size: contain;\n" +
+//    "      width: 300px;\n" +
+//    "      height: 200px;\n" +
+//    "      opacity: 0.3;\n" +
+//    "      pointer-events: none;\n" +
+//    "      z-index: 1000;\n" +
+//    "    }\n" +
+//    "    /* Repeated Watermark */\n" +
+//    "    .watermark-repeated {\n" +
+//    "      position: fixed;\n" +
+//    "      top: 0;\n" +
+//    "      left: 0;\n" +
+//    "      width: 100%;\n" +
+//    "      height: 100%;\n" +
+//    "      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
+//    "      background-repeat: repeat;\n" +
+//    "      background-size: 300px 200px;\n" +
+//    "      opacity: 0.2;\n" +
+//    "      pointer-events: none;\n" +
+//    "      z-index: 1000;\n" +
+//    "    }"
+//    + ""
+//    + "</STYLE></HEAD>\n" +
+//    "<BODY><CENTER>\n"
+//    + "<div class=\"watermark\"></div>" 
+//    + ""
+//    + "\n\n");
+//    pw.println("<!-- Creating Recipe From Kadysoft Ltd.-->\n\n");
+//    pw.println(roraa);
+//    pw.println("\n\n</center>\n</body>\n</html>");
+//    pw.println("<b id=\"signname\">Mr_Muhammet Signature: "+"</b><img id=\"signimage\" src=\""+pathtosignature+"\" width=\"300\" height=\"90\" alt=\"Developed By Kadysoft Ltd (Ahmed Elkady).\" style=\"border-color:black;border-width:10px;\">");   
+//    if (roraa.contains("background-image:")) {     
+//    }
+//    else {
+//    pw.println("\n\n<style>\n" +
+//    "body {\n" +
+//    "  background-image: url(\""+modely+".bmp\");\n" +
+//    "  background-position: center;\n" +
+//    "  height: 170px;\n" +
+//    "background-position-x:550px;"+
+//    "  background-repeat: no-repeat;\n" +
+//    "  background-size: 120px 90px;\n" +
+//    "}\n" +
+//    "</style>");             
+//    }
+//    
+//    
+//    
+//    
+//    
+// 
+//    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//        Date d = new Date();
+//        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+//        String dateString = sdf.format(d);
+//        String programmerName = "Ahmed Elkady.";
+//        String companyName = "Kadysoft Ltd.";
+//        String factoryName = "T&C Garments.";
+//        String recipeName = recipe + ".";
+//        String clientName = model + ".";
+//        int qty = Integer.parseInt(pecoco);
+//        String lastEditorName = user + ".";
+//        String date = dateString + ".";
+//        String repolink = "https://progkady.github.io/RecipesStore/";
+//        double pcsCost = onegar;
+//        String qrText = "★ Recipe Details ★\n" +
+//                "-------------------------\n" +
+//                "• Programmer : " + programmerName + "\n" +
+//                "• Developer : " + companyName + "\n" +
+//                "• Factory : " + factoryName + "\n" +
+//                "• Recipe : " + recipeName + "\n" +
+//                "• Customer : " + clientName + "\n" +
+//                "• Quantity : " + qty + "\n" +
+//                "• Editor Name : " + lastEditorName + "\n" +
+//                "• Last Update : " + date + "\n" +
+//                "• Pcs Cost : " + pcsCost + " $\n\n" +
+//                "• Recipes Link : " + repolink + "\n" +
+//                "Thanks For Using Receta From Kadysoft Ltd. ❤";
+//        int qrSize = 250;
+//        BufferedImage qrImage = createPrintableQR(qrText, qrSize);
+//        String qrBase64 = imageToBase64Png(qrImage);
+//        String htmlContent = readFile(link);
+//        Document docd = Jsoup.parse(htmlContent);
+//        docd.outputSettings().syntax(Document.OutputSettings.Syntax.html);
+//        docd.outputSettings().charset("UTF-8");
+//        Element table = docd.select("table#EXTABLE").first();
+//        if (table == null) {
+//            System.out.println("خطأ: الجدول #EXTABLE مش موجود!");
+//            return;
+//        }
+//        Elements rows = table.select("tbody > tr");
+//        int mergeRows = Math.min(7, rows.size()); // دمج 7 صفوف
+//        int qrColumnIndex = 8; // العمود رقم 9 (index 8)
+//        Element firstRow = rows.get(0);
+//        Elements cells = firstRow.select("td");
+//        if (cells.size() <= qrColumnIndex) {
+//            System.out.println("العمود رقم 9 مش موجود في الصف الأول!");
+//            return;
+//        }
+//        Element qrCell = cells.get(qrColumnIndex);
+//        Element oldQrImg = qrCell.selectFirst("img[src^=data:image]");
+//        String qrHtml =
+//    "<img src=\"data:image/png;base64," + qrBase64 + "\" " +
+//    "alt=\"★ Recipe Details ★&#10;" +
+//    "-------------------------&#10;" +
+//    "• Programmer : " + programmerName + "&#10;" +
+//    "• Developer : " + companyName + "&#10;" +
+//    "• Factory : " + factoryName + "&#10;" +
+//    "• Recipe : " + recipeName + "&#10;" +
+//    "• Customer : " + clientName + "&#10;" +
+//    "• Quantity : " + qty + "&#10;" +
+//    "• Editor Name : " + lastEditorName + "&#10;" +
+//    "• Last Update : " + date + "&#10;" +
+//    "• Pcs Cost : " + pcsCost + " $&#10;&#10;" +
+//    "• Recipes Link : " + repolink + "&#10;" +
+//    "Thanks For Using Receta From Kadysoft Ltd. ❤\" " +
+//    "style=\"width:" + qrSize + "px !important; height:" + qrSize + "px !important; " +
+//    "max-width:none !important; max-height:none !important; border:10px solid white; " +
+//    "box-shadow:0 0 0 4pt black;\"/>";
+//        if (oldQrImg != null) {
+//            qrCell.html(qrHtml);
+//        } else {
+//            qrCell.attr("rowspan", String.valueOf(mergeRows))
+//                  .attr("style", "border: 3px double #000; padding: 10px; background: #ffffff; " +
+//                                 "text-align: center; vertical-align: middle;")
+//                  .html(qrHtml);
+//        }
+//        for (int i = 1; i < mergeRows; i++) {
+//            Element row = rows.get(i);
+//            Element cellToRemove = row.selectFirst("td:nth-child(9)");
+//            if (cellToRemove != null) {
+//                cellToRemove.remove();
+//            }
+//        }
+//    writeFile(link, docd.outerHtml());
+//    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//    
+//    
+//    pw.close();
+//    code.clear();
+//    // =========================================
+//    // قراءة الملف المؤقت وعمل تشفير الحروف
+//    // =========================================
+//    StringBuilder encryptedText = new StringBuilder();
+//    BufferedReader bi = new BufferedReader(
+//    new InputStreamReader(
+//    new FileInputStream(link),
+//    "UTF-8"));
+//    String lo;
+//    while ((lo = bi.readLine()) != null) {
+//        if (lo.contains("data:image") || lo.contains("base64,")) {
+//                encryptedText.append("\n" + lo);
+//                continue;
+//            }
+//    encryptedText.append(
+//    lo
+//    .replace("A","ﬦ")
+//    .replace("B","ﬧ")
+//    .replace("C","ﬨ")
+//    .replace("D","﬩")
+//    .replace("E","שׁ")    
+//    .replace("F","שׂ")        
+//    .replace("G","שּׁ")         
+//    .replace("H","שּׂ")         
+//    .replace("I","אַ")         
+//    .replace("J","אָ")         
+//    .replace("K","אּ")         
+//    .replace("L","בּ")         
+//    .replace("M","גּ")         
+//    .replace("N","דּ")         
+//    .replace("O","הּ")         
+//    .replace("P","וּ")         
+//    .replace("Q","זּ")         
+//    .replace("R","טּ")         
+//    .replace("S","יּ")         
+//    .replace("T","ךּ")         
+//    .replace("U","כּ")         
+//    .replace("V","לּ")
+//    .replace("W","מּ")         
+//    .replace("X","נּ")         
+//    .replace("Y","סּ")         
+//    .replace("Z","ףּ") 
+//    .replace("0","פּ")         
+//    .replace("1","צּ")         
+//    .replace("2","קּ")         
+//    .replace("3","רּ")         
+//    .replace("4","שּ")         
+//    .replace("5","תּ")         
+//    .replace("6","וֹ")         
+//    .replace("7","בֿ")         
+//    .replace("8","כֿ")
+//    .replace("9","פֿ")
+//    .replace("a","ﬦ")
+//    .replace("b","ﬧ")
+//    .replace("c","ﬨ")
+//    .replace("d","﬩")
+//    .replace("e","שׁ")    
+//    .replace("f","שׂ")        
+//    .replace("g","שּׁ")         
+//    .replace("h","שּׂ")         
+//    .replace("i","אַ")         
+//    .replace("j","אָ")         
+//    .replace("k","אּ")         
+//    .replace("l","בּ")         
+//    .replace("m","גּ")         
+//    .replace("n","דּ")         
+//    .replace("o","הּ")         
+//    .replace("p","וּ")         
+//    .replace("q","זּ")         
+//    .replace("r","טּ")         
+//    .replace("s","יּ")         
+//    .replace("t","ךּ")         
+//    .replace("u","כּ")         
+//    .replace("v","לּ")
+//    .replace("w","מּ")         
+//    .replace("x","נּ")         
+//    .replace("y","סּ")         
+//    .replace("z","ףּ")
+//    );
+//    encryptedText.append("\n");
+//    }
+//    bi.close();
+//    // =========================================
+//    // إعادة كتابة النص المشفر داخل temp
+//    // =========================================
+//    PrintWriter pw2 = new PrintWriter(
+//    new OutputStreamWriter(
+//    new FileOutputStream(link),
+//    "UTF-8"));
+//    pw2.print(encryptedText.toString());
+//    pw2.close();
+//    // =========================================
+//    // تشفير بالباسورد
+//    // =========================================
+//    String longKey;
+//    try (BufferedReader reader =
+//    new BufferedReader(
+//    new FileReader("lib\\java.dat"))) {
+//    longKey = reader.readLine();
+//    }
+//    String password =
+//    KeyDecoder.extractData(longKey.trim());
+//    String encryptedTemp =
+//    link + ".enc";
+//    FileEncryptor.encrypt(
+//    link,
+//    encryptedTemp,
+//    password);
+//    // =========================================
+//    // اختيار مكان الحفظ
+//    // =========================================
+//    FileChooser dialog = new FileChooser();
+//    dialog.setInitialDirectory(new File(NewDir.file_dir+"\\"+stage+"\\"+model));
+//    dialog.setInitialFileName(recipe + ".ks");
+//    dialog.getExtensionFilters().add(
+//    new FileChooser.ExtensionFilter(
+//    "Kadysoft Files",
+//    "*.ks"));
+//    File dialogResult =
+//    dialog.showSaveDialog(null);
+//    if (dialogResult == null) {
+//    return;
+//    }
+//    // =========================================
+//    // استبدال الملف إن وجد
+//    // =========================================
+//    File finalFile = dialogResult;
+//    java.nio.file.Files.move(
+//    new File(encryptedTemp).toPath(),
+//    finalFile.toPath(),
+//    java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+//    // =========================================
+//    // حذف الملفات المؤقتة
+//    // =========================================
+//    //new File(link).delete();
+//    // لو موجود أي temp إضافي
+//    File encTempFile = new File(encryptedTemp);
+//    if (encTempFile.exists()) {
+//    //encTempFile.delete();
+//    }
+//    // =========================================
+//    // نجاح
+//    // =========================================
+//    Notifications noti = Notifications.create();
+//    noti.title("Success!");
+//    noti.text("File saved and encrypted successfully.");
+//    noti.position(Pos.CENTER);
+//    noti.hideAfter(Duration.seconds(4));
+//    noti.showInformation();
+//    }
+//    catch (Exception ex) {
+//    ex.printStackTrace();
+//    Notifications noti = Notifications.create();
+//    noti.title("Save Failed!");
+//    noti.text("Error while saving encrypted file.");
+//    noti.position(Pos.CENTER);
+//    noti.hideAfter(Duration.seconds(5));
+//    noti.showError();
+//    }
+//   
+//
+//   
+//   
+//   
+//   
+////            //String codee=code.getText();
+////            String pathtosignature="file://"+NewDir.file_dirrrrr+"\\Mr_Muhammet.png";
+////            String modely=model;
+////            FileChooser dialog = new FileChooser();
+////            dialog.setInitialDirectory(new File(NewDir.file_dir+"\\"+stage+"\\"+model));
+////            dialog.setInitialFileName(recipe+".ks");
+////            dialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("Kadysoft Files", new String[] { "*.ks" }));
+////            dialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("HTML Files", new String[] { "*.html" }));
+////            File dialogResult = dialog.showSaveDialog(null);
+////            filePath = dialogResult.getAbsolutePath().toString();
+////            OutputStream instream=new FileOutputStream(filePath);
+////            pw = new PrintWriter(new OutputStreamWriter (instream,"UTF-8"));
+////            pw.println("<!DOCTYPE html>\n<html lang=\"ar\">\n<head>\n<title>Kadysoft</title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>td {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}\ntable {\nheight:5px;\nmax-width:100%;\nheight:100%;\nwhite-space:nowrap;\n}\ntr {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}"
+////                    + ""
+////                    + ""
+////                    
+////                        + ""
+////                + "/* Centered Watermark */\n" +
+////"    .watermark {\n" +
+////"      position: fixed;\n" +
+////"      top: 50%;\n" +
+////"      left: 50%;\n" +
+////"      transform: translate(-50%, -50%) rotate(-45deg);\n" +
+////"      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
+////"      background-repeat: no-repeat;\n" +
+////"      background-size: contain;\n" +
+////"      width: 300px;\n" +
+////"      height: 200px;\n" +
+////"      opacity: 0.3;\n" +
+////"      pointer-events: none;\n" +
+////"      z-index: 1000;\n" +
+////"    }\n" +
+////"    /* Repeated Watermark */\n" +
+////"    .watermark-repeated {\n" +
+////"      position: fixed;\n" +
+////"      top: 0;\n" +
+////"      left: 0;\n" +
+////"      width: 100%;\n" +
+////"      height: 100%;\n" +
+////"      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
+////"      background-repeat: repeat;\n" +
+////"      background-size: 300px 200px;\n" +
+////"      opacity: 0.2;\n" +
+////"      pointer-events: none;\n" +
+////"      z-index: 1000;\n" +
+////"    }"
+////                + ""
+////                + "</STYLE></HEAD>\n" +
+////"<BODY><CENTER>\n"
+////+ "<div class=\"watermark\"></div>" 
+////                
+////                    
+////                    + ""
+////                    + "\n\n");
+////            pw.println("<!-- Creating Recipe From Kadysoft Ltd.-->\n\n");
+////            pw.println(roraa);
+////            pw.println("\n\n</center>\n</body>\n</html>");
+////            pw.println("<b id=\"signname\">Mr_Muhammet Signature: "+"</b><img id=\"signimage\" src=\""+pathtosignature+"\" width=\"300\" height=\"90\" alt=\"Developed By Kadysoft Ltd (Ahmed Elkady).\" style=\"border-color:black;border-width:10px;\">");   
+////      
+////            if (roraa.contains("background-image:")) {
+////                
+////            }
+////            else {
+////                pw.println("\n\n<style>\n" +
+////"body {\n" +
+////"  background-image: url(\""+modely+".bmp\");\n" +
+////"  background-position: center;\n" +
+////"  height: 170px;\n" +
+////"background-position-x:550px;"+
+////"  background-repeat: no-repeat;\n" +
+////"  background-size: 120px 90px;\n" +
+////"}\n" +
+////"</style>");             
+////          }
+////            pw.close();
+////            
+////            
+////    /////////////////////////////////////////////////// 
+////    code.clear();
+////    InputStream inputinstream=new FileInputStream(filePath);
+////    BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
+////    //BufferedReader bi=new BufferedReader (new FileReader (pathy));
+////    String lo;
+////    while ((lo=bi.readLine())!=null) {
+////        
+////        code.appendText("\n"+lo
+////       .replace("A","ﬦ")
+////       .replace("B","ﬧ")
+////       .replace("C","ﬨ")
+////       .replace("D","﬩")
+////       .replace("E","שׁ")    
+////       .replace("F","שׂ")        
+////       .replace("G","שּׁ")         
+////       .replace("H","שּׂ")         
+////       .replace("I","אַ")         
+////       .replace("J","אָ")         
+////       .replace("K","אּ")         
+////       .replace("L","בּ")         
+////       .replace("M","גּ")         
+////       .replace("N","דּ")         
+////       .replace("O","הּ")         
+////       .replace("P","וּ")         
+////       .replace("Q","זּ")         
+////       .replace("R","טּ")         
+////       .replace("S","יּ")         
+////       .replace("T","ךּ")         
+////       .replace("U","כּ")         
+////       .replace("V","לּ")
+////       .replace("W","מּ")         
+////       .replace("X","נּ")         
+////       .replace("Y","סּ")         
+////       .replace("Z","ףּ")
+////                
+////       .replace("0","פּ")         
+////       .replace("1","צּ")         
+////       .replace("2","קּ")         
+////       .replace("3","רּ")         
+////       .replace("4","שּ")         
+////       .replace("5","תּ")         
+////       .replace("6","וֹ")         
+////       .replace("7","בֿ")         
+////       .replace("8","כֿ")
+////       .replace("9","פֿ")
+////                
+////       .replace("a","ﬦ")
+////       .replace("b","ﬧ")
+////       .replace("c","ﬨ")
+////       .replace("d","﬩")
+////       .replace("e","שׁ")    
+////       .replace("f","שׂ")        
+////       .replace("g","שּׁ")         
+////       .replace("h","שּׂ")         
+////       .replace("i","אַ")         
+////       .replace("j","אָ")         
+////       .replace("k","אּ")         
+////       .replace("l","בּ")         
+////       .replace("m","גּ")         
+////       .replace("n","דּ")         
+////       .replace("o","הּ")         
+////       .replace("p","וּ")         
+////       .replace("q","זּ")         
+////       .replace("r","טּ")         
+////       .replace("s","יּ")         
+////       .replace("t","ךּ")         
+////       .replace("u","כּ")         
+////       .replace("v","לּ")
+////       .replace("w","מּ")         
+////       .replace("x","נּ")         
+////       .replace("y","סּ")         
+////       .replace("z","ףּ")                
+////      ); 
+////
+////
+////    }
+////    bi.close();
+////    String gf=code.getText();
+////    OutputStream instreamm=new FileOutputStream(filePath);
+////    PrintWriter pw = new PrintWriter(new OutputStreamWriter (instreamm,"UTF-8"));
+////    //PrintWriter pw=new PrintWriter (new FileWriter (pathy));
+////    pw.println(gf);
+////    pw.close();
+////    
+////    
+////    
+////    
+////    Notifications noti = Notifications.create();
+////    noti.title("Successful");
+////    noti.text("We have encrypted the recipe successfully.");
+////    noti.hideAfter(Duration.seconds(3));
+////    noti.position(Pos.CENTER);
+////    noti.showInformation();
+////    code.clear();
+//
+//       //////////////////////////////////////////////////
+//            
+//            
+//            //Desktop desk = Desktop.getDesktop();
+//            //desk.open(new File (filePath));
+//            Stage jk = (Stage)this.save.getScene().getWindow();
+//            //jk.close();
+//   
+//       /////////////////////////////////////////////////// 
+//   
+//       //////////////////////////////////////////////////
+//       
+//   }
+//   
+//   
+//   else {
+//       
+//       
+//       
+//        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   
+//   
+//   if (fixche.isSelected()==true) {
+//       
+//       String codee = code.getText();
+//      if (!codee.contains("TABLE")) {
+//      Notifications noti = Notifications.create();
+//      noti.title("Recipe Error");
+//      noti.text("Maybe not a recipe, Open a recipe first!.");
+//      noti.hideAfter(Duration.seconds(3));
+//      noti.position(Pos.CENTER);
+//      noti.showError();    
+//        }
+//        else {
+//            Document docj = Jsoup.parse(codee);
+//        for (Element table : docj.select("TABLE")) {
+//        for (Element row : table.select("TR")) {
+//            Elements tds = row.select("TD");
+//            if (tds.get(7).text().isEmpty()) {   
+//            }
+//            else {  
+//             ///////////////////////////////////////////////////////////////
+//String string=tds.get(7).text();
+//BufferedReader buf=new BufferedReader (new FileReader (NewDir.file_dirrrr + "\\Recipe_Indexes\\Chemical_Dictionary.kady"));
+//String line;
+//String linebeforeequal;
+//String lineafterequal;
+//while ((line=buf.readLine())!=null) {
+//linebeforeequal=line.substring(0,line.indexOf("=")-0);
+//lineafterequal=line.substring(line.indexOf("=") + 1 , line.length());
+//if (string.equals(lineafterequal)) {
+////System.out.println(string+" = "+linebeforeequal);
+//String formattedText = "<b style='display:block; text-align:center;'>" + linebeforeequal + "</b>";
+//tds.get(8).html(formattedText); // Use .html() instead of .text()     
+////tds.get(8).text(linebeforeequal);
+////System.out.println(tds.get(8).text());
+//break;
+//
+//    }
+//    else {
+//        
+//    }
+//    
+//}
+//buf.close();
+//    
+//            }   
+//         
+//        }}
+//       roraa=docj.toString();
+//        }
+//      
+//      
+//      ////////////////////////////////////////////////////////////////////////////// 
+//org.jsoup.nodes.Document doct = Jsoup.parse(roraa);
+//for (Element table : doct.select("TABLE")) {
+//for (Element row : table.select("TR")) {
+//Elements tds = row.select("TD");
+//if (tds.get(8).text().isEmpty()) {   
+//}
+//else {  
+//String string=tds.get(8).text();
+//BufferedReader bufi=new BufferedReader (new FileReader (NewDir.file_dirrrr + "\\Recipe_Indexes\\Lot_Numbers.kady"));
+//String line;
+//String linebeforeequal;//Chemical Name
+//String lineafterequal;//Lot Numbers
+//boolean found = false;         
+//while ((line=bufi.readLine())!=null) {
+//linebeforeequal=line.substring(0,line.indexOf("="));//Chemical Name
+//lineafterequal=line.substring(line.indexOf("=") + 1);//Lot Numbers
+//if (string.equalsIgnoreCase(linebeforeequal)) {
+//System.out.println(linebeforeequal);
+//String formattedText = "<b style='display:block; text-align:center;'>" + lineafterequal + "</b>";
+//tds.get(9).html(formattedText); // Use .html() instead of .text()     
+////tds.get(9).text(lineafterequal);
+//found = true;                    
+//break;
+//    }   
+//}
+//bufi.close();}}}
+//roraa=doct.toString();      
+////////////////////////////////////////////////////////////////////////////////
+//    
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   
+//      
+//org.jsoup.nodes.Document doctp = Jsoup.parse(roraa);
+//
+//// مر على كل جدول
+//for (Element table : doctp.select("table")) {
+//    for (Element row : table.select("tr")) {
+//        Elements tds = row.select("td");
+//
+//        // اتأكد إن فيه على الأقل 11 عمود (0 → 10)
+//        if (tds.size() > 10) {
+//            String target = tds.get(8).text().trim();
+//
+//            if (!target.isEmpty()) {
+//                Path mapPath = Paths.get(NewDir.file_dirrrr, "Recipe_Indexes", "Chemical_Translation.kady");
+//
+//                try (BufferedReader bufi = Files.newBufferedReader(mapPath, StandardCharsets.UTF_8)) {
+//                    String line;
+//                    boolean found = false;
+//
+//                    while ((line = bufi.readLine()) != null) {
+//                        // اتأكد إن السطر فيه =
+//                        if (!line.contains("=")) continue;
+//
+//                        String linebeforeequal = line.substring(0, line.indexOf("=")).trim();
+//                        String lineafterequal = line.substring(line.indexOf("=") + 1).trim();
+//
+//                        if (target.equalsIgnoreCase(linebeforeequal)) {
+//                            System.out.println("Matched: " + linebeforeequal);
+//
+//                            String formattedText =
+//                                    "<b style='display:block; text-align:center;'>" +
+//                                            lineafterequal +
+//                                            "</b>";
+//
+//                            // استبدل العمود رقم 10 بالنص الجديد
+//                            tds.get(10).html(formattedText);
+//
+//                            found = true;
+//                            break;
+//                        }
+//                    }
+//
+//                    if (!found) {
+//                        System.out.println("No match for: " + target);
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//roraa = doctp.toString();
+// 
+//       
+//       
+// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//       
+//   }
+//   
+//   else {
+//       
+//       //Continue..........
+//       roraa=code.getText();
+//   }
+//    
+//   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   
+//      
+//          
+//   try {
+//
+//    // =========================================
+//    // كتابة البيانات الجديدة داخل الملف المؤقت
+//    // =========================================
+//
+//    OutputStream instream = new FileOutputStream(link);
+//    pw = new PrintWriter( new OutputStreamWriter(instream, "UTF-8"));
+//    String pathtosignature="file://"+NewDir.file_dirrrrr+"\\Mr_Muhammet.png";
+//    String modely=model;
+//    pw.println("<!DOCTYPE html>\n<html lang=\"ar\">\n<head>\n<title>Kadysoft</title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>td {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}\ntable {\nheight:5px;\nmax-width:100%;\nheight:100%;\nwhite-space:nowrap;\n}\ntr {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}"
+//    + ""
+//    + ""
+//    + ""
+//    + "/* Centered Watermark */\n" +
+//    "    .watermark {\n" +
+//    "      position: fixed;\n" +
+//    "      top: 50%;\n" +
+//    "      left: 50%;\n" +
+//    "      transform: translate(-50%, -50%) rotate(-45deg);\n" +
+//    "      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
+//    "      background-repeat: no-repeat;\n" +
+//    "      background-size: contain;\n" +
+//    "      width: 300px;\n" +
+//    "      height: 200px;\n" +
+//    "      opacity: 0.3;\n" +
+//    "      pointer-events: none;\n" +
+//    "      z-index: 1000;\n" +
+//    "    }\n" +
+//    "    /* Repeated Watermark */\n" +
+//    "    .watermark-repeated {\n" +
+//    "      position: fixed;\n" +
+//    "      top: 0;\n" +
+//    "      left: 0;\n" +
+//    "      width: 100%;\n" +
+//    "      height: 100%;\n" +
+//    "      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
+//    "      background-repeat: repeat;\n" +
+//    "      background-size: 300px 200px;\n" +
+//    "      opacity: 0.2;\n" +
+//    "      pointer-events: none;\n" +
+//    "      z-index: 1000;\n" +
+//    "    }"
+//    + ""
+//    + "</STYLE></HEAD>\n" +
+//    "<BODY><CENTER>\n"
+//    + "<div class=\"watermark\"></div>" 
+//    + ""
+//    + "\n\n");
+//    pw.println("<!-- Creating Recipe From Kadysoft Ltd.-->\n\n");
+//    pw.println(roraa);
+//    pw.println("\n\n</center>\n</body>\n</html>");
+//    pw.println("<b id=\"signname\">Mr_Muhammet Signature: "+"</b><img id=\"signimage\" src=\""+pathtosignature+"\" width=\"300\" height=\"90\" alt=\"Developed By Kadysoft Ltd (Ahmed Elkady).\" style=\"border-color:black;border-width:10px;\">");   
+//    if (roraa.contains("background-image:")) {     
+//    }
+//    else {
+//    pw.println("\n\n<style>\n" +
+//    "body {\n" +
+//    "  background-image: url(\""+modely+".bmp\");\n" +
+//    "  background-position: center;\n" +
+//    "  height: 170px;\n" +
+//    "background-position-x:550px;"+
+//    "  background-repeat: no-repeat;\n" +
+//    "  background-size: 120px 90px;\n" +
+//    "}\n" +
+//    "</style>");             
+//    }
+//    
+//    
+//    
+//    
+// 
+//    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//        Date d = new Date();
+//        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+//        String dateString = sdf.format(d);
+//        String programmerName = "Ahmed Elkady.";
+//        String companyName = "Kadysoft Ltd.";
+//        String factoryName = "T&C Garments.";
+//        String recipeName = recipe + ".";
+//        String clientName = model + ".";
+//        int qty = Integer.parseInt(pecoco);
+//        String lastEditorName = user + ".";
+//        String date = dateString + ".";
+//        String repolink = "https://progkady.github.io/RecipesStore/";
+//        double pcsCost = onegar;
+//        String qrText = "★ Recipe Details ★\n" +
+//                "-------------------------\n" +
+//                "• Programmer : " + programmerName + "\n" +
+//                "• Developer : " + companyName + "\n" +
+//                "• Factory : " + factoryName + "\n" +
+//                "• Recipe : " + recipeName + "\n" +
+//                "• Customer : " + clientName + "\n" +
+//                "• Quantity : " + qty + "\n" +
+//                "• Editor Name : " + lastEditorName + "\n" +
+//                "• Last Update : " + date + "\n" +
+//                "• Pcs Cost : " + pcsCost + " $\n\n" +
+//                "• Recipes Link : " + repolink + "\n" +
+//                "Thanks For Using Receta From Kadysoft Ltd. ❤";
+//        int qrSize = 250;
+//        BufferedImage qrImage = createPrintableQR(qrText, qrSize);
+//        String qrBase64 = imageToBase64Png(qrImage);
+//        String htmlContent = readFile(link);
+//        Document docd = Jsoup.parse(htmlContent);
+//        docd.outputSettings().syntax(Document.OutputSettings.Syntax.html);
+//        docd.outputSettings().charset("UTF-8");
+//        Element table = docd.select("table#EXTABLE").first();
+//        if (table == null) {
+//            System.out.println("خطأ: الجدول #EXTABLE مش موجود!");
+//            return;
+//        }
+//        Elements rows = table.select("tbody > tr");
+//        int mergeRows = Math.min(7, rows.size()); // دمج 7 صفوف
+//        int qrColumnIndex = 8; // العمود رقم 9 (index 8)
+//        Element firstRow = rows.get(0);
+//        Elements cells = firstRow.select("td");
+//        if (cells.size() <= qrColumnIndex) {
+//            System.out.println("العمود رقم 9 مش موجود في الصف الأول!");
+//            return;
+//        }
+//        Element qrCell = cells.get(qrColumnIndex);
+//        Element oldQrImg = qrCell.selectFirst("img[src^=data:image]");
+//        String qrHtml =
+//    "<img src=\"data:image/png;base64," + qrBase64 + "\" " +
+//    "alt=\"★ Recipe Details ★&#10;" +
+//    "-------------------------&#10;" +
+//    "• Programmer : " + programmerName + "&#10;" +
+//    "• Developer : " + companyName + "&#10;" +
+//    "• Factory : " + factoryName + "&#10;" +
+//    "• Recipe : " + recipeName + "&#10;" +
+//    "• Customer : " + clientName + "&#10;" +
+//    "• Quantity : " + qty + "&#10;" +
+//    "• Editor Name : " + lastEditorName + "&#10;" +
+//    "• Last Update : " + date + "&#10;" +
+//    "• Pcs Cost : " + pcsCost + " $&#10;&#10;" +
+//    "• Recipes Link : " + repolink + "&#10;" +
+//    "Thanks For Using Receta From Kadysoft Ltd. ❤\" " +
+//    "style=\"width:" + qrSize + "px !important; height:" + qrSize + "px !important; " +
+//    "max-width:none !important; max-height:none !important; border:10px solid white; " +
+//    "box-shadow:0 0 0 4pt black;\"/>";
+//        if (oldQrImg != null) {
+//            qrCell.html(qrHtml);
+//        } else {
+//            qrCell.attr("rowspan", String.valueOf(mergeRows))
+//                  .attr("style", "border: 3px double #000; padding: 10px; background: #ffffff; " +
+//                                 "text-align: center; vertical-align: middle;")
+//                  .html(qrHtml);
+//        }
+//        for (int i = 1; i < mergeRows; i++) {
+//            Element row = rows.get(i);
+//            Element cellToRemove = row.selectFirst("td:nth-child(9)");
+//            if (cellToRemove != null) {
+//                cellToRemove.remove();
+//            }
+//        }
+//    writeFile(link, docd.outerHtml());
+//    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//    
+//    
+//    pw.close();
+//    code.clear();
+//    // =========================================
+//    // قراءة الملف المؤقت وعمل تشفير الحروف
+//    // =========================================
+//    StringBuilder encryptedText = new StringBuilder();
+//    BufferedReader bi = new BufferedReader(
+//    new InputStreamReader(
+//    new FileInputStream(link),
+//    "UTF-8"));
+//    String lo;
+//    while ((lo = bi.readLine()) != null) {
+//        if (lo.contains("data:image") || lo.contains("base64,")) {
+//                encryptedText.append("\n" + lo);
+//                continue;
+//            }
+//    encryptedText.append(
+//    lo
+//    .replace("A","ﬦ")
+//    .replace("B","ﬧ")
+//    .replace("C","ﬨ")
+//    .replace("D","﬩")
+//    .replace("E","שׁ")    
+//    .replace("F","שׂ")        
+//    .replace("G","שּׁ")         
+//    .replace("H","שּׂ")         
+//    .replace("I","אַ")         
+//    .replace("J","אָ")         
+//    .replace("K","אּ")         
+//    .replace("L","בּ")         
+//    .replace("M","גּ")         
+//    .replace("N","דּ")         
+//    .replace("O","הּ")         
+//    .replace("P","וּ")         
+//    .replace("Q","זּ")         
+//    .replace("R","טּ")         
+//    .replace("S","יּ")         
+//    .replace("T","ךּ")         
+//    .replace("U","כּ")         
+//    .replace("V","לּ")
+//    .replace("W","מּ")         
+//    .replace("X","נּ")         
+//    .replace("Y","סּ")         
+//    .replace("Z","ףּ") 
+//    .replace("0","פּ")         
+//    .replace("1","צּ")         
+//    .replace("2","קּ")         
+//    .replace("3","רּ")         
+//    .replace("4","שּ")         
+//    .replace("5","תּ")         
+//    .replace("6","וֹ")         
+//    .replace("7","בֿ")         
+//    .replace("8","כֿ")
+//    .replace("9","פֿ")
+//    .replace("a","ﬦ")
+//    .replace("b","ﬧ")
+//    .replace("c","ﬨ")
+//    .replace("d","﬩")
+//    .replace("e","שׁ")    
+//    .replace("f","שׂ")        
+//    .replace("g","שּׁ")         
+//    .replace("h","שּׂ")         
+//    .replace("i","אַ")         
+//    .replace("j","אָ")         
+//    .replace("k","אּ")         
+//    .replace("l","בּ")         
+//    .replace("m","גּ")         
+//    .replace("n","דּ")         
+//    .replace("o","הּ")         
+//    .replace("p","וּ")         
+//    .replace("q","זּ")         
+//    .replace("r","טּ")         
+//    .replace("s","יּ")         
+//    .replace("t","ךּ")         
+//    .replace("u","כּ")         
+//    .replace("v","לּ")
+//    .replace("w","מּ")         
+//    .replace("x","נּ")         
+//    .replace("y","סּ")         
+//    .replace("z","ףּ")
+//    );
+//    encryptedText.append("\n");
+//    }
+//    bi.close();
+//    // =========================================
+//    // إعادة كتابة النص المشفر داخل temp
+//    // =========================================
+//    PrintWriter pw2 = new PrintWriter(
+//    new OutputStreamWriter(
+//    new FileOutputStream(link),
+//    "UTF-8"));
+//    pw2.print(encryptedText.toString());
+//    pw2.close();
+//    // =========================================
+//    // تشفير بالباسورد
+//    // =========================================
+//    String longKey;
+//    try (BufferedReader reader =
+//    new BufferedReader(
+//    new FileReader("lib\\java.dat"))) {
+//    longKey = reader.readLine();
+//    }
+//    String password =
+//    KeyDecoder.extractData(longKey.trim());
+//    String encryptedTemp =
+//    link + ".enc";
+//    FileEncryptor.encrypt(
+//    link,
+//    encryptedTemp,
+//    password);
+//    // =========================================
+//    // اختيار مكان الحفظ
+//    // =========================================
+//    FileChooser dialog = new FileChooser();
+//    dialog.setInitialDirectory(new File(NewDir.file_dir+"\\"+stage+"\\"+model));
+//    dialog.setInitialFileName(recipe + ".ks");
+//    dialog.getExtensionFilters().add(
+//    new FileChooser.ExtensionFilter(
+//    "Kadysoft Files",
+//    "*.ks"));
+//    File dialogResult =
+//    dialog.showSaveDialog(null);
+//    if (dialogResult == null) {
+//    return;
+//    }
+//    // =========================================
+//    // استبدال الملف إن وجد
+//    // =========================================
+//    File finalFile = dialogResult;
+//    java.nio.file.Files.move(
+//    new File(encryptedTemp).toPath(),
+//    finalFile.toPath(),
+//    java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+//    // =========================================
+//    // حذف الملفات المؤقتة
+//    // =========================================
+//    //new File(link).delete();
+//    // لو موجود أي temp إضافي
+//    File encTempFile = new File(encryptedTemp);
+//    if (encTempFile.exists()) {
+//    //encTempFile.delete();
+//    }
+//    // =========================================
+//    // نجاح
+//    // =========================================
+//    Notifications noti = Notifications.create();
+//    noti.title("Success!");
+//    noti.text("File saved and encrypted successfully.");
+//    noti.position(Pos.CENTER);
+//    noti.hideAfter(Duration.seconds(4));
+//    noti.showInformation();
+//    }
+//    catch (Exception ex) {
+//    ex.printStackTrace();
+//    Notifications noti = Notifications.create();
+//    noti.title("Save Failed!");
+//    noti.text("Error while saving encrypted file.");
+//    noti.position(Pos.CENTER);
+//    noti.hideAfter(Duration.seconds(5));
+//    noti.showError();
+//    }
+//   
+//
+//   
+//   
+//   
+//       
+//       
+////            //String codee=code.getText();
+////            String pathtosignature="file://"+NewDir.file_dirrrrr+"\\Mr_Moharam.png";
+////            String modely=model;
+////            FileChooser dialog = new FileChooser();
+////            dialog.setInitialDirectory(new File(NewDir.file_dir+"\\"+stage+"\\"+model));
+////            dialog.setInitialFileName(recipe+".ks");
+////            dialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("Kadysoft Files", new String[] { "*.ks" }));
+////            dialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("HTML Files", new String[] { "*.html" }));
+////            File dialogResult = dialog.showSaveDialog(null);
+////            filePath = dialogResult.getAbsolutePath().toString();
+////            OutputStream instream=new FileOutputStream(filePath);
+////            pw = new PrintWriter(new OutputStreamWriter (instream,"UTF-8"));
+////            pw.println("<!DOCTYPE html>\n<html lang=\"ar\">\n<head>\n<title>Kadysoft</title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>td {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}\ntable {\nheight:5px;\nmax-width:100%;\nheight:100%;\nwhite-space:nowrap;\n}\ntr {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}"
+////                    + ""
+////                    + ""
+////                    
+////                        + ""
+////                + "/* Centered Watermark */\n" +
+////"    .watermark {\n" +
+////"      position: fixed;\n" +
+////"      top: 50%;\n" +
+////"      left: 50%;\n" +
+////"      transform: translate(-50%, -50%) rotate(-45deg);\n" +
+////"      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
+////"      background-repeat: no-repeat;\n" +
+////"      background-size: contain;\n" +
+////"      width: 300px;\n" +
+////"      height: 200px;\n" +
+////"      opacity: 0.3;\n" +
+////"      pointer-events: none;\n" +
+////"      z-index: 1000;\n" +
+////"    }\n" +
+////"    /* Repeated Watermark */\n" +
+////"    .watermark-repeated {\n" +
+////"      position: fixed;\n" +
+////"      top: 0;\n" +
+////"      left: 0;\n" +
+////"      width: 100%;\n" +
+////"      height: 100%;\n" +
+////"      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
+////"      background-repeat: repeat;\n" +
+////"      background-size: 300px 200px;\n" +
+////"      opacity: 0.2;\n" +
+////"      pointer-events: none;\n" +
+////"      z-index: 1000;\n" +
+////"    }"
+////                + ""
+////                + "</STYLE></HEAD>\n" +
+////"<BODY><CENTER>\n"
+////+ "<div class=\"watermark\"></div>" 
+////                
+////                    
+////                    
+////                    + ""
+////                    + ""
+////                    + "\n\n");
+////            pw.println("<!-- Creating Recipe From Kadysoft Ltd.-->\n\n");
+////            pw.println(roraa);
+////            pw.println("\n\n</center>\n</body>\n</html>");
+////            //pw.println("<b>Mr_Moharam Signature: "+"</b><img src=\""+pathtosignature+"\" width=\"300\" height=\"90\" alt=\"Developed By Kadysoft Ltd (Ahmed Elkady).\" style=\"border-color:black;border-width:10px;\">");   
+////      
+////            if (roraa.contains("background-image:")) {
+////                
+////            }
+////            else {
+////                pw.println("\n\n<style>\n" +
+////"body {\n" +
+////"  background-image: url(\""+modely+".bmp\");\n" +
+////"  background-position: center;\n" +
+////"  height: 170px;\n" +
+////"background-position-x:550px;"+
+////"  background-repeat: no-repeat;\n" +
+////"  background-size: 120px 90px;\n" +
+////"}\n" +
+////"</style>");             
+////          }
+////            pw.close();
+////            
+////            
+////               /////////////////////////////////////////////////// 
+////   code.clear();
+////    InputStream inputinstream=new FileInputStream(filePath);
+////    BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
+////    //BufferedReader bi=new BufferedReader (new FileReader (pathy));
+////    String lo;
+////    while ((lo=bi.readLine())!=null) {
+////        
+////        code.appendText("\n"+lo
+////       .replace("A","ﬦ")
+////       .replace("B","ﬧ")
+////       .replace("C","ﬨ")
+////       .replace("D","﬩")
+////       .replace("E","שׁ")    
+////       .replace("F","שׂ")        
+////       .replace("G","שּׁ")         
+////       .replace("H","שּׂ")         
+////       .replace("I","אַ")         
+////       .replace("J","אָ")         
+////       .replace("K","אּ")         
+////       .replace("L","בּ")         
+////       .replace("M","גּ")         
+////       .replace("N","דּ")         
+////       .replace("O","הּ")         
+////       .replace("P","וּ")         
+////       .replace("Q","זּ")         
+////       .replace("R","טּ")         
+////       .replace("S","יּ")         
+////       .replace("T","ךּ")         
+////       .replace("U","כּ")         
+////       .replace("V","לּ")
+////       .replace("W","מּ")         
+////       .replace("X","נּ")         
+////       .replace("Y","סּ")         
+////       .replace("Z","ףּ")
+////                
+////       .replace("0","פּ")         
+////       .replace("1","צּ")         
+////       .replace("2","קּ")         
+////       .replace("3","רּ")         
+////       .replace("4","שּ")         
+////       .replace("5","תּ")         
+////       .replace("6","וֹ")         
+////       .replace("7","בֿ")         
+////       .replace("8","כֿ")
+////       .replace("9","פֿ")
+////                
+////       .replace("a","ﬦ")
+////       .replace("b","ﬧ")
+////       .replace("c","ﬨ")
+////       .replace("d","﬩")
+////       .replace("e","שׁ")    
+////       .replace("f","שׂ")        
+////       .replace("g","שּׁ")         
+////       .replace("h","שּׂ")         
+////       .replace("i","אַ")         
+////       .replace("j","אָ")         
+////       .replace("k","אּ")         
+////       .replace("l","בּ")         
+////       .replace("m","גּ")         
+////       .replace("n","דּ")         
+////       .replace("o","הּ")         
+////       .replace("p","וּ")         
+////       .replace("q","זּ")         
+////       .replace("r","טּ")         
+////       .replace("s","יּ")         
+////       .replace("t","ךּ")         
+////       .replace("u","כּ")         
+////       .replace("v","לּ")
+////       .replace("w","מּ")         
+////       .replace("x","נּ")         
+////       .replace("y","סּ")         
+////       .replace("z","ףּ")                
+////      ); 
+////
+////
+////    }
+////    bi.close();
+////    String gf=code.getText();
+////    OutputStream instreamm=new FileOutputStream(filePath);
+////    PrintWriter pw = new PrintWriter(new OutputStreamWriter (instreamm,"UTF-8"));
+////    //PrintWriter pw=new PrintWriter (new FileWriter (pathy));
+////    pw.println(gf);
+////    pw.close();
+////    
+////    
+////    
+////    
+////    Notifications noti = Notifications.create();
+////    noti.title("Successful");
+////    noti.text("We have encrypted the recipe successfully.");
+////    noti.hideAfter(Duration.seconds(3));
+////    noti.position(Pos.CENTER);
+////    noti.showInformation();
+////    //code.clear();
+//
+//
+//            
+//            //Desktop desk = Desktop.getDesktop();
+//            //desk.open(new File (filePath));
+//            Stage jk = (Stage)this.save.getScene().getWindow();
+//            //jk.close();
+//   
+//       /////////////////////////////////////////////////// 
+//   
+//       ///////////////////////////////////////////////////
+//   }
+//   
+//   
+//   
+//   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   
+//       
+//  ////////////////////Send Mails Here///////////////////////////////////////////////////////////////////////
+//   
+//   
+//    //////////////////////////////////////////////////////////////////////////////////////////
+//        
+//      Date currentDate1 = GregorianCalendar.getInstance().getTime();
+//      DateFormat df1 = DateFormat.getDateInstance();
+//      String dateString1 = df1.format(currentDate1);
+//      Date d1 = new Date();
+//      SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
+//      String timeString1 = sdf1.format(d1);
+//      SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+//      String timeString2 = sdf2.format(d1);
+//      datevalue = timeString2;                                                          //Date
+//      
+//      modeloo=model;                 //Model
+//      
+//      filenammm=link.replace(NewDir.file_dir,"").replace("\\PRODUCTION","").replace("\\"+modeloo+"\\","").replace(".ks","").replace(".html","");
+//      //filenammm=filePath.replace(NewDir.file_dir,"").replace("\\PRODUCTION","").replace("\\"+modeloo+"\\","").replace(".ks","").replace(".html","");
+//      
+//        
+//      try {  
+//        
+//        
+//    new Thread(new Runnable() {
+//    @Override
+//    public void run() {
+//        
+//        
+//        
+////    ObservableList<String> ite=list.getItems();
+////    
+////    for  (String it : ite) {
+////        
+////        
+//        
+//    
+//          String from,password,to,sub,suby;
+//          from="ahmedelkadyteeest@gmail.com";
+//          password="lgrj esca tdtz froo";
+//          //to=it;
+//          sub="Recipe Editor (RECETA).";
+//          suby="Recipe Editor (RECETA) Powered By Kadysoft Ltd - All Rights Reserved. Ahmed Elkady - CEO.";
+//          
+//          if (stage.equals("PILOT")) {
+//              
+//                msg="Date: "+datevalue+"\nCustomer - Recipe_Name: "+modeloo+" - "+nomo.replace(".ks","")+"\nEditor_Name: "+user+"\nThis Recipe Is Maybe A Pilot Recipe (Pilots Can Be Edited By '"+user+"' Only).\n\n\n"+suby+"\n\n\n██╗░░██╗░█████╗░██████╗░██╗░░░██╗░██████╗░█████╗░███████╗████████╗\n" +
+//"▒█░▄▀ ░█▀▀█ ▒█▀▀▄ ▒█░░▒█ ▒█▀▀▀█ ▒█▀▀▀█ ▒█▀▀▀ ▀▀█▀▀ 　 ▒█░░░ ▀▀█▀▀ ▒█▀▀▄ \n" +
+//"▒█▀▄░ ▒█▄▄█ ▒█░▒█ ▒█▄▄▄█ ░▀▀▀▄▄ ▒█░░▒█ ▒█▀▀▀ ░▒█░░ 　 ▒█░░░ ░▒█░░ ▒█░▒█ \n" +
+//"▒█░▒█ ▒█░▒█ ▒█▄▄▀ ░░▒█░░ ▒█▄▄▄█ ▒█▄▄▄█ ▒█░░░ ░▒█░░ 　 ▒█▄▄█ ░▒█░░ ▒█▄▄▀";
+//         
+//              
+//          }
+//          
+//          else if (stage.equals("BLANKET")) {
+//              
+//                msg="Date: "+datevalue+"\nCustomer - Recipe_Name: "+modeloo+" - "+nomo.replace(".ks","")+"\nEditor_Name: "+user+"\nThis Recipe Is Maybe A Blanket Recipe (Blankets Can Be Edited By '"+user+"' Only).\n\n\n"+suby+"\n\n\n██╗░░██╗░█████╗░██████╗░██╗░░░██╗░██████╗░█████╗░███████╗████████╗\n" +
+//"▒█░▄▀ ░█▀▀█ ▒█▀▀▄ ▒█░░▒█ ▒█▀▀▀█ ▒█▀▀▀█ ▒█▀▀▀ ▀▀█▀▀ 　 ▒█░░░ ▀▀█▀▀ ▒█▀▀▄ \n" +
+//"▒█▀▄░ ▒█▄▄█ ▒█░▒█ ▒█▄▄▄█ ░▀▀▀▄▄ ▒█░░▒█ ▒█▀▀▀ ░▒█░░ 　 ▒█░░░ ░▒█░░ ▒█░▒█ \n" +
+//"▒█░▒█ ▒█░▒█ ▒█▄▄▀ ░░▒█░░ ▒█▄▄▄█ ▒█▄▄▄█ ▒█░░░ ░▒█░░ 　 ▒█▄▄█ ░▒█░░ ▒█▄▄▀";
+//         
+//              
+//          }
+//          
+//          else {
+//              
+//                msg="Date: "+datevalue+"\nCustomer - Recipe_Name: "+modeloo+" - "+nomo.replace(".ks","")+"\nEditor_Name: "+user+"\nShots: This Recipe Maybe Contains 3 or 4 or 5 or 6 Shots ('RANDOM BATH') Or More Than 2 Shots. Ask ('KADINIO') to calculate it for you.\nHe created a new method to calculate from 1 to 6 shots.\nFor more information ask KADINIO or see time reports.\n\nOr tell 'KADINIO' if you have a problem with it.\nWe are working on new features to make it easy to control, if you like it support me.\n\n\n"+suby+"\n\n\n██╗░░██╗░█████╗░██████╗░██╗░░░██╗░██████╗░█████╗░███████╗████████╗\n" +
+//"▒█░▄▀ ░█▀▀█ ▒█▀▀▄ ▒█░░▒█ ▒█▀▀▀█ ▒█▀▀▀█ ▒█▀▀▀ ▀▀█▀▀ 　 ▒█░░░ ▀▀█▀▀ ▒█▀▀▄ \n" +
+//"▒█▀▄░ ▒█▄▄█ ▒█░▒█ ▒█▄▄▄█ ░▀▀▀▄▄ ▒█░░▒█ ▒█▀▀▀ ░▒█░░ 　 ▒█░░░ ░▒█░░ ▒█░▒█ \n" +
+//"▒█░▒█ ▒█░▒█ ▒█▄▄▀ ░░▒█░░ ▒█▄▄▄█ ▒█▄▄▄█ ▒█░░░ ░▒█░░ 　 ▒█▄▄█ ░▒█░░ ▒█▄▄▀";
+//         
+//              
+//          }
+//          
+//          
+//          Properties props = new Properties();    
+//          props.put("mail.smtp.host", "smtp.gmail.com");    
+//          props.put("mail.smtp.socketFactory.port", "465");    
+//          props.put("mail.smtp.socketFactory.class",    
+//          "javax.net.ssl.SSLSocketFactory");    
+//          props.put("mail.smtp.auth", "true");    
+//          props.put("mail.smtp.port", "465");    
+//          Session session = Session.getDefaultInstance(props,    
+//          new javax.mail.Authenticator() {    
+//          protected PasswordAuthentication getPasswordAuthentication() {    
+//          return new PasswordAuthentication(from,password);  
+//          }    
+//          });       
+//          try {    
+//          MimeMessage message = new MimeMessage(session);  
+//          
+//          
+//          //For mailing by the old method just uncomment codes and comment current method then go straight. 
+//          
+//          String[] mailToId={"kemal.duman@tcgarments.com","muhammet.eraslan@tcgarments.com","eyup.karakoyun@tcgarments.com","ahmed.nassif@tcgarments.com","hany.emeira@tcgarments.com"/*,"chemical.store@tcgarments.com"*/,"rainforest.tc@tcgarments.com","yilmaz.bozkir@tcgarments.com","ahmed.elkady@tcgarments.com"};
+//          for(int i=0;i<mailToId.length;i++){
+//           message.addRecipients(Message.RecipientType.TO, mailToId[i]);
+//          }
+//          
+//          //message.addRecipient(Message.RecipientType.TO,new InternetAddress(it));    
+//          message.setSubject(sub);
+//          //message.setText(msg,"html", "utf-8"); 
+//          message.setContent(msg, "text/plain; charset=UTF-8");
+//          Transport.send(message);  
+//          System.out.println("Successful");
+//          } catch (MessagingException e) {throw new RuntimeException(e);} 
+//        
+//        
+//        
+////    }
+////    
+////        try {
+////            Thread.sleep(300);
+////        } catch (InterruptedException ex) {
+////            Logger.getLogger(SaverController.class.getName()).log(Level.SEVERE, null, ex);
+////        }
+//        
+//        
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//         try {
+//         String sqla = "INSERT INTO notifications (Recipient, Sender, Message, Delivered) VALUES (?, ?, ?, 0)";
+//          pst = conn.prepareStatement(sqla);
+//          pst.setString(1, "Recipe_Maker");
+//          pst.setString(2, "Ahmed Elkady");
+//          pst.setString(3, "We have updated "+filenammm+" successfully in "+datevalue+" of "+modeloo+" model.");
+//          pst.executeUpdate();
+//          }
+//          catch (Exception e) {
+//          } finally {
+//          try {
+//          rs.close();
+//          pst.close();
+//          } catch (Exception exception) {}}  
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//        
+//          }
+//}).start();
+//    
+//      
+//      }
+//      
+//      catch (Exception m) {
+//        
+//      }
+//    
+//    
+//    
+//        //////////////////////////////////////////////////////////////////////////////////////////
+//   
+//  
+//  //////////////////////////////////////////////////
+//            
+//            
+//   
+//          
+//          ////////////////////////////////////////////////////////////////////////////////////////////////////
+//          
+//          
+//          
+//          
+//      
+//      }
+//      
+//      
+//      
+//      else {}
+//        
+//   
+//
+//
+//      
+//      ///////////////////////////////////////////////////////////////////////////try here
+//        
+//      
+//        //////////////////////////////////////////////
+//
+//                           
+//        
+//       String proco=null;
+//       int bathnumzzzz=0;
+//       String moduu,commentt;
+//       
+//       String ston,fom,hypo,enzym,moon,dryr1,dryr2,dryr3;
+//       
+//       ston="No";
+//       fom="No";
+//       hypo="No";
+//       enzym="No";
+//       moon="No";
+//       dryr1="No";
+//       dryr2="No";
+//       dryr3="No";
+//       
+//       List<String> shots = new ArrayList<>();
+//    
+//       int bathnum=0;
+//       
+//        int dss=1;
+//                            org.jsoup.nodes.Document docy = Jsoup.parse(code.getText());
+//                            for (Element table : docy.select("table")) {
+//                            for (Element row : table.select("tr")) {
+//                            Elements tds = row.select("td");
+//                            
+//                            
+//                            
+//                            
+//                            
+//                            if (tds.get(7).text().contains("stone")||tds.get(7).text().contains("Stone")||tds.get(7).text().contains("STONE")||tds.get(7).text().contains("STON")||tds.get(7).text().contains("ston")) {
+//                                
+//                                ston="STONE";
+//                                stonn=ston;
+//                                
+//                            }
+//                            
+//                             else {
+//                                
+//                             //   stonn="-";
+//                               
+//                                stonn=ston;
+//                            }
+//                            
+//                            if (tds.get(7).text().contains("foam")||tds.get(7).text().contains("Foam")||tds.get(7).text().contains("FOAM")||tds.get(7).text().contains("BOOL")||tds.get(7).text().contains("BOOL فوم")||tds.get(7).text().contains("FOM")||tds.get(7).text().contains("fom")) {
+//                                
+//                                fom="FOAM";
+//                                fomm=fom;
+//                                
+//                            }
+//                            
+//                             else {
+//                                
+//                               
+//                             //   fomm="-";
+//                               
+//                                fomm=fom;
+//                            }
+//                            
+//                            if (tds.get(7).text().contains("BLEACH")||tds.get(7).text().contains("HYPO")) {
+//                                
+//                                hypo="BLEACH";
+//                                hypoo=hypo;
+//                                
+//                            }
+//                            
+//                             else {
+//                                
+//                              
+//                             //   hypoo="-";
+//                              hypoo=hypo;
+//                                 
+//                                
+//                            }
+//                            
+//                            if (tds.get(7).text().contains("ENZYME")||tds.get(7).text().contains("ENZYM")||tds.get(7).text().contains("ACUDELL")||tds.get(7).text().contains("NSY")) {
+//                                
+//                                enzym="ENZYME";
+//                                enzymm=enzym;
+//                                
+//                            }
+//                            
+//                             else {
+//                                
+//                               
+//                             //   enzymm="-";
+//                                enzymm=enzym;
+//                                
+//                            }
+//                             
+//                            if (tds.get(3).text().contains("MOON WASH")||tds.get(3).text().contains("MOON")||tds.get(3).text().contains("Moon Wash")||tds.get(3).text().contains("MON WASH")||tds.get(7).text().contains("PERMENGANATE")||tds.get(7).text().contains("PERMENGANAT")||tds.get(7).text().contains("PERMANGANATE")||tds.get(7).text().contains("PERMANGANAT")||tds.get(8).text().contains("POTASSIUM PERMANGANATE")||tds.get(8).text().contains("NOVA TEKS MOON")||tds.get(7).text().contains("PERMANGANAT TO2U")) {
+//                                
+//                                moon="MOON WASH";
+//                                moonn=moon;
+//                                
+//                            }
+//                                   
+//                          
+//                            else {
+//                                
+//                                
+//                              //  moonn="-";
+//                                 moonn=moon;
+//                            }
+//                              
+//                            String dalil=tds.get(3).text();
+//                            if (dalil.contains("EXTRACT")||dalil.contains("extract")||dalil.contains("Extract")||dalil.contains("EXTRA")||dalil.contains("EXTRACTION")||dalil.contains("extraction")) {
+//                            shots.add(dalil);}
+//                            else {
+//                            
+//                            
+//                            
+//                            }
+//                            
+//                           
+//
+//                           }}
+//                            
+//                            
+//                          bathnum=shots.size();
+//                          if (shots.size()==1) {
+//                          dryr1="DRYER 1";
+//                          dryr11=dryr1;
+//                          dryr22="No";
+//                          dryr33="No";
+//                          }
+//                          else if (shots.size()==2) {
+//                          dryr1="DRYER 1";
+//                          dryr2="DRYER 2";
+//                          dryr11=dryr1;
+//                          dryr22=dryr2;
+//                          dryr33="No";
+//                          }
+//                          else if (shots.size()==3) {
+//                          dryr1="DRYER 1";
+//                          dryr2="DRYER 2";
+//                          dryr3="DRYER 3";
+//                          dryr11=dryr1;
+//                          dryr22=dryr2;
+//                          dryr33=dryr3;
+//                          }
+//                          else {
+//                          dryr1="No";
+//                          dryr2="No";
+//                          dryr3="No";
+//                          dryr11=dryr1;
+//                          dryr22=dryr2;
+//                          dryr33=dryr3;
+//                          }
+//                            
+//     // Save To DB Here
+//    Date currentDate1l = GregorianCalendar.getInstance().getTime();
+//    DateFormat df1l = DateFormat.getDateInstance();
+//    String dateString1l = df1l.format(currentDate1l);
+//    Date d1l = new Date();
+//    SimpleDateFormat sdf1l = new SimpleDateFormat("HH:mm:ss");
+//    String timeString1l = sdf1l.format(d1l);
+//    SimpleDateFormat sdf2l = new SimpleDateFormat("yyyy-MM-dd");
+//    String dateString2l = sdf2l.format(d1l);
+//
+//    String fann = "";
+//    
+//    try {
+//        String sql0 = "select * from Recipe_Types where WashName = ? and Model = ?";
+//        pst = conn.prepareStatement(sql0);
+//        pst.setString(1, filenammm);
+//        pst.setString(2, modeloo);
+//        rs = pst.executeQuery();                    
+//        
+//        if (rs.next()) {                        
+//            fann = "found";   
+//        } else {
+//            fann = "not_found";   
+//        }
+//        
+//    } catch (Exception exception) {
+//        exception.printStackTrace(); // Handle exceptions properly
+//    } finally {
+//        try {
+//            if (rs != null) rs.close();
+//            if (pst != null) pst.close();     
+//        } catch (Exception exception) {
+//            exception.printStackTrace(); // Handle exceptions properly
+//        }
+//    }
+//
+//    if (fann.equals("found")) {
+//        try {
+//            
+//            
+//            
+//            String sqlp = "update Recipe_Types set Date = ?, Model = ?, WashName = ?, Rinse = ?, Stone = ?, Foam = ?, Bleach = ?, Enzyme = ?, MoonWash = ?, Dryer_1 = ?, Dryer_2 = ?, Dryer_3 = ? where WashName = ? and Model = ?";
+//            pst = conn.prepareStatement(sqlp);
+//            pst.setString(1, dateString2l);
+//            pst.setString(2, modeloo);
+//            pst.setString(3, filenammm);
+//            pst.setString(4, "RINSE");
+//            pst.setString(5, stonn);
+//            pst.setString(6, fomm);
+//            pst.setString(7, hypoo);
+//            pst.setString(8, enzymm);
+//            pst.setString(9, moonn);
+//            pst.setString(10, dryr11);
+//            pst.setString(11, dryr22);
+//            pst.setString(12, dryr33);
+//            pst.setString(13, filenammm); // WHERE clause parameters
+//            pst.setString(14, modeloo);
+//            pst.execute();
+//            Notifications noti = Notifications.create();
+//            noti.title("Successful");
+//            noti.text("We have updated the types successfully.");
+//            noti.hideAfter(Duration.seconds(3));
+//            noti.position(Pos.CENTER);
+//            noti.showInformation();
+//            
+//           
+//        } catch (Exception exception) {
+//            exception.printStackTrace(); // Handle exceptions properly
+//        } finally {
+//            try {
+//                if (pst != null) pst.close();
+//            } catch (Exception exception) {
+//                exception.printStackTrace();
+//            }
+//        }
+//    } else if (fann.equals("not_found")) {
+//        try { 
+//            
+//            
+//            
+//              String reg = "insert into Recipe_Types (Date, Model, WashName, Rinse, Stone, Foam, Bleach, Enzyme, MoonWash, Dryer_1, Dryer_2, Dryer_3) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+//            pst = conn.prepareStatement(reg);
+//            pst.setString(1, dateString2l);
+//            pst.setString(2, modeloo);
+//            pst.setString(3, filenammm);
+//            
+//            pst.setString(4, "RINSE");
+//            pst.setString(5, stonn);
+//            pst.setString(6, fomm);
+//            pst.setString(7, hypoo);
+//            pst.setString(8, enzymm);
+//            pst.setString(9, moonn);
+//            pst.setString(10, dryr11);
+//            pst.setString(11, dryr22);
+//            pst.setString(12, dryr33);
+//            
+//            pst.execute(); 
+//            
+//            Notifications noti = Notifications.create();
+//            noti.title("Successful");
+//            noti.text("We have inserted the new type successfully.");
+//            noti.hideAfter(Duration.seconds(3));
+//            noti.position(Pos.CENTER);
+//            noti.showInformation();
+//            
+//            
+//            
+//        } catch (Exception exception) {
+//            exception.printStackTrace(); // Handle exceptions properly
+//        } finally {
+//            try {
+//                if (pst != null) pst.close();
+//            } catch (Exception exception) {
+//                exception.printStackTrace();
+//            }
+//        }
+//    }
+//    
+//    
+//    
+//    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//    
+//      
+//       String stages=null;
+//       int bathnumzzz=0;
+//       String modu,comment;
+//    
+//        int ds=1;
+//                            org.jsoup.nodes.Document docyi = Jsoup.parse(code.getText());
+//                            for (Element table : docyi.select("table")) {
+//                            for (Element row : table.select("tr")) {
+//                            Elements tds = row.select("td");
+//                            if (tds.get(3).text().contains("/")||tds.get(3).text().contains("\\")||tds.get(3).text().isEmpty()||tds.get(3).text().contains("TEMP")||tds.get(3).text().contains("OPERATOR")||tds.get(3).text().contains("temp")||tds.get(3).text().contains("operator")/*||tds.get(3).text().contains("extract")||tds.get(3).text().contains("EXTRACT")||tds.get(3).text().contains("extraction")||tds.get(3).text().contains("EXTRACTION")*/||tds.get(3).text().matches("[0-9]+")||tds.get(3).text().contains("REMOV")||tds.get(3).text().contains("REMOVE")||tds.get(3).text().contains("BATH")||tds.get(3).text().contains("SAME")||tds.get(3).text().contains("PATH")||tds.get(3).text().contains("SAM")||tds.get(3).text().contains("RPM")||tds.get(3).text().contains("KG")||tds.get(3).text().contains("PCS")||tds.get(3).text().contains("DRAIN")||tds.get(3).text().contains("RIMOV")||tds.get(3).text().contains("RIMOVE")) {}
+//                            else {
+//                            String tempo=tds.get(3).text();
+//                            if (tempo.contains("EXTRACT")||tempo.contains("Extract")||tempo.contains("extract")) {
+//                               
+//                                stages=stages+"\n"+"WASHING "+Integer.toString(ds++);
+//                                
+//                            }
+//                            
+//                            else {
+//                                
+//                                stages=stages+"\n"+tempo;
+//                                
+//                            }
+//                            }
+//                            
+//
+//                           }}
+//             
+//        String arabicRegex = "[\\u0600-\\u06FF]+";
+//        Pattern pattern = Pattern.compile(arabicRegex);
+//        
+//        Matcher matcher = pattern.matcher(stages + "");
+//        String modifiedLine = matcher.replaceAll("\n");
+//        String lone = modifiedLine.replace("null", "\n");
+//        
+//        StringBuilder result = new StringBuilder();
+//        String[] lines = lone.split("\n");
+//        int nonEmptyCount = 0;
+//        // Count non-empty lines to handle the last one differently
+//        for (String line : lines) {
+//            if (!line.trim().isEmpty()) {
+//                nonEmptyCount++;
+//            }
+//        }
+//        
+//        int currentNonEmpty = 0;
+//        for (String line : lines) {
+//            if (!line.trim().isEmpty()) {
+//                currentNonEmpty++;
+//                result.append(line);
+//                // Append " - " only if it's not the last non-empty line
+//                if (currentNonEmpty < nonEmptyCount) {
+//                    result.append(" - ");
+//                }
+//            }
+//        }                                   
+//                            
+//      procccc=result.toString();         
+//        
+//        // Save To DB Here
+//
+//    String fannn = "";
+//    
+//    try {
+//        String sql0 = "select * from Recipe_Processes where WashName = ? and Model = ?";
+//        pst = conn.prepareStatement(sql0);
+//        pst.setString(1, filenammm);
+//        pst.setString(2, modeloo);
+//        rs = pst.executeQuery();                    
+//        
+//        if (rs.next()) {                        
+//            fannn = "found";   
+//        } else {
+//            fannn = "not_found";   
+//        }
+//        
+//    } catch (Exception exception) {
+//        exception.printStackTrace(); // Handle exceptions properly
+//    } finally {
+//        try {
+//            if (rs != null) rs.close();
+//            if (pst != null) pst.close();     
+//        } catch (Exception exception) {
+//            exception.printStackTrace(); // Handle exceptions properly
+//        }
+//    }
+//
+//    if (fannn.equals("found")) {
+//        try {
+//            String sqlp = "update Recipe_Processes set Date = ?, Model = ?, WashName = ?, Processes = ? where WashName = ? and Model = ?";
+//            pst = conn.prepareStatement(sqlp);
+//            pst.setString(1, dateString2l);
+//            pst.setString(2, modeloo);
+//            pst.setString(3, filenammm);
+//            pst.setString(4, procccc);
+//            pst.setString(5, filenammm); // WHERE clause parameters
+//            pst.setString(6, modeloo);
+//            pst.execute();
+//            
+//            Notifications noti = Notifications.create();
+//            noti.title("Successful");
+//            noti.text("We have updated the processes successfully.");
+//            noti.hideAfter(Duration.seconds(3));
+//            noti.position(Pos.CENTER);
+//            noti.showInformation();
+//            
+//        } catch (Exception exception) {
+//            exception.printStackTrace(); // Handle exceptions properly
+//        } finally {
+//            try {
+//                if (pst != null) pst.close();
+//            } catch (Exception exception) {
+//                exception.printStackTrace();
+//            }
+//        }
+//    } else if (fannn.equals("not_found")) {
+//        try {                            
+//            String reg = "insert into Recipe_Processes (Date, Model, WashName, Processes) values (?, ?, ?, ?)";
+//            pst = conn.prepareStatement(reg);
+//            pst.setString(1, dateString2l);
+//            pst.setString(2, modeloo);
+//            pst.setString(3, filenammm);
+//            pst.setString(4, procccc);
+//            pst.execute(); 
+//            
+//            Notifications noti = Notifications.create();
+//            noti.title("Successful");
+//            noti.text("We have inserted the new processes successfully.");
+//            noti.hideAfter(Duration.seconds(3));
+//            noti.position(Pos.CENTER);
+//            noti.showInformation();
+//            
+//        } catch (Exception exception) {
+//            exception.printStackTrace(); // Handle exceptions properly
+//        } finally {
+//            try {
+//                if (pst != null) pst.close();
+//            } catch (Exception exception) {
+//                exception.printStackTrace();
+//            }
+//        }
+//    }
+//        
+//    
+//    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//    
+//   //Add Here//
+//   
+//   
+//   ///////////////////////ooooooooooooooooooooooo////////////////////////////////////////////////////   
+//                      
+//sumz=0.0;
+//ally=0.0;
+//
+//                            org.jsoup.nodes.Document docyp = Jsoup.parse(code.getText());
+//                            for (Element table : docyp.select("table")) {
+//                            for (Element row : table.select("tr")) {
+//                            Elements tds = row.select("td");
+//                            
+//                            
+//                            if (tds.get(7).text().contains("new stone")||tds.get(7).text().contains("New Stone")||tds.get(7).text().contains("NEW STONE")||tds.get(7).text().contains("NEW STON")||tds.get(7).text().contains("new ston")||tds.get(7).text().contains("now ston")||tds.get(7).text().contains("now stone")||tds.get(7).text().contains("NOW STON")||tds.get(7).text().contains("NOW STONE")) {
+//                                
+//                                 
+//                                stonny=tds.get(5).text().toString();
+//                                sto=Double.parseDouble(stonny);
+//                                sumz=sumz+sto;
+//                                
+//                            }
+//                            
+//                             else {
+//                               
+//                                sumz=sumz;
+//                                
+//                            }
+//                            
+//                            ally=(sumz/2)*25;
+//                            finall=Double.toString(ally);
+//                            
+//                           }}
+//                       
+//                            
+//    // Save To DB Here
+//    Date currentDate1 = GregorianCalendar.getInstance().getTime();
+//    DateFormat df1 = DateFormat.getDateInstance();
+//    String dateString1 = df1.format(currentDate1);
+//    Date d1 = new Date();
+//    SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
+//    String timeString1 = sdf1.format(d1);
+//    SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+//    String dateString2 = sdf2.format(d1);
+//
+//    String fannm = "";
+//    
+//    try {
+//        String sql0 = "select * from GetterStone where Name = ? and Model = ?";
+//        pst = conn.prepareStatement(sql0);
+//        pst.setString(1, filenammm);
+//        pst.setString(2, modeloo);
+//        rs = pst.executeQuery();                    
+//        
+//        if (rs.next()) {                        
+//            fannm = "found";   
+//        } else {
+//            fannm = "not_found";   
+//        }
+//        
+//    } catch (Exception exception) {
+//        exception.printStackTrace(); // Handle exceptions properly
+//    } finally {
+//        try {
+//            if (rs != null) rs.close();
+//            if (pst != null) pst.close();     
+//        } catch (Exception exception) {
+//            exception.printStackTrace(); // Handle exceptions properly
+//        }
+//    }
+//    
+//    
+//
+//    if (fannm.equals("found")) {
+//        try {
+//            String sqlp = "update GetterStone set Date = ?, Model = ?, Name = ?, Stone = ? where Name = ? and Model = ?";
+//            pst = conn.prepareStatement(sqlp);
+//            pst.setString(1, dateString2);
+//            pst.setString(2, modeloo);
+//            pst.setString(3, filenammm);
+//            pst.setString(4, finall);
+//            pst.setString(5, filenammm); // WHERE clause parameters
+//            pst.setString(6, modeloo);
+//            pst.execute();
+//            
+//            Notifications noti = Notifications.create();
+//            noti.title("Successful");
+//            noti.text("We have updated the stone successfully.");
+//            noti.hideAfter(Duration.seconds(3));
+//            noti.position(Pos.CENTER);
+//            noti.showInformation();
+//            
+//        } catch (Exception exception) {
+//            exception.printStackTrace(); // Handle exceptions properly
+//        } finally {
+//            try {
+//                if (pst != null) pst.close();
+//            } catch (Exception exception) {
+//                exception.printStackTrace();
+//            }
+//        }
+//    } else if (fannm.equals("not_found")) {
+//        try {                            
+//            String reg = "insert into GetterStone (Date, Model, Name, Stone) values (?, ?, ?, ?)";
+//            pst = conn.prepareStatement(reg);
+//            pst.setString(1, dateString2);
+//            pst.setString(2, modeloo);
+//            pst.setString(3, filenammm);
+//            pst.setString(4, finall);
+//            pst.execute(); 
+//            
+//            Notifications noti = Notifications.create();
+//            noti.title("Successful");
+//            noti.text("We have inserted the new stone successfully.");
+//            noti.hideAfter(Duration.seconds(3));
+//            noti.position(Pos.CENTER);
+//            noti.showInformation();
+//            
+//        } catch (Exception exception) {
+//            exception.printStackTrace(); // Handle exceptions properly
+//        } finally {
+//            try {
+//                if (pst != null) pst.close();
+//            } catch (Exception exception) {
+//                exception.printStackTrace();
+//            }
+//        }
+//    }
+//    
+//
+//    
+//    
+//    ///////////////////////////////llllllllllllllllllll/////////////////////////////////////////////
+//      
+////   String gfff = code.getText();
+////   System.out.println(gfff);
+////
+////    Map<String, Object> change = new LinkedHashMap<>();
+////    change.put("type", "edit");
+////    change.put("row", 0);
+////    change.put("column", 0);
+////    change.put("oldValue", ""); // القيمة القديمة لو عندك
+////    change.put("newValue", gfff);
+////    List<Map<String, Object>> changes = new ArrayList<>();
+////    changes.add(change);
+////    saveToHistory(changes);
+////
+////    code.clear();
+//    
+//    
+//    
+//// النص القديم قبل التعديل – لو عندك نسخة محفوظة منه
+//String oldContent = originalltextt; // أو حمّله من آخر نسخة محفوظة مثلاً
+//// النص الجديد بعد التعديل
+//String newContent = code.getText();
+//// احسب التغييرات الفعلية بين النصين
+//List<Map<String, Object>> changes = computeChanges(oldContent, newContent);
+//// لو مفيش تغييرات، ما تحفظش حاجة
+//if (!changes.isEmpty()) {
+//    saveToHistory(changes);
 //}
 //code.clear();
 //
-//// إعداد بيانات QR
-//Date d = new Date();
-//SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-//String dateString = sdf.format(d);
-//
-//String programmerName = "Ahmed Elkady.";
-//String companyName = "Kadysoft Ltd.";
-//String factoryName = "T&C Garments.";
-//String recipeName = recipe + ".";
-//String clientName = model + ".";
-//int qty = Integer.parseInt(pecoco);
-//String lastEditorName = user + ".";
-//String date = dateString + ".";
-////String repolink = "https://progkady.github.io/RecipeBrowser/";
-//String repolink = "https://progkady.github.io/RecipesStore/";
-//double pcsCost = onegar;
-//
-//String qrText = "★ Recipe Details ★\n" +
-//        "-------------------------\n" +
-//        "• Programmer : " + programmerName + "\n" +
-//        "• Developer : " + companyName + "\n" +
-//        "• Factory : " + factoryName + "\n" +
-//        "• Recipe : " + recipeName + "\n" +
-//        "• Customer : " + clientName + "\n" +
-//        "• Quantity : " + qty + "\n" +
-//        "• Editor Name : " + lastEditorName + "\n" +
-//        "• Last Update : " + date + "\n" +
-//        "• Pcs Cost : " + pcsCost + " $\n\n" +
-//        "• Recipes Link : " + repolink + "\n" +
-//        "Thanks For Using Receta From Kadysoft Ltd. ❤";
-//
-//// إنشاء QR بحجم كبير وواضح
-//int qrSize = 250; // حجم QR بالبكسل
-//BufferedImage qrImage = createPrintableQR(qrText, qrSize);
-//String qrBase64 = imageToBase64Png(qrImage);
-//
-//// قراءة HTML الأصلي
-//String htmlContent = readFile(link);
-//Document doc = Jsoup.parse(htmlContent);
-//doc.outputSettings().syntax(Document.OutputSettings.Syntax.html);
-//doc.outputSettings().charset("UTF-8");
-//
-//Element table = doc.select("table#EXTABLE").first();
-//if (table == null) {
-//    System.out.println("خطأ: الجدول #EXTABLE مش موجود!");
-//    return;
-//}
 //
 //
+//
+//    
+//    
+////    String gffft = code.getText();
+////    
+////    System.out.println();
+////    System.out.println();
+////    System.out.println();System.out.println();
+////    System.out.println();
+////    System.out.println();System.out.println();
+////    System.out.println();
+////    System.out.println();
+////    System.out.println();
+////    
+////    
+////    
+////    
+////   
+////    System.out.println(gffft+"hello");
+//    
+//
+//
+//Platform.runLater(() -> {
+//    try {
+//        //////////////////////////////////////////End Save////////////////////////////////////////
+//
+//        // تنظيف الكود القديم
+//        code.clear();
+//        // قراءة الملف وفك التشفير
+//        
+//        
+//    ////////////////////////////////////////////////////////////
+//    
+//
+////    String longKey;
+////    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+////        longKey = cxsd.readLine();
+////    }
+////    if (longKey == null || longKey.trim().isEmpty()) {
+////        Notifications noti = Notifications.create();
+////        noti.title("Fatal Error!");
+////        noti.text("java.dat is empty!");
+////        noti.position(Pos.CENTER);
+////        noti.hideAfter(Duration.seconds(4));
+////        noti.showError();
+////        return;
+////    }
+////    String resultx = KeyDecoder.extractData(longKey.trim());
+////    if (linko == null) {
+////        Notifications noti = Notifications.create();
+////        noti.title("Fatal Error!");
+////        noti.text("Choose file first!");
+////        noti.position(Pos.CENTER);
+////        noti.hideAfter(Duration.seconds(4));
+////        noti.showError();
+////        return;
+////    }
+////    String input = linko;
+////    File originalFile = new File(input);
+////    //Add backup here
+////    File backupFolder = new File("D:\\All_Recipessss\\Backup");
+////    if (!backupFolder.exists()) {
+////        backupFolder.mkdirs();
+////    }
+////    String backupFileName = originalFile.getName() + ".bak";
+////    File backupFile = new File(backupFolder, backupFileName);
+////    try {
+////        java.nio.file.Files.copy(originalFile.toPath(), 
+////                                backupFile.toPath(), 
+////                                java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+////        System.out.println("✅ Backup created / updated: " + backupFile.getAbsolutePath());
+////    } catch (Exception backupEx) {
+////        System.out.println("⚠️ Warning: Failed to create backup - " + backupEx.getMessage());
+////    }
+//    // =================================================
+//    
+////    String tempOutput = System.getProperty("user.home")+"\\"+Paths.get(linko).getFileName().toString()+ ".tmp";
+////    System.out.println("Decrypting with password: " + resultx); // للتصحيح
+////    FileDecryptor.decrypt(input, tempOutput, resultx);
+//    
+//
+//
+//    ////////////////////////////////////////////////////////////
+//        
+//        
+////        InputStream inputinstream = new FileInputStream(tempOutput);
+////        BufferedReader bi = new BufferedReader(new InputStreamReader(inputinstream, "UTF-8"));
+////        String lo;
+////        while ((lo = bi.readLine()) != null) {
+////            code.appendText("\n" + lo
+////                    .replace("ﬦ", "A").replace("ﬧ", "B").replace("ﬨ", "C").replace("﬩", "D").replace("שׁ", "E")
+////                    .replace("שׂ", "F").replace("שּׁ", "G").replace("שּׂ", "H").replace("אַ", "I").replace("אָ", "J")
+////                    .replace("אּ", "K").replace("בּ", "L").replace("גּ", "M").replace("דּ", "N").replace("הּ", "O")
+////                    .replace("וּ", "P").replace("זּ", "Q").replace("טּ", "R").replace("יּ", "S").replace("ךּ", "T")
+////                    .replace("כּ", "U").replace("לּ", "V").replace("מּ", "W").replace("נּ", "X").replace("סּ", "Y")
+////                    .replace("ףּ", "Z").replace("פּ", "0").replace("צּ", "1").replace("קּ", "2").replace("רּ", "3")
+////                    .replace("שּ", "4").replace("תּ", "5").replace("וֹ", "6").replace("בֿ", "7").replace("כֿ", "8")
+////                    .replace("פֿ", "9").replace("&NBSP;", ""));
+////        }
+////        bi.close();
+//
+//        
+//        
+//        
+//        try { 
+////    // =========================================
+////    // كتابة البيانات الجديدة داخل الملف المؤقت
+////    // =========================================
+////    OutputStream instream = new FileOutputStream(tempOutput);
+////    pw = new PrintWriter( new OutputStreamWriter(instream, "UTF-8"));
+////    String pathtosignature="file://"+NewDir.file_dirrrrr+"\\Mr_Muhammet.png";
+////    String modely=model;
+////    pw.println("<!DOCTYPE html>\n<html lang=\"ar\">\n<head>\n<title>Kadysoft</title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>td {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}\ntable {\nheight:5px;\nmax-width:100%;\nheight:100%;\nwhite-space:nowrap;\n}\ntr {\nheight:5px;\nmax-width:100%;\nwhite-space:nowrap;\n}"
+////    + ""
+////    + ""
+////    + ""
+////    + "/* Centered Watermark */\n" +
+////    "    .watermark {\n" +
+////    "      position: fixed;\n" +
+////    "      top: 50%;\n" +
+////    "      left: 50%;\n" +
+////    "      transform: translate(-50%, -50%) rotate(-45deg);\n" +
+////    "      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
+////    "      background-repeat: no-repeat;\n" +
+////    "      background-size: contain;\n" +
+////    "      width: 300px;\n" +
+////    "      height: 200px;\n" +
+////    "      opacity: 0.3;\n" +
+////    "      pointer-events: none;\n" +
+////    "      z-index: 1000;\n" +
+////    "    }\n" +
+////    "    /* Repeated Watermark */\n" +
+////    "    .watermark-repeated {\n" +
+////    "      position: fixed;\n" +
+////    "      top: 0;\n" +
+////    "      left: 0;\n" +
+////    "      width: 100%;\n" +
+////    "      height: 100%;\n" +
+////    "      background-image: url('logo.png'); /* Replace with the path to T & C Garments logo */\n" +
+////    "      background-repeat: repeat;\n" +
+////    "      background-size: 300px 200px;\n" +
+////    "      opacity: 0.2;\n" +
+////    "      pointer-events: none;\n" +
+////    "      z-index: 1000;\n" +
+////    "    }"
+////    + ""
+////    + "</STYLE></HEAD>\n" +
+////    "<BODY><CENTER>\n"
+////    + "<div class=\"watermark\"></div>" 
+////    + ""
+////    + "\n\n");
+////    pw.println("<!-- Creating Recipe From Kadysoft Ltd.-->\n\n");
+////    pw.println(roraa);
+////    pw.println("\n\n</center>\n</body>\n</html>");
+////    pw.println("<b id=\"signname\">Mr_Muhammet Signature: "+"</b><img id=\"signimage\" src=\""+pathtosignature+"\" width=\"300\" height=\"90\" alt=\"Developed By Kadysoft Ltd (Ahmed Elkady).\" style=\"border-color:black;border-width:10px;\">");   
+////    if (roraa.contains("background-image:")) {     
+////    }
+////    else {
+////    pw.println("\n\n<style>\n" +
+////    "body {\n" +
+////    "  background-image: url(\""+modely+".bmp\");\n" +
+////    "  background-position: center;\n" +
+////    "  height: 170px;\n" +
+////    "background-position-x:550px;"+
+////    "  background-repeat: no-repeat;\n" +
+////    "  background-size: 120px 90px;\n" +
+////    "}\n" +
+////    "</style>");             
+////    }
+//    
+//    
+////    // إعداد بيانات QR
+////        Date d = new Date();
+////        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+////        String dateString = sdf.format(d);
+////        String programmerName = "Ahmed Elkady.";
+////        String companyName = "Kadysoft Ltd.";
+////        String factoryName = "T&C Garments.";
+////        String recipeName = recipe + ".";
+////        String clientName = model + ".";
+////        int qty = Integer.parseInt(pecoco);
+////        String lastEditorName = user + ".";
+////        String date = dateString + ".";
+////        String repolink = "https://progkady.github.io/RecipesStore/";
+////        double pcsCost = onegar;
+////
+////        String qrText = "★ Recipe Details ★\n" +
+////                "-------------------------\n" +
+////                "• Programmer : " + programmerName + "\n" +
+////                "• Developer : " + companyName + "\n" +
+////                "• Factory : " + factoryName + "\n" +
+////                "• Recipe : " + recipeName + "\n" +
+////                "• Customer : " + clientName + "\n" +
+////                "• Quantity : " + qty + "\n" +
+////                "• Editor Name : " + lastEditorName + "\n" +
+////                "• Last Update : " + date + "\n" +
+////                "• Pcs Cost : " + pcsCost + " $\n\n" +
+////                "• Recipes Link : " + repolink + "\n" +
+////                "Thanks For Using Receta From Kadysoft Ltd. ❤";
+////
+////        // إنشاء QR بحجم كبير وواضح
+////        int qrSize = 250;
+////        BufferedImage qrImage = createPrintableQR(qrText, qrSize);
+////        String qrBase64 = imageToBase64Png(qrImage);
+////
+////        // قراءة HTML الأصلي
+////        String htmlContent = readFile(tempOutput);
+////        Document doc = Jsoup.parse(htmlContent);
+////        doc.outputSettings().syntax(Document.OutputSettings.Syntax.html);
+////        doc.outputSettings().charset("UTF-8");
+////
+////        Element table = doc.select("table#EXTABLE").first();
+////        if (table == null) {
+////            System.out.println("خطأ: الجدول #EXTABLE مش موجود!");
+////            return;
+////        }
+////
+////        // الحصول على الصفوف
+////        Elements rows = table.select("tbody > tr");
+////        int mergeRows = Math.min(7, rows.size()); // دمج 7 صفوف
+////        int qrColumnIndex = 8; // العمود رقم 9 (index 8)
+////
+////        // الصف الأول
+////        Element firstRow = rows.get(0);
+////        Elements cells = firstRow.select("td");
+////        if (cells.size() <= qrColumnIndex) {
+////            System.out.println("العمود رقم 9 مش موجود في الصف الأول!");
+////            return;
+////        }
+////
+////        // خلية QR Code
+////        Element qrCell = cells.get(qrColumnIndex);
+////
+////        // فحص وجود QR CODE قديم
+////        Element oldQrImg = qrCell.selectFirst("img[src^=data:image]");
+////
+////        // HTML الخاص بالـ QR الجديد (مع الـ alt الطويل)
+////        String qrHtml =
+////    "<img src=\"data:image/png;base64," + qrBase64 + "\" " +
+////    "alt=\"★ Recipe Details ★&#10;" +
+////    "-------------------------&#10;" +
+////    "• Programmer : " + programmerName + "&#10;" +
+////    "• Developer : " + companyName + "&#10;" +
+////    "• Factory : " + factoryName + "&#10;" +
+////    "• Recipe : " + recipeName + "&#10;" +
+////    "• Customer : " + clientName + "&#10;" +
+////    "• Quantity : " + qty + "&#10;" +
+////    "• Editor Name : " + lastEditorName + "&#10;" +
+////    "• Last Update : " + date + "&#10;" +
+////    "• Pcs Cost : " + pcsCost + " $&#10;&#10;" +
+////    "• Recipes Link : " + repolink + "&#10;" +
+////    "Thanks For Using Receta From Kadysoft Ltd. ❤\" " +
+////    "style=\"width:" + qrSize + "px !important; height:" + qrSize + "px !important; " +
+////    "max-width:none !important; max-height:none !important; border:10px solid white; " +
+////    "box-shadow:0 0 0 4pt black;\"/>";
+////
+////        // استبدال أو إضافة QR
+////        if (oldQrImg != null) {
+////            // موجود QR قديم → نستبدل الـ HTML فقط
+////            qrCell.html(qrHtml);
+////        } else {
+////            // مفيش QR → نضيف الـ rowspan والستايل والـ HTML
+////            qrCell.attr("rowspan", String.valueOf(mergeRows))
+////                  .attr("style", "border: 3px double #000; padding: 10px; background: #ffffff; " +
+////                                 "text-align: center; vertical-align: middle;")
+////                  .html(qrHtml);
+////        }
+////
+////        // === التعديل المهم هنا ===
+////        // إزالة الخلية من الصفوف الأخرى باستخدام :nth-child(9) بدل الـ index
+////        for (int i = 1; i < mergeRows; i++) {
+////            Element row = rows.get(i);
+////            Element cellToRemove = row.selectFirst("td:nth-child(9)");
+////            if (cellToRemove != null) {
+////                cellToRemove.remove();
+////            }
+////        }
+////
+////        // حفظ HTML بعد دمج QR
+////    writeFile(tempOutput, doc.outerHtml());
+//    //pw.close();
+//    //code.clear();
+//    // =========================================
+//    // قراءة الملف المؤقت وعمل تشفير الحروف
+//    // =========================================
+////    StringBuilder encryptedText = new StringBuilder();
+////    BufferedReader biu = new BufferedReader(
+////    new InputStreamReader(
+////    new FileInputStream(tempOutput),
+////    "UTF-8"));
+////    String lou;
+////    while ((lou = biu.readLine()) != null) {
+////        
+////        if (lou.contains("data:image") || lou.contains("base64,")) {
+////                encryptedText.append("\n" + lou);
+////                continue;
+////            }
+////        
+////        
+////    encryptedText.append(
+////    lou
+////    .replace("A","ﬦ")
+////    .replace("B","ﬧ")
+////    .replace("C","ﬨ")
+////    .replace("D","﬩")
+////    .replace("E","שׁ")    
+////    .replace("F","שׂ")        
+////    .replace("G","שּׁ")         
+////    .replace("H","שּׂ")         
+////    .replace("I","אַ")         
+////    .replace("J","אָ")         
+////    .replace("K","אּ")         
+////    .replace("L","בּ")         
+////    .replace("M","גּ")         
+////    .replace("N","דּ")         
+////    .replace("O","הּ")         
+////    .replace("P","וּ")         
+////    .replace("Q","זּ")         
+////    .replace("R","טּ")         
+////    .replace("S","יּ")         
+////    .replace("T","ךּ")         
+////    .replace("U","כּ")         
+////    .replace("V","לּ")
+////    .replace("W","מּ")         
+////    .replace("X","נּ")         
+////    .replace("Y","סּ")         
+////    .replace("Z","ףּ") 
+////    .replace("0","פּ")         
+////    .replace("1","צּ")         
+////    .replace("2","קּ")         
+////    .replace("3","רּ")         
+////    .replace("4","שּ")         
+////    .replace("5","תּ")         
+////    .replace("6","וֹ")         
+////    .replace("7","בֿ")         
+////    .replace("8","כֿ")
+////    .replace("9","פֿ")
+////    .replace("a","ﬦ")
+////    .replace("b","ﬧ")
+////    .replace("c","ﬨ")
+////    .replace("d","﬩")
+////    .replace("e","שׁ")    
+////    .replace("f","שׂ")        
+////    .replace("g","שּׁ")         
+////    .replace("h","שּׂ")         
+////    .replace("i","אַ")         
+////    .replace("j","אָ")         
+////    .replace("k","אּ")         
+////    .replace("l","בּ")         
+////    .replace("m","גּ")         
+////    .replace("n","דּ")         
+////    .replace("o","הּ")         
+////    .replace("p","וּ")         
+////    .replace("q","זּ")         
+////    .replace("r","טּ")         
+////    .replace("s","יּ")         
+////    .replace("t","ךּ")         
+////    .replace("u","כּ")         
+////    .replace("v","לּ")
+////    .replace("w","מּ")         
+////    .replace("x","נּ")         
+////    .replace("y","סּ")         
+////    .replace("z","ףּ")
+////    );
+////    encryptedText.append("\n");
+////    }
+////    biu.close();
+////    
+////    
+//    // =========================================
+//    // إعادة كتابة النص المشفر داخل temp
+//    // =========================================
+////    PrintWriter pw2 = new PrintWriter(
+////    new OutputStreamWriter(
+////    new FileOutputStream(tempOutput),
+////    "UTF-8"));
+////    pw2.print(encryptedText.toString());
+////    pw2.close();
+////    // =========================================
+////    // تشفير بالباسورد
+////    // =========================================
+////    String longKeyi;
+////    try (BufferedReader reader =
+////    new BufferedReader(
+////    new FileReader("lib\\java.dat"))) {
+////    longKeyi = reader.readLine();
+////    }
+////    String password =
+////    KeyDecoder.extractData(longKeyi.trim());
+////    String encryptedTemp =
+////    link + ".enc";
+////    FileEncryptor.encrypt(
+////    link,
+////    encryptedTemp,
+////    password);
+//    
+//    
+//    // =========================================
+//    // اختيار مكان الحفظ
+//    // =========================================
+//    
+//    
+////    String savePath =
+////    NewDir.file_dir
+////    + "\\"
+////    + stage
+////    + "\\"
+////    + model
+////    + "\\"
+////    + recipe
+////    + ".ks";
+////File finalFile = new File(savePath);
+////finalFile.getParentFile().mkdirs();
+////java.nio.file.Files.move(
+////        new File(encryptedTemp).toPath(),
+////        finalFile.toPath(),
+////        java.nio.file.StandardCopyOption.REPLACE_EXISTING
+////);
+//    
+//    // =========================================
+//    // حذف الملفات المؤقتة
+//    // =========================================
+////    new File(link).delete();
+////    File encTempFile = new File(encryptedTemp);
+////    if (encTempFile.exists()) {
+////    encTempFile.delete();
+////    }
+//    // =========================================
+//    // نجاح
+//    // =========================================
+////    Notifications noti = Notifications.create();
+////    noti.title("Success!");
+////    noti.text("File saved and encrypted successfully.");
+////    noti.position(Pos.CENTER);
+////    noti.hideAfter(Duration.seconds(4));
+////    noti.showInformation();
+////    
+////    
+//    
+//    Git.gitCommands();
+//
+//    }
+//    catch (Exception ex) {
+//    ex.printStackTrace();
+//    Notifications noti = Notifications.create();
+//    noti.title("GIT Failed!");
+//    noti.text("Error while saving GIT file.");
+//    noti.position(Pos.CENTER);
+//    noti.hideAfter(Duration.seconds(5));
+//    noti.showError();
+//    }
+//        
+//        
+//        
+//        
+//        
+//        
+//        
+//        
+//////        // كتابة الملف بعد فك التشفير
+//////        String gf = code.getText();
+//////        try (PrintWriter pwe = new PrintWriter(new OutputStreamWriter(new FileOutputStream(link), "UTF-8"))) {
+//////            pwe.println(gf);
+//////        }
+//////        code.clear();
+////
+////        // إعداد بيانات QR
+////        Date d = new Date();
+////        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+////        String dateString = sdf.format(d);
+////        String programmerName = "Ahmed Elkady.";
+////        String companyName = "Kadysoft Ltd.";
+////        String factoryName = "T&C Garments.";
+////        String recipeName = recipe + ".";
+////        String clientName = model + ".";
+////        int qty = Integer.parseInt(pecoco);
+////        String lastEditorName = user + ".";
+////        String date = dateString + ".";
+////        String repolink = "https://progkady.github.io/RecipesStore/";
+////        double pcsCost = onegar;
+////
+////        String qrText = "★ Recipe Details ★\n" +
+////                "-------------------------\n" +
+////                "• Programmer : " + programmerName + "\n" +
+////                "• Developer : " + companyName + "\n" +
+////                "• Factory : " + factoryName + "\n" +
+////                "• Recipe : " + recipeName + "\n" +
+////                "• Customer : " + clientName + "\n" +
+////                "• Quantity : " + qty + "\n" +
+////                "• Editor Name : " + lastEditorName + "\n" +
+////                "• Last Update : " + date + "\n" +
+////                "• Pcs Cost : " + pcsCost + " $\n\n" +
+////                "• Recipes Link : " + repolink + "\n" +
+////                "Thanks For Using Receta From Kadysoft Ltd. ❤";
+////
+////        // إنشاء QR بحجم كبير وواضح
+////        int qrSize = 250;
+////        BufferedImage qrImage = createPrintableQR(qrText, qrSize);
+////        String qrBase64 = imageToBase64Png(qrImage);
+////
+////        // قراءة HTML الأصلي
+////        String htmlContent = readFile(link);
+////        Document doc = Jsoup.parse(htmlContent);
+////        doc.outputSettings().syntax(Document.OutputSettings.Syntax.html);
+////        doc.outputSettings().charset("UTF-8");
+////
+////        Element table = doc.select("table#EXTABLE").first();
+////        if (table == null) {
+////            System.out.println("خطأ: الجدول #EXTABLE مش موجود!");
+////            return;
+////        }
+////
+////        // الحصول على الصفوف
+////        Elements rows = table.select("tbody > tr");
+////        int mergeRows = Math.min(7, rows.size()); // دمج 7 صفوف
+////        int qrColumnIndex = 8; // العمود رقم 9 (index 8)
+////
+////        // الصف الأول
+////        Element firstRow = rows.get(0);
+////        Elements cells = firstRow.select("td");
+////        if (cells.size() <= qrColumnIndex) {
+////            System.out.println("العمود رقم 9 مش موجود في الصف الأول!");
+////            return;
+////        }
+////
+////        // خلية QR Code
+////        Element qrCell = cells.get(qrColumnIndex);
+////
+////        // فحص وجود QR CODE قديم
+////        Element oldQrImg = qrCell.selectFirst("img[src^=data:image]");
+////
+////        // HTML الخاص بالـ QR الجديد (مع الـ alt الطويل)
+////        String qrHtml =
+////    "<img src=\"data:image/png;base64," + qrBase64 + "\" " +
+////    "alt=\"★ Recipe Details ★&#10;" +
+////    "-------------------------&#10;" +
+////    "• Programmer : " + programmerName + "&#10;" +
+////    "• Developer : " + companyName + "&#10;" +
+////    "• Factory : " + factoryName + "&#10;" +
+////    "• Recipe : " + recipeName + "&#10;" +
+////    "• Customer : " + clientName + "&#10;" +
+////    "• Quantity : " + qty + "&#10;" +
+////    "• Editor Name : " + lastEditorName + "&#10;" +
+////    "• Last Update : " + date + "&#10;" +
+////    "• Pcs Cost : " + pcsCost + " $&#10;&#10;" +
+////    "• Recipes Link : " + repolink + "&#10;" +
+////    "Thanks For Using Receta From Kadysoft Ltd. ❤\" " +
+////    "style=\"width:" + qrSize + "px !important; height:" + qrSize + "px !important; " +
+////    "max-width:none !important; max-height:none !important; border:10px solid white; " +
+////    "box-shadow:0 0 0 4pt black;\"/>";
+////
+////        // استبدال أو إضافة QR
+////        if (oldQrImg != null) {
+////            // موجود QR قديم → نستبدل الـ HTML فقط
+////            qrCell.html(qrHtml);
+////        } else {
+////            // مفيش QR → نضيف الـ rowspan والستايل والـ HTML
+////            qrCell.attr("rowspan", String.valueOf(mergeRows))
+////                  .attr("style", "border: 3px double #000; padding: 10px; background: #ffffff; " +
+////                                 "text-align: center; vertical-align: middle;")
+////                  .html(qrHtml);
+////        }
+////
+////        // === التعديل المهم هنا ===
+////        // إزالة الخلية من الصفوف الأخرى باستخدام :nth-child(9) بدل الـ index
+////        for (int i = 1; i < mergeRows; i++) {
+////            Element row = rows.get(i);
+////            Element cellToRemove = row.selectFirst("td:nth-child(9)");
+////            if (cellToRemove != null) {
+////                cellToRemove.remove();
+////            }
+////        }
+////
+////        // حفظ HTML بعد دمج QR
+////        writeFile(link, doc.outerHtml());
+////        code.clear();
+////
+////        // إعادة تشفير الملف
+////        InputStream inputinstreamn = new FileInputStream(link);
+////        BufferedReader bin = new BufferedReader(new InputStreamReader(inputinstreamn, "UTF-8"));
+////        String lon;
+////        while ((lon = bin.readLine()) != null) {
+////            if (lon.contains("data:image") || lon.contains("base64,")) {
+////                code.appendText("\n" + lon);
+////                continue;
+////            }
+////            String converted = lon
+////                    .replace("A","ﬦ").replace("B","ﬧ").replace("C","ﬨ").replace("D","﬩").replace("E","שׁ")
+////                    .replace("F","שׂ").replace("G","שּׁ").replace("H","שּׂ").replace("I","אַ").replace("J","אָ")
+////                    .replace("K","אּ").replace("L","בּ").replace("M","גּ").replace("N","דּ").replace("O","הּ")
+////                    .replace("P","וּ").replace("Q","זּ").replace("R","טּ").replace("S","יּ").replace("T","ךּ")
+////                    .replace("U","כּ").replace("V","לּ").replace("W","מּ").replace("X","נּ").replace("Y","סּ")
+////                    .replace("Z","ףּ")
+////                    .replace("0","פּ").replace("1","צּ").replace("2","קּ").replace("3","רּ").replace("4","שּ")
+////                    .replace("5","תּ").replace("6","וֹ").replace("7","בֿ").replace("8","כֿ").replace("9","פֿ")
+////                    .replace("a","ﬦ").replace("b","ﬧ").replace("c","ﬨ").replace("d","﬩").replace("e","שׁ")
+////                    .replace("f","שׂ").replace("g","שּׁ").replace("h","שּׂ").replace("i","אַ").replace("j","אָ")
+////                    .replace("k","אּ").replace("l","בּ").replace("m","גּ").replace("n","דּ").replace("o","הּ")
+////                    .replace("p","וּ").replace("q","זּ").replace("r","טּ").replace("s","יּ").replace("t","ךּ")
+////                    .replace("u","כּ").replace("v","לּ").replace("w","מּ").replace("x","נּ").replace("y","סּ")
+////                    .replace("z","ףּ");
+////            code.appendText("\n" + converted);
+////        }
+////        bin.close();
+////
+////        try (PrintWriter pwn = new PrintWriter(new OutputStreamWriter(new FileOutputStream(link), "UTF-8"))) {
+////            pwn.println(code.getText());
+////        }
+////        code.clear();
+////
+////        // Git operations
+////        
+////        Git.gitCommands();
+//        
+////        try {
+////            String repoPath = "X:\\Recipe_System\\Recipes";
+////            runCommand("git add .", repoPath);
+////            runCommand("git commit -m \"Update some data\"", repoPath);
+////            runCommand("git push", repoPath);
+////
+////            Notifications noti = Notifications.create();
+////            noti.title("Successful");
+////            noti.text("✔ Git operations completed successfully!");
+////            noti.position(Pos.CENTER);
+////            noti.show();
+////        } catch (Exception e) {
+////            e.printStackTrace();
+////        }
+//
+//    } catch (Exception r) {
+//        r.printStackTrace();
+//    }
+//});
+//
+//
+//    
+////
+////Platform.runLater( () -> {
+////        
+////        
+////try {
+////
+////    
+////       //////////////////////////////////////////End Save//////////////////////////////////////// 
+////       
+////   // تنظيف الكود القديم
+////code.clear();
+////
+////// قراءة الملف وفك التشفير
+////InputStream inputinstream = new FileInputStream(link);
+////BufferedReader bi = new BufferedReader(new InputStreamReader(inputinstream, "UTF-8"));
+////String lo;
+////while ((lo = bi.readLine()) != null) {
+////    code.appendText("\n" + lo
+////            .replace("ﬦ", "A").replace("ﬧ", "B").replace("ﬨ", "C").replace("﬩", "D").replace("שׁ", "E")
+////            .replace("שׂ", "F").replace("שּׁ", "G").replace("שּׂ", "H").replace("אַ", "I").replace("אָ", "J")
+////            .replace("אּ", "K").replace("בּ", "L").replace("גּ", "M").replace("דּ", "N").replace("הּ", "O")
+////            .replace("וּ", "P").replace("זּ", "Q").replace("טּ", "R").replace("יּ", "S").replace("ךּ", "T")
+////            .replace("כּ", "U").replace("לּ", "V").replace("מּ", "W").replace("נּ", "X").replace("סּ", "Y")
+////            .replace("ףּ", "Z").replace("פּ", "0").replace("צּ", "1").replace("קּ", "2").replace("רּ", "3")
+////            .replace("שּ", "4").replace("תּ", "5").replace("וֹ", "6").replace("בֿ", "7").replace("כֿ", "8")
+////            .replace("פֿ", "9").replace("&NBSP;", ""));
+////}
+////bi.close();
+////
+////// كتابة الملف بعد فك التشفير
+////String gf = code.getText();
+////try (PrintWriter pwe = new PrintWriter(new OutputStreamWriter(new FileOutputStream(link), "UTF-8"))) {
+////    pwe.println(gf);
+////}
+////code.clear();
+////
+////// إعداد بيانات QR
+////Date d = new Date();
+////SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+////String dateString = sdf.format(d);
+////
+////String programmerName = "Ahmed Elkady.";
+////String companyName = "Kadysoft Ltd.";
+////String factoryName = "T&C Garments.";
+////String recipeName = recipe + ".";
+////String clientName = model + ".";
+////int qty = Integer.parseInt(pecoco);
+////String lastEditorName = user + ".";
+////String date = dateString + ".";
+//////String repolink = "https://progkady.github.io/RecipeBrowser/";
+////String repolink = "https://progkady.github.io/RecipesStore/";
+////double pcsCost = onegar;
+////
+////String qrText = "★ Recipe Details ★\n" +
+////        "-------------------------\n" +
+////        "• Programmer : " + programmerName + "\n" +
+////        "• Developer : " + companyName + "\n" +
+////        "• Factory : " + factoryName + "\n" +
+////        "• Recipe : " + recipeName + "\n" +
+////        "• Customer : " + clientName + "\n" +
+////        "• Quantity : " + qty + "\n" +
+////        "• Editor Name : " + lastEditorName + "\n" +
+////        "• Last Update : " + date + "\n" +
+////        "• Pcs Cost : " + pcsCost + " $\n\n" +
+////        "• Recipes Link : " + repolink + "\n" +
+////        "Thanks For Using Receta From Kadysoft Ltd. ❤";
+////
+////// إنشاء QR بحجم كبير وواضح
+////int qrSize = 250; // حجم QR بالبكسل
+////BufferedImage qrImage = createPrintableQR(qrText, qrSize);
+////String qrBase64 = imageToBase64Png(qrImage);
+////
+////// قراءة HTML الأصلي
+////String htmlContent = readFile(link);
+////Document doc = Jsoup.parse(htmlContent);
+////doc.outputSettings().syntax(Document.OutputSettings.Syntax.html);
+////doc.outputSettings().charset("UTF-8");
+////
+////Element table = doc.select("table#EXTABLE").first();
+////if (table == null) {
+////    System.out.println("خطأ: الجدول #EXTABLE مش موجود!");
+////    return;
+////}
+////
+////
+//////Elements rows = table.select("tbody > tr");
+//////int mergeRows = Math.min(7, rows.size()); // دمج أول 8 صفوف
+//////int qrColumnIndex = 8; // العمود رقم 9
+//////
+//////Element firstRow = rows.get(0);
+//////Elements cells = firstRow.select("td");
+//////if (cells.size() <= qrColumnIndex) {
+//////    System.out.println("العمود رقم 9 مش موجود في الصف الأول!");
+//////    return;
+//////}
+//////
+//////// إدراج QR في العمود 9 مع CSS مناسب للطباعة
+//////Element qrCell = cells.get(qrColumnIndex);
+//////qrCell.attr("rowspan", String.valueOf(mergeRows))
+//////      .attr("style", "border: 3px double #000; padding: 10px; background: #ffffff; " +
+//////                     "text-align: center; vertical-align: middle;")
+//////      .html(
+//////        "<img src=\"data:image/png;base64," + qrBase64 + "\" " +
+//////        "alt=\"QR CODE, POWERED BY KADYSOFT LTD.\" " +
+//////        "style=\"width:" + qrSize + "px !important; height:" + qrSize + "px !important; " +
+//////        "max-width:none !important; max-height:none !important; border:10px solid white; " +
+//////        "box-shadow:0 0 0 4pt black;\"/>" +
+//////        "<br><br>" +
+//////        "<div style=\"font-weight: bold; font-size: 16pt; color: black; margin-top: 10px;\">" +
+//////        "Scan Me Now</div>"
+//////      );
+////
+////
+////
+////// --- الحصول على الصفوف ---
 ////Elements rows = table.select("tbody > tr");
-////int mergeRows = Math.min(7, rows.size()); // دمج أول 8 صفوف
+////int mergeRows = Math.min(7, rows.size()); // دمج 7 صفوف
 ////int qrColumnIndex = 8; // العمود رقم 9
 ////
+////// --- الصف الأول ---
 ////Element firstRow = rows.get(0);
 ////Elements cells = firstRow.select("td");
+////
 ////if (cells.size() <= qrColumnIndex) {
 ////    System.out.println("العمود رقم 9 مش موجود في الصف الأول!");
 ////    return;
 ////}
 ////
-////// إدراج QR في العمود 9 مع CSS مناسب للطباعة
+////// --- خلية QR Code ---
 ////Element qrCell = cells.get(qrColumnIndex);
-////qrCell.attr("rowspan", String.valueOf(mergeRows))
-////      .attr("style", "border: 3px double #000; padding: 10px; background: #ffffff; " +
-////                     "text-align: center; vertical-align: middle;")
-////      .html(
-////        "<img src=\"data:image/png;base64," + qrBase64 + "\" " +
-////        "alt=\"QR CODE, POWERED BY KADYSOFT LTD.\" " +
-////        "style=\"width:" + qrSize + "px !important; height:" + qrSize + "px !important; " +
-////        "max-width:none !important; max-height:none !important; border:10px solid white; " +
-////        "box-shadow:0 0 0 4pt black;\"/>" +
-////        "<br><br>" +
-////        "<div style=\"font-weight: bold; font-size: 16pt; color: black; margin-top: 10px;\">" +
-////        "Scan Me Now</div>"
-////      );
-//
-//
-//
-//// --- الحصول على الصفوف ---
-//Elements rows = table.select("tbody > tr");
-//int mergeRows = Math.min(7, rows.size()); // دمج 7 صفوف
-//int qrColumnIndex = 8; // العمود رقم 9
-//
-//// --- الصف الأول ---
-//Element firstRow = rows.get(0);
-//Elements cells = firstRow.select("td");
-//
-//if (cells.size() <= qrColumnIndex) {
-//    System.out.println("العمود رقم 9 مش موجود في الصف الأول!");
-//    return;
-//}
-//
-//// --- خلية QR Code ---
-//Element qrCell = cells.get(qrColumnIndex);
-//
-//// --- (1) فحص وجود QR CODE قديم ---
-//Element oldQrImg = qrCell.selectFirst("img[src^=data:image]");
-//
-//// --- (2) HTML الخاص بالـ QR الجديد ---
+////
+////// --- (1) فحص وجود QR CODE قديم ---
+////Element oldQrImg = qrCell.selectFirst("img[src^=data:image]");
+////
+////// --- (2) HTML الخاص بالـ QR الجديد ---
+//////String qrHtml =
+//////        "<img src=\"data:image/png;base64," + qrBase64 + "\" " +
+//////        "alt=\"QR CODE, POWERED BY KADYSOFT LTD.\" " +
+//////        "style=\"width:" + qrSize + "px !important; height:" + qrSize + "px !important; " +
+//////        "max-width:none !important; max-height:none !important; border:10px solid white; " +
+//////        "box-shadow:0 0 0 4pt black;\"/>";
+////
 ////String qrHtml =
-////        "<img src=\"data:image/png;base64," + qrBase64 + "\" " +
-////        "alt=\"QR CODE, POWERED BY KADYSOFT LTD.\" " +
-////        "style=\"width:" + qrSize + "px !important; height:" + qrSize + "px !important; " +
-////        "max-width:none !important; max-height:none !important; border:10px solid white; " +
-////        "box-shadow:0 0 0 4pt black;\"/>";
-//
-//String qrHtml =
-//    "<img src=\"data:image/png;base64," + qrBase64 + "\" " +
-//    "alt=\"★ Recipe Details ★\n" +
-//    "-------------------------\n" +
-//    "• Programmer : " + programmerName + "\n" +
-//    "• Developer : " + companyName + "\n" +
-//    "• Factory : " + factoryName + "\n" +
-//    "• Recipe : " + recipeName + "\n" +
-//    "• Customer : " + clientName + "\n" +
-//    "• Quantity : " + qty + "\n" +
-//    "• Editor Name : " + lastEditorName + "\n" +
-//    "• Last Update : " + date + "\n" +
-//    "• Pcs Cost : " + pcsCost + " $\n\n" +
-//    "• Recipes Link : " + repolink + "\n" +
-//    "Thanks For Using Receta From Kadysoft Ltd. ❤\" " +
-//    "style=\"width:" + qrSize + "px !important; height:" + qrSize + "px !important; " +
-//    "max-width:none !important; max-height:none !important; border:10px solid white; " +
-//    "box-shadow:0 0 0 4pt black;\"/>";
-//
-//// --- (3) استبدال QR الموجود لو موجود ---
-//if (oldQrImg != null) {
-//    // يستبدل الـ HTML فقط بدون تغيير الـ rowspan أو الستايل
-//    qrCell.html(qrHtml);
-//} else {
-//    // --- (4) إضافة QR جديد لو مفيش ---
-//    qrCell.attr("rowspan", String.valueOf(mergeRows))
-//          .attr("style", "border: 3px double #000; padding: 10px; background: #ffffff; " +
-//                         "text-align: center; vertical-align: middle;")
-//          .html(qrHtml);
-//}
-//
-//
-//// إزالة الخلية من الصفوف الأخرى
-//for (int i = 1; i < mergeRows; i++) {
-//    Element row = rows.get(i);
-//    Elements rowCells = row.select("td");
-//    if (rowCells.size() > qrColumnIndex) {
-//        rowCells.get(qrColumnIndex).remove();
+////    "<img src=\"data:image/png;base64," + qrBase64 + "\" " +
+////    "alt=\"★ Recipe Details ★\n" +
+////    "-------------------------\n" +
+////    "• Programmer : " + programmerName + "\n" +
+////    "• Developer : " + companyName + "\n" +
+////    "• Factory : " + factoryName + "\n" +
+////    "• Recipe : " + recipeName + "\n" +
+////    "• Customer : " + clientName + "\n" +
+////    "• Quantity : " + qty + "\n" +
+////    "• Editor Name : " + lastEditorName + "\n" +
+////    "• Last Update : " + date + "\n" +
+////    "• Pcs Cost : " + pcsCost + " $\n\n" +
+////    "• Recipes Link : " + repolink + "\n" +
+////    "Thanks For Using Receta From Kadysoft Ltd. ❤\" " +
+////    "style=\"width:" + qrSize + "px !important; height:" + qrSize + "px !important; " +
+////    "max-width:none !important; max-height:none !important; border:10px solid white; " +
+////    "box-shadow:0 0 0 4pt black;\"/>";
+////
+////// --- (3) استبدال QR الموجود لو موجود ---
+////if (oldQrImg != null) {
+////    // يستبدل الـ HTML فقط بدون تغيير الـ rowspan أو الستايل
+////    qrCell.html(qrHtml);
+////} else {
+////    // --- (4) إضافة QR جديد لو مفيش ---
+////    qrCell.attr("rowspan", String.valueOf(mergeRows))
+////          .attr("style", "border: 3px double #000; padding: 10px; background: #ffffff; " +
+////                         "text-align: center; vertical-align: middle;")
+////          .html(qrHtml);
+////}
+////
+////
+////// إزالة الخلية من الصفوف الأخرى
+////for (int i = 1; i < mergeRows; i++) {
+////    Element row = rows.get(i);
+////    Elements rowCells = row.select("td");
+////    if (rowCells.size() > qrColumnIndex) {
+////        rowCells.get(qrColumnIndex).remove();
+////    }
+////}
+////
+////// حفظ HTML بعد دمج QR
+////writeFile(link, doc.outerHtml());
+////code.clear();
+////
+////// إعادة تشفير الملف
+////InputStream inputinstreamn = new FileInputStream(link);
+////BufferedReader bin = new BufferedReader(new InputStreamReader(inputinstreamn, "UTF-8"));
+////String lon;
+////while ((lon = bin.readLine()) != null) {
+////    if (lon.contains("data:image") || lon.contains("base64,")) {
+////        code.appendText("\n" + lon);
+////        continue;
+////    }
+////    String converted = lon
+////            .replace("A","ﬦ").replace("B","ﬧ").replace("C","ﬨ").replace("D","﬩").replace("E","שׁ")
+////            .replace("F","שׂ").replace("G","שּׁ").replace("H","שּׂ").replace("I","אַ").replace("J","אָ")
+////            .replace("K","אּ").replace("L","בּ").replace("M","גּ").replace("N","דּ").replace("O","הּ")
+////            .replace("P","וּ").replace("Q","זּ").replace("R","טּ").replace("S","יּ").replace("T","ךּ")
+////            .replace("U","כּ").replace("V","לּ").replace("W","מּ").replace("X","נּ").replace("Y","סּ")
+////            .replace("Z","ףּ")
+////            .replace("0","פּ").replace("1","צּ").replace("2","קּ").replace("3","רּ").replace("4","שּ")
+////            .replace("5","תּ").replace("6","וֹ").replace("7","בֿ").replace("8","כֿ").replace("9","פֿ")
+////            .replace("a","ﬦ").replace("b","ﬧ").replace("c","ﬨ").replace("d","﬩").replace("e","שׁ")
+////            .replace("f","שׂ").replace("g","שּׁ").replace("h","שּׂ").replace("i","אַ").replace("j","אָ")
+////            .replace("k","אּ").replace("l","בּ").replace("m","גּ").replace("n","דּ").replace("o","הּ")
+////            .replace("p","וּ").replace("q","זּ").replace("r","טּ").replace("s","יּ").replace("t","ךּ")
+////            .replace("u","כּ").replace("v","לּ").replace("w","מּ").replace("x","נּ").replace("y","סּ")
+////            .replace("z","ףּ");
+////    code.appendText("\n" + converted);
+////}
+////bin.close();
+////
+////try (PrintWriter pwn = new PrintWriter(new OutputStreamWriter(new FileOutputStream(link), "UTF-8"))) {
+////    pwn.println(code.getText());
+////}
+////code.clear();
+////
+////    
+////    
+////    //Encrypt Here.............
+////       
+////       
+////    try {
+////            // المسار المطلوب تنفيذه فيه أوامر Git
+////            String repoPath = "X:\\Recipe_System\\Recipes";
+////
+////            // تشغيل الأوامر بالترتيب
+////            runCommand("git add .", repoPath);
+////            runCommand("git commit -m \"Update some data\"", repoPath);
+////            runCommand("git push", repoPath);
+////
+////            
+////            
+////        Notifications noti = Notifications.create();
+////        noti.title("Successful");
+////        noti.text("✔ Git operations completed successfully!");
+////        noti.position(Pos.CENTER);
+////        noti.show();
+////            
+////
+////        } catch (Exception e) {
+////            e.printStackTrace();
+////        }
+////    
+////       
+////}
+////
+////catch (Exception r) {
+////    
+////}
+////    
+////    
+////    });
+//       
+//       
 //    }
-//}
-//
-//// حفظ HTML بعد دمج QR
-//writeFile(link, doc.outerHtml());
-//code.clear();
-//
-//// إعادة تشفير الملف
-//InputStream inputinstreamn = new FileInputStream(link);
-//BufferedReader bin = new BufferedReader(new InputStreamReader(inputinstreamn, "UTF-8"));
-//String lon;
-//while ((lon = bin.readLine()) != null) {
-//    if (lon.contains("data:image") || lon.contains("base64,")) {
-//        code.appendText("\n" + lon);
-//        continue;
-//    }
-//    String converted = lon
-//            .replace("A","ﬦ").replace("B","ﬧ").replace("C","ﬨ").replace("D","﬩").replace("E","שׁ")
-//            .replace("F","שׂ").replace("G","שּׁ").replace("H","שּׂ").replace("I","אַ").replace("J","אָ")
-//            .replace("K","אּ").replace("L","בּ").replace("M","גּ").replace("N","דּ").replace("O","הּ")
-//            .replace("P","וּ").replace("Q","זּ").replace("R","טּ").replace("S","יּ").replace("T","ךּ")
-//            .replace("U","כּ").replace("V","לּ").replace("W","מּ").replace("X","נּ").replace("Y","סּ")
-//            .replace("Z","ףּ")
-//            .replace("0","פּ").replace("1","צּ").replace("2","קּ").replace("3","רּ").replace("4","שּ")
-//            .replace("5","תּ").replace("6","וֹ").replace("7","בֿ").replace("8","כֿ").replace("9","פֿ")
-//            .replace("a","ﬦ").replace("b","ﬧ").replace("c","ﬨ").replace("d","﬩").replace("e","שׁ")
-//            .replace("f","שׂ").replace("g","שּׁ").replace("h","שּׂ").replace("i","אַ").replace("j","אָ")
-//            .replace("k","אּ").replace("l","בּ").replace("m","גּ").replace("n","דּ").replace("o","הּ")
-//            .replace("p","וּ").replace("q","זּ").replace("r","טּ").replace("s","יּ").replace("t","ךּ")
-//            .replace("u","כּ").replace("v","לּ").replace("w","מּ").replace("x","נּ").replace("y","סּ")
-//            .replace("z","ףּ");
-//    code.appendText("\n" + converted);
-//}
-//bin.close();
-//
-//try (PrintWriter pwn = new PrintWriter(new OutputStreamWriter(new FileOutputStream(link), "UTF-8"))) {
-//    pwn.println(code.getText());
-//}
-//code.clear();
-//
-//    
-//    
-//    //Encrypt Here.............
-//       
-//       
-//    try {
-//            // المسار المطلوب تنفيذه فيه أوامر Git
-//            String repoPath = "X:\\Recipe_System\\Recipes";
-//
-//            // تشغيل الأوامر بالترتيب
-//            runCommand("git add .", repoPath);
-//            runCommand("git commit -m \"Update some data\"", repoPath);
-//            runCommand("git push", repoPath);
-//
-//            
-//            
-//        Notifications noti = Notifications.create();
-//        noti.title("Successful");
-//        noti.text("✔ Git operations completed successfully!");
-//        noti.position(Pos.CENTER);
-//        noti.show();
-//            
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    
-//       
-//}
-//
-//catch (Exception r) {
-//    
-//}
-//    
-//    
-//    });
-       
-       
-    }
 
     
     
@@ -5806,9 +9302,10 @@ private void viewHistory() {
         conn = db.java_db();
         
         link=RecipeMakerController_1.lonkk;
+        linko=RecipeMakerController_1.lonkko;
         user=RecipeMakerController_1.theuser;
         recipe=RecipeMakerController_1.funkifi;
-        Path path = Paths.get(link);
+        Path path = Paths.get(linko);
         stage= path.getName(2).toString();
         model= path.getName(3).toString();
         editedby.setText(recipe+" Is Editing By "+user);
@@ -6141,7 +9638,14 @@ try {
     }
     
     
-    
+   
+   
+   
+   
+   
+   
+   
+   
 }
 
 

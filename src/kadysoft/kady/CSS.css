@@ -58,3 +58,161 @@
 }
 
 
+
+
+
+
+
+
+
+
+
+
+/* =========================
+   MAIN BACKGROUND
+========================= */
+
+.main-background {
+    -fx-background-color: #FFFFFF;
+}
+
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+    -fx-background-color: #F4F7FB;
+}
+
+
+/* =========================
+   MENU BUTTONS
+========================= */
+
+.menu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #1F2937;
+
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+
+    -fx-background-radius: 10px;
+    -fx-cursor: hand;
+
+    -fx-padding: 10 15 10 15;
+}
+
+.menu-button:hover {
+    -fx-background-color: #E8EEF7;
+}
+
+.menu-button-active {
+    -fx-background-color: #DCE7F7;
+    -fx-text-fill: #4A90E2;
+
+    -fx-background-radius: 10px;
+}
+
+
+/* =========================
+   ICONS
+========================= */
+
+.icon-style {
+    -fx-fill: #4A90E2;
+}
+
+
+/* =========================
+   LABELS
+========================= */
+
+.main-label {
+    -fx-text-fill: #1F2937;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.secondary-label {
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 13px;
+}
+
+
+/* =========================
+   CARDS / PANELS
+========================= */
+
+.card {
+    -fx-background-color: #FFFFFF;
+
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+
+    -fx-border-color: #E5E7EB;
+    -fx-border-width: 1px;
+
+    -fx-padding: 15px;
+}
+
+
+/* =========================
+   PRIMARY BUTTON
+========================= */
+
+.primary-button {
+    -fx-background-color: #4A90E2;
+    -fx-text-fill: white;
+
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+
+    -fx-background-radius: 10px;
+    -fx-cursor: hand;
+
+    -fx-padding: 10 20 10 20;
+}
+
+.primary-button:hover {
+    -fx-background-color: #3B82D6;
+}
+
+
+
+
+
+.icon10
+{
+-fx-graphic : url("open-folder.png");
+}
+
+.icon110
+{
+-fx-graphic : url("view0.png");
+}
+
+.icon1110
+{
+-fx-graphic : url("edit0.png");
+}
+
+.icon11110
+{
+-fx-graphic : url("settings0.png");
+}
+
+.icon111110
+{
+-fx-graphic : url("business-report.png");
+}
+
+.icon1111110
+{
+-fx-graphic : url("add-user.png");
+}
+
+.icon11111110
+{
+-fx-graphic : url("help0.png");
+}

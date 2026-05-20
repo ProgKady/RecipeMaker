@@ -1,18 +1,16 @@
+
 package kadysoft.kady;
 
 
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextArea;
-import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,10 +19,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,10 +29,6 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 /**
  * FXML Controller class
@@ -62,11 +52,102 @@ public class DecryptMultipleController implements Initializable {
     
     
     @FXML
-    void fixaction(ActionEvent event) throws FileNotFoundException, IOException{
+    void fixaction(ActionEvent event) throws FileNotFoundException, IOException, Exception{
 
  
         String[] filess=list.getText().split("\n");
         for (String namo :filess) {
+            
+            
+    ////////////////////////////////////////////////////////////
+    
+    
+
+    try {
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String result = KeyDecoder.extractData(longKey.trim());
+    if (namo == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = namo;
+    File originalFile = new File(input);
+    //Add backup here
+    File backupFolder = new File("D:\\All_Recipessss\\Backup");
+    if (!backupFolder.exists()) {
+        backupFolder.mkdirs();
+    }
+    String backupFileName = originalFile.getName() + ".bak";
+    File backupFile = new File(backupFolder, backupFileName);
+    try {
+        java.nio.file.Files.copy(originalFile.toPath(), 
+                                backupFile.toPath(), 
+                                java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+        System.out.println("✅ Backup created / updated: " + backupFile.getAbsolutePath());
+    } catch (Exception backupEx) {
+        System.out.println("⚠️ Warning: Failed to create backup - " + backupEx.getMessage());
+    }
+    // =================================================
+    
+    String tempOutput = input + ".tmp";
+    System.out.println("Decrypting with password: " + result); // للتصحيح
+    FileDecryptor.decrypt(input, tempOutput, result);
+    File original = new File(input);
+    File temp = new File(tempOutput);
+    if (original.exists()) {
+        original.delete();
+    }
+    if (temp.renameTo(original)) {
+        Notifications noti = Notifications.create();
+        noti.title("Success!");
+        noti.text("File decrypted successfully.");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showInformation();
+    } else {
+        Notifications noti = Notifications.create();
+        noti.title("Error!");
+        noti.text("Failed to replace original file.");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+    }
+} catch (Exception ex) {
+    ex.printStackTrace();
+    String errorMsg = "Wrong password or corrupted file.";
+    if (ex.getClass().getSimpleName().contains("AEADBadTag") || 
+        ex.getMessage() != null && ex.getMessage().contains("BadTag")) {
+        errorMsg = "Wrong password! The key does not match the file.";
+    }
+    Notifications noti = Notifications.create();
+    noti.title("Decryption Failed!");
+    noti.text(errorMsg);
+    noti.position(Pos.CENTER);
+    noti.hideAfter(Duration.seconds(5));
+    noti.showError();
+}
+
+
+
+    ////////////////////////////////////////////////////////////
+            
             
             rora.clear();
     InputStream inputinstream=new FileInputStream(namo);
@@ -129,8 +210,7 @@ public class DecryptMultipleController implements Initializable {
     noti.position(Pos.CENTER);
     noti.showInformation();
     rora.clear();
-
-            
+  
             
         }
         
@@ -138,7 +218,7 @@ public class DecryptMultipleController implements Initializable {
       list.clear(); 
       text.setVisible(true);
       
-      
+
       
       Git.gitCommands();
       

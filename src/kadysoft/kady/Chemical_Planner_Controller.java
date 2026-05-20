@@ -2,29 +2,16 @@ package kadysoft.kady;
 
 
 
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
-import com.spire.xls.FileFormat;
-import com.spire.xls.Workbook;
-import com.spire.xls.Worksheet;
-import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -33,14 +20,10 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.URI;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -48,24 +31,16 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.ResourceBundle;
-
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.stream.Collectors;
-
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -81,8 +56,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Hyperlink;
@@ -100,16 +73,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import javafx.util.Callback;
 import javafx.util.Duration;
-import javax.swing.JOptionPane;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import static org.apache.poi.ss.usermodel.CellType.BOOLEAN;
@@ -358,6 +327,96 @@ void fixchemiccaction(ActionEvent event) throws FileNotFoundException, Unsupport
                
                 //All code goes here  
                 
+                
+                 ////////////////////////////////////////////////////////////
+    
+    
+
+    try {
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String result = KeyDecoder.extractData(longKey.trim());
+    if ((recipelistall.getItems().get(i)) == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = recipelistall.getItems().get(i);
+    File originalFile = new File(input);
+    //Add backup here
+    File backupFolder = new File("D:\\All_Recipessss\\Backup");
+    if (!backupFolder.exists()) {
+        backupFolder.mkdirs();
+    }
+    String backupFileName = originalFile.getName() + ".bak";
+    File backupFile = new File(backupFolder, backupFileName);
+    try {
+        java.nio.file.Files.copy(originalFile.toPath(), 
+                                backupFile.toPath(), 
+                                java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+        System.out.println("✅ Backup created / updated: " + backupFile.getAbsolutePath());
+    } catch (Exception backupEx) {
+        System.out.println("⚠️ Warning: Failed to create backup - " + backupEx.getMessage());
+    }
+    // =================================================
+    
+    String tempOutput = input + ".tmp";
+    System.out.println("Decrypting with password: " + result); // للتصحيح
+    FileDecryptor.decrypt(input, tempOutput, result);
+    File original = new File(input);
+    File temp = new File(tempOutput);
+    if (original.exists()) {
+        original.delete();
+    }
+    if (temp.renameTo(original)) {
+        Notifications noti = Notifications.create();
+        noti.title("Success!");
+        noti.text("File decrypted successfully.");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showInformation();
+    } else {
+        Notifications noti = Notifications.create();
+        noti.title("Error!");
+        noti.text("Failed to replace original file.");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+    }
+} catch (Exception ex) {
+    ex.printStackTrace();
+    String errorMsg = "Wrong password or corrupted file.";
+    if (ex.getClass().getSimpleName().contains("AEADBadTag") || 
+        ex.getMessage() != null && ex.getMessage().contains("BadTag")) {
+        errorMsg = "Wrong password! The key does not match the file.";
+    }
+    Notifications noti = Notifications.create();
+    noti.title("Decryption Failed!");
+    noti.text(errorMsg);
+    noti.position(Pos.CENTER);
+    noti.hideAfter(Duration.seconds(5));
+    noti.showError();
+}
+
+
+
+    //////////////////////////////////////////////////////////// 
+                
           
     lili.clear();
     InputStream inputinstream=new FileInputStream(recipelistall.getItems().get(i));
@@ -587,6 +646,72 @@ buf.close();
        .replace("z","ףּ"));
        pwwc.close();
     
+       
+       ////////////////////////////////////////////////////////////////
+    
+  
+     try {
+    String longKey;
+    try (BufferedReader reader = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = reader.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("No password found in java.dat!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String password = KeyDecoder.extractData(longKey.trim());
+    if ((recipelistall.getItems().get(i)) == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = recipelistall.getItems().get(i);
+    String tempOutput = input + ".tmp";
+    System.out.println("Encrypting with password: " + password);
+    FileEncryptor.encrypt(input, tempOutput, password);
+    File original = new File(input);
+    File temp = new File(tempOutput);
+    if (original.exists()) {
+        original.delete();
+    }
+    if (temp.renameTo(original)) {
+        Notifications noti = Notifications.create();
+        noti.title("Success!");
+        noti.text("File encrypted successfully!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showInformation();
+    } else {
+        Notifications noti = Notifications.create();
+        noti.title("Error!");
+        noti.text("Failed to replace original file.");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+    }
+} catch (Exception ex) {
+    ex.printStackTrace();
+    Notifications noti = Notifications.create();
+    noti.title("Encryption Failed!");
+    noti.text("An error occurred during encryption.");
+    noti.position(Pos.CENTER);
+    noti.hideAfter(Duration.seconds(5));
+    noti.showError();
+}
+  
+    
+    ////////////////////////////////////////////////////////////////
+       
+       
       Notifications noti = Notifications.create();
       noti.title("Successful Operation");
       noti.text("We updated everything successfully!.");
@@ -885,9 +1010,45 @@ void planallaction(ActionEvent event) throws FileNotFoundException, IOException,
 }
 
 // دالة معالجة الوصفة (محدثة ومحسنة: إزالة الفلاتر الزائدة، تحسين التنظيف، إضافة لوج للتشخيص المؤقت، ترتيب أفضل)
-private boolean processRecipeFile(String filePath, String recipeName, String modelName, String patch) {
+private boolean processRecipeFile(String filePath, String recipeName, String modelName, String patch) throws Exception {
+    
+        ////////////////////////////////////////////////////////////
+
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        //return;
+    }
+    String result = KeyDecoder.extractData(longKey.trim());
+    if (filePath == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        //return;
+    }
+    String input = filePath;
+    String nameofit=recipeName;
+    String tempOutput = System.getProperty("user.home")+"\\"+nameofit;
+ 
+    FileDecryptor.decrypt(input, tempOutput, result);
+    File tempu = new File(tempOutput);
+    
+    ////////////////////////////////////////////////////////////
+    
+    
     try {
-        String content = readFileToString(filePath)
+        String content = readFileToString(tempOutput)
                 .replace("ﬦ", "A").replace("ﬧ", "B").replace("ﬨ", "C").replace("﬩", "D")
                 .replace("שׁ", "E").replace("שׂ", "F").replace("שּׁ", "G").replace("שּׂ", "H")
                 .replace("אַ", "I").replace("אָ", "J").replace("אּ", "K").replace("בּ", "L")
@@ -1036,6 +1197,12 @@ private boolean processRecipeFile(String filePath, String recipeName, String mod
         try {
             File temp = new File(System.getProperty("user.home") + File.separator + "ruoo.ks");
             if (temp.exists()) temp.delete();
+            	
+    ////////////////////////////////////////////////////////////////
+    if (tempu.exists()) {
+        tempu.delete();
+    }
+    ////////////////////////////////////////////////////////////////
         } catch (Exception ignored) {}
     }
 }
@@ -2250,7 +2417,7 @@ private void showErrorNotification(String title, String text) {
     
     
     @FXML
-    void browselinkaction(ActionEvent event) throws FileNotFoundException, IOException  {
+    void browselinkaction(ActionEvent event) throws FileNotFoundException, IOException, Exception  {
         
         
         
@@ -2303,11 +2470,46 @@ String recipepathy = f.getAbsolutePath().toString();
         
         
         
+            ////////////////////////////////////////////////////////////
+
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String result = KeyDecoder.extractData(longKey.trim());
+    if (f == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = f.getAbsolutePath();
+    String nameofit=lin2;
+    String tempOutput = System.getProperty("user.home")+"\\"+nameofit;
+ 
+    FileDecryptor.decrypt(input, tempOutput, result);
+    File temp = new File(tempOutput);
+    
+    ////////////////////////////////////////////////////////////
+        
+        
         //lin3=NewDir.file_dir.replace("X:",drib+":")+"\\PRODUCTION\\"+lin1+"\\"+lin2+".ks";  //Path To Recipe.
         
         //Read File Here//////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-InputStream inputinstream=new FileInputStream(recipepathy);
+InputStream inputinstream=new FileInputStream(temp);
 BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
 String lo;
 lili.clear();
@@ -2610,6 +2812,19 @@ adddbtn.fire();
 //        
 //stato="PILOT";
         
+
+
+
+
+
+    ////////////////////////////////////////////////////////////////
+    if (temp.exists()) {
+        temp.delete();
+    }
+    ////////////////////////////////////////////////////////////////
+
+
+
         
     }
     
@@ -2905,7 +3120,7 @@ adddbtn.fire();
     
 
     @FXML
-    void fixchemicaction(ActionEvent event) throws FileNotFoundException, UnsupportedEncodingException, IOException  {
+    void fixchemicaction(ActionEvent event) throws FileNotFoundException, UnsupportedEncodingException, IOException, Exception, Exception  {
         
         
         String lin1,lin2,lin3;
@@ -2926,6 +3141,100 @@ adddbtn.fire();
             
         }
         
+         
+         
+    ////////////////////////////////////////////////////////////
+    
+    
+
+    try {
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String result = KeyDecoder.extractData(longKey.trim());
+    if (lin3 == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = lin3;
+    File originalFile = new File(input);
+    //Add backup here
+    File backupFolder = new File("D:\\All_Recipessss\\Backup");
+    if (!backupFolder.exists()) {
+        backupFolder.mkdirs();
+    }
+    String backupFileName = originalFile.getName() + ".bak";
+    File backupFile = new File(backupFolder, backupFileName);
+    try {
+        java.nio.file.Files.copy(originalFile.toPath(), 
+                                backupFile.toPath(), 
+                                java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+        System.out.println("✅ Backup created / updated: " + backupFile.getAbsolutePath());
+    } catch (Exception backupEx) {
+        System.out.println("⚠️ Warning: Failed to create backup - " + backupEx.getMessage());
+    }
+    // =================================================
+    
+    String tempOutput = input + ".tmp";
+    System.out.println("Decrypting with password: " + result); // للتصحيح
+    FileDecryptor.decrypt(input, tempOutput, result);
+    File original = new File(input);
+    File temp = new File(tempOutput);
+    if (original.exists()) {
+        original.delete();
+    }
+    if (temp.renameTo(original)) {
+        Notifications noti = Notifications.create();
+        noti.title("Success!");
+        noti.text("File decrypted successfully.");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showInformation();
+    } else {
+        Notifications noti = Notifications.create();
+        noti.title("Error!");
+        noti.text("Failed to replace original file.");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+    }
+} catch (Exception ex) {
+    ex.printStackTrace();
+    String errorMsg = "Wrong password or corrupted file.";
+    if (ex.getClass().getSimpleName().contains("AEADBadTag") || 
+        ex.getMessage() != null && ex.getMessage().contains("BadTag")) {
+        errorMsg = "Wrong password! The key does not match the file.";
+    }
+    Notifications noti = Notifications.create();
+    noti.title("Decryption Failed!");
+    noti.text(errorMsg);
+    noti.position(Pos.CENTER);
+    noti.hideAfter(Duration.seconds(5));
+    noti.showError();
+}
+
+
+
+    ////////////////////////////////////////////////////////////
+	
+	
+         
+         
         
     lili.clear();
     
@@ -3152,6 +3461,75 @@ buf.close();
        .replace("y","סּ")         
        .replace("z","ףּ"));
     pwwc.close();
+    
+    
+    
+	
+	
+	////////////////////////////////////////////////////////////////
+    
+  
+     try {
+    String longKey;
+    try (BufferedReader reader = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = reader.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("No password found in java.dat!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String password = KeyDecoder.extractData(longKey.trim());
+    if (lin3 == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = lin3;
+    String tempOutput = input + ".tmp";
+    System.out.println("Encrypting with password: " + password);
+    FileEncryptor.encrypt(input, tempOutput, password);
+    File original = new File(input);
+    File temp = new File(tempOutput);
+    if (original.exists()) {
+        original.delete();
+    }
+    if (temp.renameTo(original)) {
+        Notifications noti = Notifications.create();
+        noti.title("Success!");
+        noti.text("File encrypted successfully!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showInformation();
+    } else {
+        Notifications noti = Notifications.create();
+        noti.title("Error!");
+        noti.text("Failed to replace original file.");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+    }
+} catch (Exception ex) {
+    ex.printStackTrace();
+    Notifications noti = Notifications.create();
+    noti.title("Encryption Failed!");
+    noti.text("An error occurred during encryption.");
+    noti.position(Pos.CENTER);
+    noti.hideAfter(Duration.seconds(5));
+    noti.showError();
+}
+  
+    
+    ////////////////////////////////////////////////////////////////
+    
     
       Notifications noti = Notifications.create();
       noti.title("Successful Operation");
@@ -3648,7 +4026,7 @@ l11.getItems().addAll(  jhkjh  );
     
     
     @FXML
-    void readoutrecipeaction(Event event) throws FileNotFoundException, IOException {
+    void readoutrecipeaction(Event event) throws FileNotFoundException, IOException, Exception {
 
         
         
@@ -3681,9 +4059,46 @@ l11.getItems().addAll(  jhkjh  );
         
         woow=selectedItem;
         
+        
+            ////////////////////////////////////////////////////////////
+
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String result = KeyDecoder.extractData(longKey.trim());
+    if (lin3 == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = lin3;
+    String nameofit=lin2;
+    String tempOutput = System.getProperty("user.home")+"\\"+nameofit;
+ 
+    FileDecryptor.decrypt(input, tempOutput, result);
+    File temp = new File(tempOutput);
+    
+    ////////////////////////////////////////////////////////////
+	
+        
+        
         //Read File Here//////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-InputStream inputinstream=new FileInputStream(lin3);
+InputStream inputinstream=new FileInputStream(temp);
 BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
 String lo;
 lili.clear();
@@ -3744,7 +4159,7 @@ lili.appendText(
          );
 
 
-while ((lo=bi.readLine())!=null) {        
+while ((lo=bi.readLine())!=null) {      
 lili.appendText("\n"+lo
 .replace("ﬦ","A")
 .replace("ﬧ","B")
@@ -3796,6 +4211,12 @@ PrintWriter pwe = new PrintWriter(new OutputStreamWriter (instreamm,"UTF-8"));
 pwe.println(gf);
 pwe.close();
 
+	
+    ////////////////////////////////////////////////////////////////
+    if (temp.exists()) {
+        temp.delete();
+    }
+    ////////////////////////////////////////////////////////////////
 
 get.fire();
 adddbtn.fire();
@@ -4163,18 +4584,5 @@ try (BufferedReader buf = new BufferedReader(new FileReader(models_file_path))) 
         
         table.getSelectionModel().clearSelection();
     }
-    
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-    
-    
+       
 }

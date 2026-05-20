@@ -2,6 +2,14 @@ package kadysoft.kady;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
+import java.io.*;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,15 +23,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
-import java.io.*;
-import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
 
 public class CostMultipleController_Shot implements Initializable {
 
@@ -292,9 +291,45 @@ public class CostMultipleController_Shot implements Initializable {
     // الدوال المساعدة (نفس السابقة مع تحسينات)
     // ──────────────────────────────────────────────
 
-    private String cleanSpecialCharacters(File file) throws IOException {
+    private String cleanSpecialCharacters(File file) throws IOException, Exception {
+        
+    ////////////////////////////////////////////////////////////
+
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        //return;
+    }
+    String result = KeyDecoder.extractData(longKey.trim());
+    if (file == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        //return;
+    }
+    String input = file.getAbsolutePath();
+    String nameofit=file.getName();
+    String tempOutput = System.getProperty("user.home")+"\\"+nameofit;
+ 
+    FileDecryptor.decrypt(input, tempOutput, result);
+    File tempy = new File(tempOutput);
+    
+    ////////////////////////////////////////////////////////////
+        
+        
         StringBuilder sb = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(tempy), "UTF-8"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 line = line

@@ -241,23 +241,25 @@ package kadysoft.kady;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.TransferMode;
-import javafx.scene.text.Text;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import java.awt.Desktop;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.TransferMode;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 /**
  * FXML Controller class
@@ -361,10 +363,47 @@ public class CostMultipleController_2 implements Initializable {
     }
 
     // فك التشفير وحفظ الملف المؤقت
-    private void processAndDecryptFile(String filePath, String recipeName) throws IOException {
+    private void processAndDecryptFile(String filePath, String recipeName) throws IOException, Exception {
         rora.clear();
 
-        try (BufferedReader bi = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), "UTF-8"))) {
+        
+        
+            ////////////////////////////////////////////////////////////
+
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String result = KeyDecoder.extractData(longKey.trim());
+    if (filePath == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = filePath;
+    String nameofit=recipeName;
+    String tempOutput = System.getProperty("user.home")+"\\"+nameofit;
+ 
+    FileDecryptor.decrypt(input, tempOutput, result);
+    File temp = new File(tempOutput);
+    
+    ////////////////////////////////////////////////////////////
+        
+        
+        try (BufferedReader bi = new BufferedReader(new InputStreamReader(new FileInputStream(temp), "UTF-8"))) {
             String line;
             while ((line = bi.readLine()) != null) {
                 String decrypted = line
@@ -389,6 +428,17 @@ public class CostMultipleController_2 implements Initializable {
         try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(tempFile), "UTF-8"))) {
             pw.print(rora.getText());
         }
+        
+        
+        	
+	
+    ////////////////////////////////////////////////////////////////
+    if (temp.exists()) {
+        temp.delete();
+    }
+    ////////////////////////////////////////////////////////////////
+        
+        
     }
 
     // استخراج رقم PCS

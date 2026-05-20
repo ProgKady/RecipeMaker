@@ -135,10 +135,48 @@ public class HtmlToHtaController implements Initializable {
     
     
     @FXML
-    void readaction(ActionEvent event) throws IOException {
+    void readaction(ActionEvent event) throws IOException, Exception {
 
         
-    InputStream inputinstream=new FileInputStream(input.getText());
+        
+            ////////////////////////////////////////////////////////////
+
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String result = KeyDecoder.extractData(longKey.trim());
+    if ((input.getText()) == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String inputt = input.getText();
+    File f=new File (inputt);
+    String nameofit=f.getName();
+    String tempOutput = System.getProperty("user.home")+"\\"+nameofit;
+ 
+    FileDecryptor.decrypt(inputt, tempOutput, result);
+    File temp = new File(tempOutput);
+    
+    ////////////////////////////////////////////////////////////
+        
+        
+        
+    InputStream inputinstream=new FileInputStream(temp);
     BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
     String line;
     while ((line=bi.readLine())!=null) {
@@ -181,6 +219,12 @@ public class HtmlToHtaController implements Initializable {
        .replace("&NBSP;",""));
     }
     bi.close();
+    
+    ////////////////////////////////////////////////////////////////
+    if (temp.exists()) {
+        temp.delete();
+    }
+    ////////////////////////////////////////////////////////////////
     
       Notifications noti = Notifications.create();
       noti.title("Successful");

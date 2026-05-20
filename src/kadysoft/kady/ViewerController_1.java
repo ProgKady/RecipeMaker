@@ -1,9 +1,7 @@
 package kadysoft.kady;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXRadioButton;
 import com.jfoenix.controls.JFXTextArea;
-import com.jfoenix.controls.JFXTextField;
 import java.awt.Desktop;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
@@ -26,71 +24,44 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.ResourceBundle;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.web.WebView;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import org.controlsfx.control.Notifications;
@@ -132,7 +103,7 @@ public class ViewerController_1  <T extends Comparable<T>>  implements Initializ
   
   
    @FXML
-    void tableeaction(MouseEvent event) throws FileNotFoundException, UnsupportedEncodingException, IOException, InterruptedException {
+    void tableeaction(MouseEvent event) throws FileNotFoundException, UnsupportedEncodingException, IOException, InterruptedException, Exception {
 
          
         String wsa=link.getText();
@@ -186,10 +157,42 @@ public class ViewerController_1  <T extends Comparable<T>>  implements Initializ
           }
           
           
-          
+    ////////////////////////////////////////////////////////////
+
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String result = KeyDecoder.extractData(longKey.trim());
+    if (op == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = op.getAbsolutePath();
+    String nameofit=op.getName();
+    String tempOutput = System.getProperty("user.home")+"\\"+nameofit;
+ 
+    FileDecryptor.decrypt(input, tempOutput, result);
+    File temp = new File(tempOutput);
+    
+    ////////////////////////////////////////////////////////////
                
     coode.clear();
-    InputStream inputinstream=new FileInputStream(pathy);
+    InputStream inputinstream=new FileInputStream(temp);
     BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
     String lo;
     while ((lo=bi.readLine())!=null) {
@@ -295,6 +298,12 @@ public class ViewerController_1  <T extends Comparable<T>>  implements Initializ
     pwe.close();
     coode.clear();
    
+    ////////////////////////////////////////////////////////////////
+    if (temp.exists()) {
+        temp.delete();
+    }
+    ////////////////////////////////////////////////////////////////
+    
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
           
         WebView webviewt=new WebView ();
@@ -341,7 +350,7 @@ public class ViewerController_1  <T extends Comparable<T>>  implements Initializ
   
   
   @FXML
-    void imageaction(MouseEvent event) throws IOException, InterruptedException {
+    void imageaction(MouseEvent event) throws IOException, InterruptedException, Exception {
 
          
         String wsa=link.getText();
@@ -387,9 +396,45 @@ public class ViewerController_1  <T extends Comparable<T>>  implements Initializ
           else {
               
           }
+          
+          
+    ////////////////////////////////////////////////////////////
+
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String result = KeyDecoder.extractData(longKey.trim());
+    if (op == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = op.getAbsolutePath();
+    String nameofit=op.getName();
+    String tempOutput = System.getProperty("user.home")+"\\"+nameofit;
+ 
+    FileDecryptor.decrypt(input, tempOutput, result);
+    File temp = new File(tempOutput);
+    
+    ////////////////////////////////////////////////////////////
+          
                
     coode.clear();
-    InputStream inputinstream=new FileInputStream(pathy);
+    InputStream inputinstream=new FileInputStream(temp);
     BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
     String lo;
     while ((lo=bi.readLine())!=null) {
@@ -456,6 +501,12 @@ public class ViewerController_1  <T extends Comparable<T>>  implements Initializ
     nsdf.open(dds);
     coode.clear();
    
+    ////////////////////////////////////////////////////////////////
+    if (temp.exists()) {
+        temp.delete();
+    }
+    ////////////////////////////////////////////////////////////////
+    
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          
            
@@ -587,9 +638,45 @@ public class ViewerController_1  <T extends Comparable<T>>  implements Initializ
     }
   
   
-  private String readFile(File file) throws IOException {
+  private String readFile(File file) throws IOException, Exception {
       
-      InputStream inputinstream=new FileInputStream(file);
+      
+          ////////////////////////////////////////////////////////////
+
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        //return;
+    }
+    String result = KeyDecoder.extractData(longKey.trim());
+    if (file == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        //return;
+    }
+    String input = file.getAbsolutePath();
+    String nameofit=file.getName();
+    String tempOutput = System.getProperty("user.home")+"\\"+nameofit;
+ 
+    FileDecryptor.decrypt(input, tempOutput, result);
+    File temp = new File(tempOutput);
+    
+    ////////////////////////////////////////////////////////////
+      
+      
+      InputStream inputinstream=new FileInputStream(temp);
       BufferedReader reader=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
       
         //BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -635,6 +722,14 @@ public class ViewerController_1  <T extends Comparable<T>>  implements Initializ
        .replace("&NBSP;","")).append("\n");
         }
         reader.close();
+        
+        	
+    ////////////////////////////////////////////////////////////////
+    if (temp.exists()) {
+        temp.delete();
+    }
+    ////////////////////////////////////////////////////////////////
+        
         return content.toString();
     }
 
@@ -648,7 +743,7 @@ public class ViewerController_1  <T extends Comparable<T>>  implements Initializ
   
   
   @FXML
-    void editorprintaction(ActionEvent event) throws FileNotFoundException, IOException, InterruptedException {
+    void editorprintaction(ActionEvent event) throws FileNotFoundException, IOException, InterruptedException, Exception {
         
         
         
@@ -664,7 +759,42 @@ public class ViewerController_1  <T extends Comparable<T>>  implements Initializ
       noti.showError();
       }
       else {   
-    InputStream inputinstream=new FileInputStream(pathy);
+          
+              ////////////////////////////////////////////////////////////
+
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String result = KeyDecoder.extractData(longKey.trim());
+    if (op == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = op.getAbsolutePath();
+    String nameofit=op.getName();
+    String tempOutput = System.getProperty("user.home")+"\\"+nameofit;
+ 
+    FileDecryptor.decrypt(input, tempOutput, result);
+    File temp = new File(tempOutput);
+    
+    ////////////////////////////////////////////////////////////
+          
+    InputStream inputinstream=new FileInputStream(temp);
     BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
     OutputStream instreamm=new FileOutputStream(NewDir.file_dirrrr + "\\Editor\\index.html");
     PrintWriter pwe = new PrintWriter(new OutputStreamWriter (instreamm,"UTF-8"));
@@ -762,6 +892,15 @@ public class ViewerController_1  <T extends Comparable<T>>  implements Initializ
     pwe.append("\n\n\n</textarea>\n\t\t</div>\n\t\t<script>\n\t\t\tconst editor = Jodit.make('#editor' ,{\n\t\t\t\tuploader: {\n\t\t\t\t\t\n\t\t\t\t},\n\t\t\t\tfilebrowser: {\n\t\t\t\t\tajax: {\n\t\t\t\t\t\t\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t});\n\t\t</script>\n\t</body>\n</html>"); 
     pwe.close();
     bi.close();
+    
+    	
+    ////////////////////////////////////////////////////////////////
+    if (temp.exists()) {
+        temp.delete();
+    }
+    ////////////////////////////////////////////////////////////////
+    
+    
     Desktop desk = Desktop.getDesktop();
     desk.open(new File(NewDir.file_dirrrr + "\\Editor\\index.html")); 
     Thread.sleep(4000);
@@ -1374,7 +1513,7 @@ public class ViewerController_1  <T extends Comparable<T>>  implements Initializ
   
   
   @FXML
-  void linkaction(ActionEvent event) throws IOException, InterruptedException {
+  void linkaction(ActionEvent event) throws IOException, InterruptedException, Exception {
       
       
     String linkval = this.link.getText();
@@ -1439,8 +1578,43 @@ public class ViewerController_1  <T extends Comparable<T>>  implements Initializ
         hf.createNewFile();
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
+            ////////////////////////////////////////////////////////////
+
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String result = KeyDecoder.extractData(longKey.trim());
+    if (op == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = op.getAbsolutePath();
+    String nameofit=op.getName();
+    String tempOutput = System.getProperty("user.home")+"\\"+nameofit;
+ 
+    FileDecryptor.decrypt(input, tempOutput, result);
+    File temp = new File(tempOutput);
+    
+    ////////////////////////////////////////////////////////////
+        
+        
     coode.clear();
-    InputStream inputinstream=new FileInputStream(pathy);
+    InputStream inputinstream=new FileInputStream(temp);
     BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
     String lo;
     while ((lo=bi.readLine())!=null) {
@@ -1471,7 +1645,7 @@ public class ViewerController_1  <T extends Comparable<T>>  implements Initializ
        .replace("מּ","W")         
        .replace("נּ","X")         
        .replace("סּ","Y")         
-       .replace("ףּ","Z")         
+       .replace("ףּ","Z")       
        .replace("פּ","0")         
        .replace("צּ","1")         
        .replace("קּ","2")         
@@ -1490,6 +1664,14 @@ public class ViewerController_1  <T extends Comparable<T>>  implements Initializ
 
     }
     bi.close();
+    
+    	
+    ////////////////////////////////////////////////////////////////
+    if (temp.exists()) {
+        temp.delete();
+    }
+    ////////////////////////////////////////////////////////////////
+    
     String gf=coode.getText();
     OutputStream instreamm=new FileOutputStream(newpathyy);
     PrintWriter pwe = new PrintWriter(new OutputStreamWriter (instreamm,"UTF-8"));
@@ -1875,11 +2057,43 @@ new Image("file:"+NewDir.file_dirrr+"\\ADS\\adsimage.png", 1200, 120, false, fal
               
           }
           
-          
+              ////////////////////////////////////////////////////////////
+
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String result = KeyDecoder.extractData(longKey.trim());
+    if (op == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = op.getAbsolutePath();
+    String nameofit=op.getName();
+    String tempOutput = System.getProperty("user.home")+"\\"+nameofit;
+ 
+    FileDecryptor.decrypt(input, tempOutput, result);
+    File temp = new File(tempOutput);
+    
+    ////////////////////////////////////////////////////////////
           
                
     coode.clear();
-    InputStream inputinstream=new FileInputStream(pathy);
+    InputStream inputinstream=new FileInputStream(temp);
     BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
     String lo;
     while ((lo=bi.readLine())!=null) {
@@ -1929,6 +2143,14 @@ new Image("file:"+NewDir.file_dirrr+"\\ADS\\adsimage.png", 1200, 120, false, fal
 
     }
     bi.close();
+    	
+    ////////////////////////////////////////////////////////////////
+    if (temp.exists()) {
+        temp.delete();
+    }
+    ////////////////////////////////////////////////////////////////
+    
+    
     String gf=coode.getText();
     OutputStream instreamm=new FileOutputStream(tw2o);
     PrintWriter pwe = new PrintWriter(new OutputStreamWriter (instreamm,"UTF-8"));

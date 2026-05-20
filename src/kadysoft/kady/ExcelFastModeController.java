@@ -27,11 +27,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -66,9 +69,6 @@ import org.controlsfx.control.Notifications;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import java.util.List;
-import java.util.ArrayList;
-import javafx.application.Platform;
 
 /**
  * FXML Controller class
@@ -572,7 +572,7 @@ code.setText(doctp.toString());
     
     
     @FXML
-    void convertaction(ActionEvent event) throws FileNotFoundException, UnsupportedEncodingException, IOException {
+    void convertaction(ActionEvent event) throws FileNotFoundException, UnsupportedEncodingException, IOException, Exception {
      
         
         
@@ -707,6 +707,69 @@ code.setText(doctp.toString());
 "        });\n" +
 "    </script>"+allcode);
     pw.close();
+      
+    ////////////////////////////////////////////////////////////////
+    
+     try {
+    String longKey;
+    try (BufferedReader reader = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = reader.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("No password found in java.dat!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String password = KeyDecoder.extractData(longKey.trim());
+    if (fff == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = fff.getAbsolutePath();
+    String tempOutput = input + ".tmp";
+    System.out.println("Encrypting with password: " + password);
+    FileEncryptor.encrypt(input, tempOutput, password);
+    File original = new File(input);
+    File temp = new File(tempOutput);
+    if (original.exists()) {
+        original.delete();
+    }
+    if (temp.renameTo(original)) {
+        Notifications noti = Notifications.create();
+        noti.title("Success!");
+        noti.text("File encrypted successfully!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showInformation();
+    } else {
+        Notifications noti = Notifications.create();
+        noti.title("Error!");
+        noti.text("Failed to replace original file.");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+    }
+} catch (Exception ex) {
+    ex.printStackTrace();
+    Notifications noti = Notifications.create();
+    noti.title("Encryption Failed!");
+    noti.text("An error occurred during encryption.");
+    noti.position(Pos.CENTER);
+    noti.hideAfter(Duration.seconds(5));
+    noti.showError();
+}
+  
+    ////////////////////////////////////////////////////////////////
+    
     Notifications noti = Notifications.create();
     noti.title("Successful");
     noti.text("We have created the recipe successfully.");
@@ -728,11 +791,42 @@ code.setText(doctp.toString());
 
  //SHow recipr first here..........
 
+    ////////////////////////////////////////////////////////////
 
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications notii = Notifications.create();
+        notii.title("Fatal Error!");
+        notii.text("java.dat is empty!");
+        notii.position(Pos.CENTER);
+        notii.hideAfter(Duration.seconds(4));
+        notii.showError();
+        return;
+    }
+    String result = KeyDecoder.extractData(longKey.trim());
+    if (fff == null) {
+        Notifications notiii = Notifications.create();
+        notiii.title("Fatal Error!");
+        notiii.text("Choose file first!");
+        notiii.position(Pos.CENTER);
+        notiii.hideAfter(Duration.seconds(4));
+        notiii.showError();
+        return;
+    }
+    String input = fff.getAbsolutePath();
+    String nameofit=fff.getName();
+    String tempOutput = System.getProperty("user.home")+"\\"+nameofit;
+     FileDecryptor.decrypt(input, tempOutput, result);
+    File tempr = new File(tempOutput);
+    
+    ////////////////////////////////////////////////////////////
 
 String modelooo=model.getSelectionModel().getSelectedItem().toString();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-InputStream inputinstream=new FileInputStream(pattt);
+InputStream inputinstream=new FileInputStream(tempr);
 BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
 String lo;
 code.clear();
@@ -2371,6 +2465,8 @@ if (results.isPresent() && results.get() == buttonTypeOne) {
     
     ////////////////////////////////////////////////  
     
+    
+    
 }
 
 
@@ -2380,6 +2476,15 @@ else {
     
 }
     
+
+
+    ////////////////////////////////////////////////////////////////
+    if (tempr.exists()) {
+        tempr.delete();
+    }
+    ////////////////////////////////////////////////////////////////
+
+
 
 Platform.runLater( () -> {
     

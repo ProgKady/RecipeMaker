@@ -33,19 +33,13 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.text.DateFormat;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -56,7 +50,6 @@ import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
@@ -66,7 +59,6 @@ import org.controlsfx.control.Notifications;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 
 /**
@@ -226,6 +218,9 @@ buf.close();
     pwwc.close();
     lili.clear();
  
+    
+    
+    
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     
     InputStream inputinstream=new FileInputStream(System.getProperty("user.home")+"\\uppo.ks");
@@ -443,7 +438,7 @@ lili.appendText(
 
 
 
-while ((lo=bi.readLine())!=null) {        
+while ((lo=bi.readLine())!=null) {       
 lili.appendText("\n"+lo
 .replace("ﬦ","A")
 .replace("ﬧ","B")
@@ -3349,7 +3344,7 @@ void clearallaction(ActionEvent event)  throws IOException{
 
     
 @FXML
-void browseaction(ActionEvent event)  throws IOException{
+void browseaction(ActionEvent event)  throws IOException, Exception{
     
     
     
@@ -3366,11 +3361,51 @@ recipenami=f.getName().replace(".ks","").replace(".html","");
 String recipepathy = f.getAbsolutePath().toString();
 recipelink.setText(recipepathy);  
 
+
 //Read File Here//////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+  ////////////////////////////////////////////////////////////
+
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String resultp = KeyDecoder.extractData(longKey.trim());
+    if (f == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = f.getAbsolutePath();
+    String nameofit=recipenami;
+    String tempOutput = System.getProperty("user.home")+"\\"+nameofit;
+ 
+    FileDecryptor.decrypt(input, tempOutput, resultp);
+    File temp = new File(tempOutput);
+    
+    ////////////////////////////////////////////////////////////
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-InputStream inputinstream=new FileInputStream(recipepathy);
+InputStream inputinstream=new FileInputStream(temp);
 BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
 String lo;
+
+
 lili.clear();
 
 //lili.appendText(      
@@ -3602,7 +3637,19 @@ calculate.setDisable(false);
 calnew.setDisable(false);
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
+
+
+
     }
+
+
+	
+    ////////////////////////////////////////////////////////////////
+    if (temp.exists()) {
+        temp.delete();
+    }
+    ////////////////////////////////////////////////////////////////
+
 
 //Show alert here
 
@@ -3644,9 +3691,43 @@ recipenami1=iif.getName().replace(".ks","").replace(".html","");
 String recipepathyi = iif.getAbsolutePath().toString();
 recipelink1.setText(recipepathyi);  
 
+
+    ////////////////////////////////////////////////////////////
+
+    String longKeyo;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKeyo = cxsd.readLine();
+    }
+    if (longKeyo == null || longKeyo.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String resultf = KeyDecoder.extractData(longKeyo.trim());
+    if (iif == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String inputp = iif.getAbsolutePath();
+    String nameofitp=recipenami1;
+    String tempOutputp = System.getProperty("user.home")+"\\"+nameofitp;
+    FileDecryptor.decrypt(inputp, tempOutputp, resultf);
+    File tempi = new File(tempOutputp);
+    
+    ////////////////////////////////////////////////////////////
+
 //Read File Here//////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-InputStream inputinstreami=new FileInputStream(recipepathyi);
+InputStream inputinstreami=new FileInputStream(tempi);
 BufferedReader bii=new BufferedReader (new InputStreamReader (inputinstreami,"UTF-8"));
 String loi;
 lili3.clear();
@@ -3690,7 +3771,7 @@ lili3.clear();
 
 
 
-while ((loi=bii.readLine())!=null) {        
+while ((loi=bii.readLine())!=null) {     
 lili3.appendText("\n"+loi
 .replace("ﬦ","A")
 .replace("ﬧ","B")
@@ -3885,7 +3966,12 @@ calnew.setDisable(false);
 
 updatecostt.setDisable(false);
 
-
+	
+    ////////////////////////////////////////////////////////////////
+    if (tempi.exists()) {
+        tempi.delete();
+    }
+    ////////////////////////////////////////////////////////////////
     
 }
 
@@ -3918,7 +4004,7 @@ result.setText(Double.toString(onegar));
     
     
     @FXML
-    void refreshaction(ActionEvent event) throws FileNotFoundException, UnsupportedEncodingException, IOException {
+    void refreshaction(ActionEvent event) throws FileNotFoundException, UnsupportedEncodingException, IOException, Exception {
 
    String rRe=recipelink.getText();
    
@@ -3936,8 +4022,45 @@ noti.showError();
    
    else {
        
+       
+       
+           ////////////////////////////////////////////////////////////
+
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String resultb = KeyDecoder.extractData(longKey.trim());
+    if (rRe == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = rRe;
+    String nameofit=Paths.get(rRe).getFileName().toString();
+    String tempOutput = System.getProperty("user.home")+"\\"+nameofit;
+ 
+    FileDecryptor.decrypt(input, tempOutput, resultb);
+    File temp = new File(tempOutput);
+    
+    ////////////////////////////////////////////////////////////
+       
+       
 //Re Read File Recipe.       
-InputStream inputinstream=new FileInputStream(rRe);
+InputStream inputinstream=new FileInputStream(temp);
 BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
 String lo;
 lili1.clear();
@@ -4466,7 +4589,7 @@ lili1.appendText(
 
 
 
-while ((lo=bi.readLine())!=null) {        
+while ((lo=bi.readLine())!=null) {      
 lili1.appendText("\n"+lo
 .replace("ﬦ","A")
 .replace("ﬧ","B")
@@ -4953,7 +5076,7 @@ lili1.appendText(
 
 
 
-while ((lo=bi.readLine())!=null) {        
+while ((lo=bi.readLine())!=null) {     
 lili1.appendText("\n"+lo
 .replace("ﬦ","A")
 .replace("ﬧ","B")

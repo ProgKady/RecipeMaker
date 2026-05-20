@@ -25,9 +25,11 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
-import javafx.stage.Window;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 
 /**
  * FXML Controller class
@@ -85,7 +87,7 @@ public class AddDataToRecipeController implements Initializable {
     
     
     @FXML
-void pushaction(ActionEvent event) throws FileNotFoundException, IOException {
+void pushaction(ActionEvent event) throws FileNotFoundException, IOException, Exception {
 
     FileChooser fcho = new FileChooser();
     fcho.getExtensionFilters().add(new FileChooser.ExtensionFilter("Kadysoft Files", "*.ks"));
@@ -94,11 +96,45 @@ void pushaction(ActionEvent event) throws FileNotFoundException, IOException {
     File f = fcho.showOpenDialog(null);
 
     if (f == null) return;
+    
+    ////////////////////////////////////////////////////////////
+
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String result = KeyDecoder.extractData(longKey.trim());
+    if (f == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = f.getAbsolutePath();
+    String nameofit=f.getName();
+    String tempOutput = System.getProperty("user.home")+"\\"+nameofit;
+ 
+    FileDecryptor.decrypt(input, tempOutput, result);
+    File temp = new File(tempOutput);
+    
+    ////////////////////////////////////////////////////////////
 
     roroname = f.getName().replaceAll(".ks", "");
     String pathy = f.getAbsolutePath();
 
-    InputStream inputinstream = new FileInputStream(pathy);
+    InputStream inputinstream = new FileInputStream(tempOutput);
     BufferedReader buf = new BufferedReader(new InputStreamReader(inputinstream, "UTF-8"));
 
     OutputStream instreamm = new FileOutputStream(getValueByKey("lib\\setto.cfg", "Secondry_Editor"));
@@ -246,6 +282,12 @@ void pushaction(ActionEvent event) throws FileNotFoundException, IOException {
 
     pw.close();
     buf.close();
+    
+    ////////////////////////////////////////////////////////////////
+    if (temp.exists()) {
+        temp.delete();
+    }
+    ////////////////////////////////////////////////////////////////
     
     Desktop ffsd=Desktop.getDesktop();
     ffsd.open(new File (getValueByKey("lib\\setto.cfg", "Secondry_Editor")));

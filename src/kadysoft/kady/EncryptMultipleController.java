@@ -3,16 +3,13 @@ package kadysoft.kady;
 
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextArea;
-import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,10 +18,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,10 +28,6 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 /**
  * FXML Controller class
@@ -100,6 +89,72 @@ public class EncryptMultipleController implements Initializable {
     PrintWriter pw = new PrintWriter(new OutputStreamWriter (instreamm,"UTF-8"));
     pw.println(gf);
     pw.close();
+    
+    ////////////////////////////////////////////////////////////////
+    
+  
+     try {
+    String longKey;
+    try (BufferedReader reader = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = reader.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("No password found in java.dat!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String password = KeyDecoder.extractData(longKey.trim());
+    if (namo == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = namo;
+    String tempOutput = input + ".tmp";
+    System.out.println("Encrypting with password: " + password);
+    FileEncryptor.encrypt(input, tempOutput, password);
+    File original = new File(input);
+    File temp = new File(tempOutput);
+    if (original.exists()) {
+        original.delete();
+    }
+    if (temp.renameTo(original)) {
+        Notifications noti = Notifications.create();
+        noti.title("Success!");
+        noti.text("File encrypted successfully!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showInformation();
+    } else {
+        Notifications noti = Notifications.create();
+        noti.title("Error!");
+        noti.text("Failed to replace original file.");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+    }
+} catch (Exception ex) {
+    ex.printStackTrace();
+    Notifications noti = Notifications.create();
+    noti.title("Encryption Failed!");
+    noti.text("An error occurred during encryption.");
+    noti.position(Pos.CENTER);
+    noti.hideAfter(Duration.seconds(5));
+    noti.showError();
+}
+  
+    
+    ////////////////////////////////////////////////////////////////
+    
+    
     Notifications noti = Notifications.create();
     noti.title("Successful");
     noti.text("We have encrypted the recipe successfully.");

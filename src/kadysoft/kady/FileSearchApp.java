@@ -3,17 +3,6 @@ package kadysoft.kady;
 
 
 import java.io.BufferedReader;
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,13 +10,25 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javafx.application.Application;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 
 public class FileSearchApp extends Application {
 
@@ -137,6 +138,8 @@ public class FileSearchApp extends Application {
                         handleFiles(droppedFiles, word);/////////////////
                     } catch (IOException ex) {
                         Logger.getLogger(FileSearchApp.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
+                        Logger.getLogger(FileSearchApp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } else {
                     textArea.setText("Please enter a word to search first!");
@@ -152,7 +155,7 @@ public class FileSearchApp extends Application {
     }
     
     
-private void handleFiles(List<File> droppedFiles, String searchWord) throws IOException {
+private void handleFiles(List<File> droppedFiles, String searchWord) throws IOException, Exception {
     StringBuilder result = new StringBuilder();
 
     List<String> fileNames = droppedFiles.stream()
@@ -167,8 +170,45 @@ private void handleFiles(List<File> droppedFiles, String searchWord) throws IOEx
 
     for (File file : droppedFiles) {
         // Always read UTF-8
+        
+        
+            ////////////////////////////////////////////////////////////
+
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String resultu = KeyDecoder.extractData(longKey.trim());
+    if (file == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = file.getAbsolutePath();
+    String nameofit=file.getName();
+    String tempOutput = System.getProperty("user.home")+"\\"+nameofit;
+ 
+    FileDecryptor.decrypt(input, tempOutput, resultu);
+    File temp = new File(tempOutput);
+    
+    ////////////////////////////////////////////////////////////
+        
+        
         String contentt = new String(
-            Files.readAllBytes(file.toPath()),
+            Files.readAllBytes(temp.toPath()),
             StandardCharsets.UTF_8
         );
         // Decrypt
@@ -195,6 +235,14 @@ private void handleFiles(List<File> droppedFiles, String searchWord) throws IOEx
             result.append("❌ Not found in: ").append(file.getName()).append("\n");
             notFoundCount++;
         }
+        
+        
+    ////////////////////////////////////////////////////////////////
+    if (temp.exists()) {
+        temp.delete();
+    }
+    ////////////////////////////////////////////////////////////////
+        
     }
 
     result.append("\nSummary:\n")
@@ -202,6 +250,9 @@ private void handleFiles(List<File> droppedFiles, String searchWord) throws IOEx
             .append("❌ Not found in ").append(notFoundCount).append(" files\n");
 
     textArea.setText(result.toString());
+    
+   	
+
 }
 
 

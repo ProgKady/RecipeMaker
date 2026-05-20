@@ -9,50 +9,79 @@ import org.controlsfx.control.Notifications;
 public class Git {
 
     public static void gitCommands() {
-        // ننشئ Thread جديد للخلفية
         new Thread(() -> {
             try {
                 String repoPath = NewDir.file_dir;
+                
+                System.out.println("Git Operations Started in: " + repoPath);
 
+                // 1. Add
                 runCommand("git add .", repoPath);
-                runCommand("git commit -m \"Update some data\"", repoPath);
-                runCommand("git push", repoPath);
-
-                // لما العمليات تخلص نرجع UI thread عشان نعرض الإشعار
-                Platform.runLater(() -> {
-                    Notifications noti = Notifications.create();
-                    noti.title("Successful");
-                    noti.text("✔ Git operations completed successfully!");
-                    noti.position(Pos.CENTER);
-                    noti.show();
-                });
+                
+                // 2. Commit فقط لو فيه تغييرات
+                boolean hasChanges = runCommandWithResult("git status --porcelain", repoPath);
+                
+                if (hasChanges) {
+                    runCommand("git commit -m \"Update some data - " + new java.util.Date() + "\"", repoPath);
+                    runCommand("git push origin master", repoPath);   // حددنا الـ branch
+                    
+                    Platform.runLater(() -> showNotification("✔ Git Push Completed Successfully!", "success"));
+                } else {
+                    Platform.runLater(() -> showNotification("ℹ No changes to commit", "info"));
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
-                // لو في خطأ نقدر نعرضه برضه في UI
-                Platform.runLater(() -> {
-                    Notifications noti = Notifications.create();
-                    noti.title("Error");
-                    noti.text("✖ Git operations failed: " + e.getMessage());
-                    noti.position(Pos.CENTER);
-                    noti.show();
-                });
+                Platform.runLater(() -> showNotification("✖ Git Error: " + e.getMessage(), "error"));
             }
-        }).start(); // نبدأ Thread
+        }).start();
     }
 
-    public static void runCommand(String command, String workingDir) throws Exception {
+    private static void runCommand(String command, String workingDir) throws Exception {
+        System.out.println("Running: " + command);
         ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", command);
         builder.directory(new java.io.File(workingDir));
         builder.redirectErrorStream(true);
+        
         Process process = builder.start();
+        printProcessOutput(process);
+        process.waitFor();
+    }
 
+    private static boolean runCommandWithResult(String command, String workingDir) throws Exception {
+        ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", command);
+        builder.directory(new java.io.File(workingDir));
+        builder.redirectErrorStream(true);
+        
+        Process process = builder.start();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line;
+        boolean hasOutput = false;
+        
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line);
+            if (!line.trim().isEmpty()) hasOutput = true;
+        }
+        process.waitFor();
+        return hasOutput;
+    }
+
+    private static void printProcessOutput(Process process) throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line;
         while ((line = reader.readLine()) != null) {
             System.out.println(line);
         }
+    }
 
-        process.waitFor();
+    private static void showNotification(String text, String type) {
+        Notifications noti = Notifications.create();
+        noti.title(type.equals("success") ? "Git Success" : "Git Info");
+        noti.text(text);
+        noti.position(Pos.CENTER);
+        
+        if (type.equals("success")) noti.showInformation();
+        else if (type.equals("error")) noti.showError();
+        else noti.showWarning();
     }
 }

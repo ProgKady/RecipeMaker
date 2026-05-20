@@ -3,15 +3,12 @@ package kadysoft.kady;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
-import com.spire.xls.ExcelVersion;
-import com.spire.xls.FileFormat;
-import com.spire.xls.Workbook;
-import com.spire.xls.Worksheet;
 import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,12 +17,12 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
@@ -60,7 +57,7 @@ public class ConverterController implements Initializable {
     
     
     @FXML
-    void browseaction(MouseEvent event) throws IOException, InterruptedException {
+    void browseaction(MouseEvent event) throws IOException, InterruptedException, Exception {
 
     FileChooser fcho = new FileChooser();
     String go = NewDir.file_dir;
@@ -90,7 +87,45 @@ public class ConverterController implements Initializable {
           }
           
     coode.clear();
-    InputStream inputinstream=new FileInputStream(pathy);
+    
+    
+        ////////////////////////////////////////////////////////////
+
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String result = KeyDecoder.extractData(longKey.trim());
+    if (f == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = f.getAbsolutePath();
+    String nameofit=f.getName();
+    String tempOutput = System.getProperty("user.home")+"\\"+nameofit;
+ 
+    FileDecryptor.decrypt(input, tempOutput, result);
+    File temp = new File(tempOutput);
+    
+    ////////////////////////////////////////////////////////////
+    
+    
+    
+    InputStream inputinstream=new FileInputStream(temp);
     BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
     String lo;
     while ((lo=bi.readLine())!=null) {
@@ -214,11 +249,17 @@ public class ConverterController implements Initializable {
     
     pwe.close();
     coode.clear();
+    
+    ////////////////////////////////////////////////////////////////
+    if (temp.exists()) {
+        temp.delete();
+    }
+    ////////////////////////////////////////////////////////////////
         
     Desktop gd=Desktop.getDesktop();
     gd.open(tw2);
           
-    Thread.sleep(2000);
+    Thread.sleep(4000);
     
     PrintWriter pl=new PrintWriter(new FileWriter(tw2));
     pl.println("Powered By Kadysoft - Pilot Was Removed.");
@@ -248,7 +289,7 @@ public class ConverterController implements Initializable {
     
     
     @FXML
-    void dragdroppedd(DragEvent event) throws IOException, InterruptedException {
+    void dragdroppedd(DragEvent event) throws IOException, InterruptedException, Exception {
 
         Dragboard db = event.getDragboard();
                 boolean success = false;
@@ -275,7 +316,44 @@ public class ConverterController implements Initializable {
           }
           
     coode.clear();
-    InputStream inputinstream=new FileInputStream(path);
+    
+    
+       ////////////////////////////////////////////////////////////
+
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String result = KeyDecoder.extractData(longKey.trim());
+    if (path == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = path;
+    String nameofit=Paths.get(path).getFileName().toString();
+    String tempOutput = System.getProperty("user.home")+"\\"+nameofit;
+ 
+    FileDecryptor.decrypt(input, tempOutput, result);
+    File temp = new File(tempOutput);
+    
+    ////////////////////////////////////////////////////////////
+    
+    
+    InputStream inputinstream=new FileInputStream(temp);
     BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
     String lo;
     while ((lo=bi.readLine())!=null) {
@@ -402,11 +480,17 @@ public class ConverterController implements Initializable {
     
     pwe.close();
     coode.clear();
+    
+    ////////////////////////////////////////////////////////////////
+    if (temp.exists()) {
+        temp.delete();
+    }
+    ////////////////////////////////////////////////////////////////
         
     Desktop gd=Desktop.getDesktop();
     gd.open(tw2);
           
-    Thread.sleep(2000);
+    Thread.sleep(4000);
     
     PrintWriter pl=new PrintWriter(new FileWriter(tw2));
     pl.println("Powered By Kadysoft - Pilot Was Removed.");

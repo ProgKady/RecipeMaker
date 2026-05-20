@@ -610,6 +610,73 @@ public class CreateFastModeController implements Initializable {
     PrintWriter pw = new PrintWriter(new OutputStreamWriter (instreamm,"UTF-8"));
     pw.println(allcode);
     pw.close();
+    
+    
+    
+	////////////////////////////////////////////////////////////////
+    
+  
+     try {
+    String longKey;
+    try (BufferedReader reader = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = reader.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("No password found in java.dat!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String password = KeyDecoder.extractData(longKey.trim());
+    if (file == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = file.getAbsolutePath();
+    String tempOutput = input + ".tmp";
+    System.out.println("Encrypting with password: " + password);
+    FileEncryptor.encrypt(input, tempOutput, password);
+    File original = new File(input);
+    File temp = new File(tempOutput);
+    if (original.exists()) {
+        original.delete();
+    }
+    if (temp.renameTo(original)) {
+        Notifications noti = Notifications.create();
+        noti.title("Success!");
+        noti.text("File encrypted successfully!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showInformation();
+    } else {
+        Notifications noti = Notifications.create();
+        noti.title("Error!");
+        noti.text("Failed to replace original file.");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+    }
+} catch (Exception ex) {
+    ex.printStackTrace();
+    Notifications noti = Notifications.create();
+    noti.title("Encryption Failed!");
+    noti.text("An error occurred during encryption.");
+    noti.position(Pos.CENTER);
+    noti.hideAfter(Duration.seconds(5));
+    noti.showError();
+}
+  
+    
+    ////////////////////////////////////////////////////////////////
+    
     Notifications noti = Notifications.create();
     noti.title("Successful");
     noti.text("We have created the recipe successfully.");

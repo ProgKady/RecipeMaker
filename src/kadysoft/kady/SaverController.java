@@ -34,7 +34,6 @@ import java.awt.Desktop;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -59,7 +58,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -73,14 +71,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.ResourceBundle;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -90,7 +85,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DialogPane;
@@ -98,14 +92,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.util.Duration;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -435,6 +426,8 @@ public class SaverController implements Initializable {
                 pwe1.close();
                 
                 //Encrypt First
+                
+                
                 
                 String gf2=code.getText();
                 OutputStream instreamm2=new FileOutputStream(bn3);
@@ -1898,6 +1891,73 @@ roraa = doctp.toString();
     //PrintWriter pw=new PrintWriter (new FileWriter (pathy));
     pw.println(gf);
     pw.close();
+    
+    
+    ////////////////////////////////////////////////////////////////
+    
+  
+     try {
+    String longKey;
+    try (BufferedReader reader = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = reader.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("No password found in java.dat!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String password = KeyDecoder.extractData(longKey.trim());
+    if (filePath == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = filePath;
+    String tempOutput = input + ".tmp";
+    System.out.println("Encrypting with password: " + password);
+    FileEncryptor.encrypt(input, tempOutput, password);
+    File original = new File(input);
+    File tempu = new File(tempOutput);
+    if (original.exists()) {
+        original.delete();
+    }
+    if (tempu.renameTo(original)) {
+        Notifications noti = Notifications.create();
+        noti.title("Success!");
+        noti.text("File encrypted successfully!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showInformation();
+    } else {
+        Notifications noti = Notifications.create();
+        noti.title("Error!");
+        noti.text("Failed to replace original file.");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+    }
+} catch (Exception ex) {
+    ex.printStackTrace();
+    Notifications noti = Notifications.create();
+    noti.title("Encryption Failed!");
+    noti.text("An error occurred during encryption.");
+    noti.position(Pos.CENTER);
+    noti.hideAfter(Duration.seconds(5));
+    noti.showError();
+}
+  
+    
+    ////////////////////////////////////////////////////////////////
+    
+    
     Notifications noti = Notifications.create();
     noti.title("Successful");
     noti.text("We have encrypted the recipe successfully.");
@@ -2244,6 +2304,73 @@ roraa = doctp.toString();
     //PrintWriter pw=new PrintWriter (new FileWriter (pathy));
     pw.println(gf);
     pw.close();
+    
+    
+    ////////////////////////////////////////////////////////////////
+    
+  
+     try {
+    String longKey;
+    try (BufferedReader reader = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = reader.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("No password found in java.dat!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String password = KeyDecoder.extractData(longKey.trim());
+    if (filePath == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = filePath;
+    String tempOutput = input + ".tmp";
+    System.out.println("Encrypting with password: " + password);
+    FileEncryptor.encrypt(input, tempOutput, password);
+    File original = new File(input);
+    File tempa = new File(tempOutput);
+    if (original.exists()) {
+        original.delete();
+    }
+    if (tempa.renameTo(original)) {
+        Notifications noti = Notifications.create();
+        noti.title("Success!");
+        noti.text("File encrypted successfully!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showInformation();
+    } else {
+        Notifications noti = Notifications.create();
+        noti.title("Error!");
+        noti.text("Failed to replace original file.");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+    }
+} catch (Exception ex) {
+    ex.printStackTrace();
+    Notifications noti = Notifications.create();
+    noti.title("Encryption Failed!");
+    noti.text("An error occurred during encryption.");
+    noti.position(Pos.CENTER);
+    noti.hideAfter(Duration.seconds(5));
+    noti.showError();
+}
+  
+    
+    ////////////////////////////////////////////////////////////////
+    
+    
     Notifications noti = Notifications.create();
     noti.title("Successful");
     noti.text("We have encrypted the recipe successfully.");
@@ -2622,13 +2749,48 @@ roraa = doctp.toString();
        
        
        
+         ////////////////////////////////////////////////////////////
+
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String resultb = KeyDecoder.extractData(longKey.trim());
+    if (filePath == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = filePath;
+    String nameofit=filePath.replace(".ks", "");
+    String tempOutput = System.getProperty("user.home")+"\\"+nameofit;
+ 
+    FileDecryptor.decrypt(input, tempOutput, resultb);
+    File tempk = new File(tempOutput);
+    
+    ////////////////////////////////////////////////////////////
+     
+     
 ///////////////////////////////Calculate Cost/////////////////////////////////////////////////////////////   
        
-InputStream inputinstream=new FileInputStream(filePath);
+InputStream inputinstream=new FileInputStream(tempk);
 BufferedReader bi=new BufferedReader (new InputStreamReader (inputinstream,"UTF-8"));
 String lo;
 code.clear();
-while ((lo=bi.readLine())!=null) {        
+while ((lo=bi.readLine())!=null) {       
 code.appendText("\n"+lo
 .replace("ﬦ","A")
 .replace("ﬧ","B")
@@ -2676,6 +2838,11 @@ PrintWriter pwe = new PrintWriter(new OutputStreamWriter (instreamm,"UTF-8"));
 pwe.println(gf);
 pwe.close();
 
+    ////////////////////////////////////////////////////////////////
+    if (tempk.exists()) {
+        tempk.delete();
+    }
+    ////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////   
 List<Double> pri = new ArrayList<>();
@@ -3704,6 +3871,73 @@ roraa = doctp.toString();
     //PrintWriter pw=new PrintWriter (new FileWriter (pathy));
     pw.println(gf);
     pw.close();
+    
+    
+    ////////////////////////////////////////////////////////////////
+    
+  
+     try {
+    String longKey;
+    try (BufferedReader reader = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = reader.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("No password found in java.dat!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String password = KeyDecoder.extractData(longKey.trim());
+    if (filePath == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = filePath;
+    String tempOutput = input + ".tmp";
+    System.out.println("Encrypting with password: " + password);
+    FileEncryptor.encrypt(input, tempOutput, password);
+    File original = new File(input);
+    File temp = new File(tempOutput);
+    if (original.exists()) {
+        original.delete();
+    }
+    if (temp.renameTo(original)) {
+        Notifications noti = Notifications.create();
+        noti.title("Success!");
+        noti.text("File encrypted successfully!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showInformation();
+    } else {
+        Notifications noti = Notifications.create();
+        noti.title("Error!");
+        noti.text("Failed to replace original file.");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+    }
+} catch (Exception ex) {
+    ex.printStackTrace();
+    Notifications noti = Notifications.create();
+    noti.title("Encryption Failed!");
+    noti.text("An error occurred during encryption.");
+    noti.position(Pos.CENTER);
+    noti.hideAfter(Duration.seconds(5));
+    noti.showError();
+}
+  
+    
+    ////////////////////////////////////////////////////////////////
+    
+    
     Notifications noti = Notifications.create();
     noti.title("Successful");
     noti.text("We have encrypted the recipe successfully.");
@@ -4054,6 +4288,72 @@ roraa = doctp.toString();
     //PrintWriter pw=new PrintWriter (new FileWriter (pathy));
     pw.println(gf);
     pw.close();
+    
+    ////////////////////////////////////////////////////////////////
+    
+  
+     try {
+    String longKey;
+    try (BufferedReader reader = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = reader.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("No password found in java.dat!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String password = KeyDecoder.extractData(longKey.trim());
+    if (filePath == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = filePath;
+    String tempOutput = input + ".tmp";
+    System.out.println("Encrypting with password: " + password);
+    FileEncryptor.encrypt(input, tempOutput, password);
+    File original = new File(input);
+    File temp = new File(tempOutput);
+    if (original.exists()) {
+        original.delete();
+    }
+    if (temp.renameTo(original)) {
+        Notifications noti = Notifications.create();
+        noti.title("Success!");
+        noti.text("File encrypted successfully!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showInformation();
+    } else {
+        Notifications noti = Notifications.create();
+        noti.title("Error!");
+        noti.text("Failed to replace original file.");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+    }
+} catch (Exception ex) {
+    ex.printStackTrace();
+    Notifications noti = Notifications.create();
+    noti.title("Encryption Failed!");
+    noti.text("An error occurred during encryption.");
+    noti.position(Pos.CENTER);
+    noti.hideAfter(Duration.seconds(5));
+    noti.showError();
+}
+  
+    
+    ////////////////////////////////////////////////////////////////
+    
+    
     Notifications noti = Notifications.create();
     noti.title("Successful");
     noti.text("We have encrypted the recipe successfully.");
@@ -4831,6 +5131,98 @@ Platform.runLater( () -> {
 code.clear();
 
 // قراءة الملف وفك التشفير
+
+
+    ////////////////////////////////////////////////////////////
+    
+    
+
+    try {
+    String longKey;
+    try (BufferedReader cxsd = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = cxsd.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("java.dat is empty!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String resulta = KeyDecoder.extractData(longKey.trim());
+    if ((lonk.getText()) == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = lonk.getText();
+    File originalFile = new File(input);
+    //Add backup here
+    File backupFolder = new File("D:\\All_Recipessss\\Backup");
+    if (!backupFolder.exists()) {
+        backupFolder.mkdirs();
+    }
+    String backupFileName = originalFile.getName() + ".bak";
+    File backupFile = new File(backupFolder, backupFileName);
+    try {
+        java.nio.file.Files.copy(originalFile.toPath(), 
+                                backupFile.toPath(), 
+                                java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+        System.out.println("✅ Backup created / updated: " + backupFile.getAbsolutePath());
+    } catch (Exception backupEx) {
+        System.out.println("⚠️ Warning: Failed to create backup - " + backupEx.getMessage());
+    }
+    // =================================================
+    
+    String tempOutput = input + ".tmp";
+    System.out.println("Decrypting with password: " + resulta); // للتصحيح
+    FileDecryptor.decrypt(input, tempOutput, resulta);
+    File original = new File(input);
+    File temp = new File(tempOutput);
+    if (original.exists()) {
+        original.delete();
+    }
+    if (temp.renameTo(original)) {
+        Notifications noti = Notifications.create();
+        noti.title("Success!");
+        noti.text("File decrypted successfully.");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showInformation();
+    } else {
+        Notifications noti = Notifications.create();
+        noti.title("Error!");
+        noti.text("Failed to replace original file.");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+    }
+} catch (Exception ex) {
+    ex.printStackTrace();
+    String errorMsg = "Wrong password or corrupted file.";
+    if (ex.getClass().getSimpleName().contains("AEADBadTag") || 
+        ex.getMessage() != null && ex.getMessage().contains("BadTag")) {
+        errorMsg = "Wrong password! The key does not match the file.";
+    }
+    Notifications noti = Notifications.create();
+    noti.title("Decryption Failed!");
+    noti.text(errorMsg);
+    noti.position(Pos.CENTER);
+    noti.hideAfter(Duration.seconds(5));
+    noti.showError();
+}
+
+
+
+    ////////////////////////////////////////////////////////////
+
+
 InputStream inputinstream = new FileInputStream(lonk.getText());
 BufferedReader bi = new BufferedReader(new InputStreamReader(inputinstream, "UTF-8"));
 String lo;
@@ -5040,6 +5432,71 @@ try (PrintWriter pwn = new PrintWriter(new OutputStreamWriter(new FileOutputStre
 }
 code.clear();
 
+
+
+	////////////////////////////////////////////////////////////////
+    
+  
+     try {
+    String longKey;
+    try (BufferedReader reader = new BufferedReader(new FileReader("lib\\java.dat"))) {
+        longKey = reader.readLine();
+    }
+    if (longKey == null || longKey.trim().isEmpty()) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("No password found in java.dat!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String password = KeyDecoder.extractData(longKey.trim());
+    if ((lonk.getText()) == null) {
+        Notifications noti = Notifications.create();
+        noti.title("Fatal Error!");
+        noti.text("Choose file first!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+        return;
+    }
+    String input = lonk.getText();
+    String tempOutput = input + ".tmp";
+    System.out.println("Encrypting with password: " + password);
+    FileEncryptor.encrypt(input, tempOutput, password);
+    File original = new File(input);
+    File temp = new File(tempOutput);
+    if (original.exists()) {
+        original.delete();
+    }
+    if (temp.renameTo(original)) {
+        Notifications noti = Notifications.create();
+        noti.title("Success!");
+        noti.text("File encrypted successfully!");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showInformation();
+    } else {
+        Notifications noti = Notifications.create();
+        noti.title("Error!");
+        noti.text("Failed to replace original file.");
+        noti.position(Pos.CENTER);
+        noti.hideAfter(Duration.seconds(4));
+        noti.showError();
+    }
+} catch (Exception ex) {
+    ex.printStackTrace();
+    Notifications noti = Notifications.create();
+    noti.title("Encryption Failed!");
+    noti.text("An error occurred during encryption.");
+    noti.position(Pos.CENTER);
+    noti.hideAfter(Duration.seconds(5));
+    noti.showError();
+}
+  
+    
+    ////////////////////////////////////////////////////////////////
     
     
     //Encrypt Here.............
@@ -5554,32 +6011,7 @@ private void viewHistory() {
         closeResources();
     }
 
-    // ──────────────────────────────────────────────
-    // الدوال المساعدة (نفس السابقة مع تحسينات)
-    // ──────────────────────────────────────────────
 
-    private String cleanSpecialCharacters(File file) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                line = line
-                        .replace("ﬦ","A").replace("ﬧ","B").replace("ﬨ","C").replace("﬩","D")
-                        .replace("שׁ","E").replace("שׂ","F").replace("שּׁ","G").replace("שּׂ","H")
-                        .replace("אַ","I").replace("אָ","J").replace("אּ","K").replace("בּ","L")
-                        .replace("גּ","M").replace("דּ","N").replace("הּ","O").replace("וּ","P")
-                        .replace("זּ","Q").replace("טּ","R").replace("יּ","S").replace("ךּ","T")
-                        .replace("כּ","U").replace("לּ","V").replace("מּ","W").replace("נּ","X")
-                        .replace("סּ","Y").replace("ףּ","Z")
-                        .replace("פּ","0").replace("צּ","1").replace("קּ","2").replace("רּ","3")
-                        .replace("שּ","4").replace("תּ","5").replace("וֹ","6").replace("בֿ","7")
-                        .replace("כֿ","8").replace("פֿ","9")
-                        .replace("&NBSP;"," ").replace("&nbsp;"," ").replace("&NBSP", " ");
-                sb.append(line).append("\n");
-            }
-        }
-        return sb.toString();
-    }
 
     private double parseQuantity(String amountStr, String unit, String chemical) {
         try {
