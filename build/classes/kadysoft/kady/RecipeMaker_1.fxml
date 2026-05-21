@@ -377,6 +377,14 @@
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="block1" disable="true" mnemonicParsing="false" onAction="#iloveuaction" text="I LOVE U ❤" />
                         <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="audit" disable="true" mnemonicParsing="false" onAction="#auditaction" text="Show Audit" />
+                        <Menu fx:id="histo" disable="true" mnemonicParsing="false" text="Recipe Editing History">
+                           <items>
+                              <MenuItem mnemonicParsing="false" onAction="#historyactionn" text="Recipe Editing History (Specific)" />
+                              <MenuItem mnemonicParsing="false" onAction="#historyaction2" text="Drag And Drop" />
+                           </items>
+                        </Menu>
+                        <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="logout" mnemonicParsing="false" onAction="#logoutaction" text="Log Out" />
                      </items>
                   </MenuButton>

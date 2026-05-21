@@ -7,9 +7,7 @@ import com.jfoenix.controls.JFXTextField;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,21 +22,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -57,9 +45,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JOptionPane;
 import org.controlsfx.control.Notifications;
 
@@ -1144,7 +1129,8 @@ public class LogIn_GUI_Controller  implements Initializable {
         noti.showInformation();
       } catch (Exception exception) {}
     } 
-    this.positionbox.getItems().addAll(new Object[] { "Recipe_Maker", "Developer", "Viewer" }); // For Me Only.
+    this.positionbox.getItems().addAll(new Object[] { "Recipe_Maker" }); // For Me Only.
+    //this.positionbox.getItems().addAll(new Object[] { "Recipe_Maker", "Developer", "Viewer" }); // For Me Only.
     //this.positionbox.getItems().addAll(new Object[] { "Developer", "Admin", "Recipe_Maker", "Viewer" }); // For Me Only.
     //this.positionbox.getItems().addAll(new Object[] { "Recipe_Maker", "Viewer" }); // For Anyone.
     //this.positionbox.getItems().addAll(new Object[] { "Viewer" }); // For BARCODE.

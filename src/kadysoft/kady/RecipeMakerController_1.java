@@ -68,6 +68,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -75,26 +76,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.stage.Window;
+import javafx.stage.*;
 import javafx.util.Duration;
 import javax.swing.JOptionPane;
 import static kadysoft.kady.SaverController.filenammm;
@@ -126,6 +119,13 @@ public class RecipeMakerController_1  <T extends Comparable<T>> implements Initi
   
   @FXML
   private MenuItem editedit;
+  
+  
+  @FXML
+  private MenuItem audit;
+  
+  @FXML
+  private Menu histo;
   
   @FXML
   private MenuItem exceltohtml,calcost,recipeplanner,calculatedev,deleterows;
@@ -294,13 +294,158 @@ public class RecipeMakerController_1  <T extends Comparable<T>> implements Initi
     public static String models_file_path=NewDir.file_dirr+"\\Models.kady";
     public static String recipes_folder=NewDir.file_dir;  
       
-      
+    
       
       @FXML
     private MenuItem createfastmode;
       
       
       public static Map<String, String> nameStatusMap = new HashMap<>();
+      
+      
+  @FXML
+  void auditaction(ActionEvent event) throws IOException {
+      
+    Stage kady = new Stage();
+    Parent root = FXMLLoader.<Parent>load(getClass().getResource("Audit_Window.fxml"));
+    Scene scene = new Scene(root);
+    kady.setTitle("Audit Viewer");
+    kady.centerOnScreen();
+    kady.setResizable(true);
+    kady.setMaximized(true);
+    kady.centerOnScreen();
+    kady.setScene(scene);
+    kady.show();
+      
+  }
+  
+  
+  
+    
+  
+  @FXML
+  void historyactionn(ActionEvent event)  {
+      
+      //FXML with data in alert
+      
+      ComboBox cbb1=new ComboBox ();
+      cbb1.setPromptText("Choose Model");
+      cbb1.setMaxWidth(250);
+      
+      ComboBox cbb2=new ComboBox ();
+      //cbb2.setEditable(true);
+      cbb2.setPromptText("Choose Wash Name");
+      cbb2.setMaxWidth(250);
+      
+    cbb1.setOnShowing(gg -> {
+          
+    cbb1.getItems().clear();
+    try {
+      BufferedReader buf = new BufferedReader(new FileReader(models_file_path));
+      String line;
+      while ((line = buf.readLine()) != null) {
+    cbb1.getItems().addAll(new String[] { line });
+      } 
+      buf.close();
+    } catch (FileNotFoundException fileNotFoundException) {
+    
+    } catch (IOException iOException) {}
+          
+      });
+      
+      cbb1.setOnHidden(df -> {
+          cbb2.getItems().clear();
+      });
+      
+      cbb2.setOnShowing(sa -> {
+          
+          String userInput = cbb1.getSelectionModel().getSelectedItem().toString();
+
+String sql = "SELECT Name FROM Creation WHERE Model LIKE ?";
+try {
+    this.pst = this.conn.prepareStatement(sql);
+    this.pst.setString(1, "%" + userInput + "%"); // search anywhere in Model column
+
+    this.rs = this.pst.executeQuery();
+
+    cbb2.getItems().clear(); // clear old items before adding new ones
+
+    while (this.rs.next()) {
+        String name = this.rs.getString("Name");
+        if (name != null && !name.trim().isEmpty()) {
+            cbb2.getItems().add(name);
+        }
+    }
+
+} catch (Exception e) {
+   
+} finally {
+    try {
+        if (this.rs != null) this.rs.close();
+        if (this.pst != null) this.pst.close();
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+}
+
+          
+      });
+      
+      cbb2.setOnHidden(ds -> {
+    try {
+       
+        String wq=cbb1.getSelectionModel().getSelectedItem().toString();
+        String ew=cbb2.getSelectionModel().getSelectedItem().toString();
+        
+        historyyfileepathh=NewDir.file_dirrrr+"\\Recipes_History\\"+wq+"."+ew+".history.json";
+        viewHistory();
+        
+        
+        
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+});
+
+      
+      VBox rew=new VBox ();
+      rew.getChildren().addAll(cbb1,cbb2);
+      rew.setSpacing (20);
+      
+      Alert al=new Alert (Alert.AlertType.INFORMATION);
+      al.setGraphic(rew);
+      al.setWidth(600);
+      al.setHeight(350);
+      DialogPane dialogPane = al.getDialogPane();
+      dialogPane.getStylesheets().add(
+      getClass().getResource("cupertino-light.css").toExternalForm());
+      al.showAndWait();
+      
+ 
+      
+      
+      
+  }
+  
+  
+  @FXML
+  void historyaction2(ActionEvent event) throws IOException  {
+      
+      
+    Stage kady = new Stage();
+    Parent root = FXMLLoader.<Parent>load(getClass().getResource("HistoryChecker.fxml"));
+    Scene scene = new Scene(root);
+    kady.setTitle("History Checker");
+    kady.centerOnScreen();
+    kady.setResizable(false);
+    kady.centerOnScreen();
+    kady.setScene(scene);
+    kady.show();
+      
+      
+  }
+  
+  
   
       
     @FXML
@@ -856,6 +1001,10 @@ if (!optiono.isPresent()) { // Handles when the dialog is dismissed (e.g., click
                        editeditedit.setDisable(false);
                        
                        block.setDisable(false);
+                       
+                       audit.setDisable(false);
+                       histo.setDisable(false);
+                       
                        block1.setDisable(false);
                        unblock.setDisable(false);
                        
@@ -887,6 +1036,11 @@ if (!optiono.isPresent()) { // Handles when the dialog is dismissed (e.g., click
                        editeditedit.setDisable(true);
                        
                        block.setDisable(true);
+                       
+                       audit.setDisable(true);
+                       histo.setDisable(true);
+                       
+                       
                        block1.setDisable(true);
                        unblock.setDisable(true);
                        
@@ -926,6 +1080,9 @@ if (!optiono.isPresent()) { // Handles when the dialog is dismissed (e.g., click
                        block.setDisable(true);
                        block1.setDisable(true);
                        unblock.setDisable(true);
+                       
+                       audit.setDisable(true);
+                       histo.setDisable(true);
       
       } else {
       admon.setText("Open Admin");
@@ -946,6 +1103,9 @@ if (!optiono.isPresent()) { // Handles when the dialog is dismissed (e.g., click
                            block.setDisable(true);
                            block1.setDisable(true);
                        unblock.setDisable(true);
+                       
+                       audit.setDisable(true);
+                       histo.setDisable(true);
       }
      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
          //55555555555555555555555555///////////////////////
@@ -969,6 +1129,9 @@ if (!optiono.isPresent()) { // Handles when the dialog is dismissed (e.g., click
                            block.setDisable(true);
                            block1.setDisable(true);
                        unblock.setDisable(true);
+                       
+                       audit.setDisable(true);
+                       histo.setDisable(true);
                        
      }   
      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   
@@ -13911,17 +14074,122 @@ try {
   
   @FXML
   void aboutaction(ActionEvent event) throws IOException, DocumentException {
-    Image img = new Image(getClass().getResourceAsStream("kadysoft.png"));
-    ImageView imgview = new ImageView();
-    imgview.setImage(img);
-    Notifications noti = Notifications.create();
-    noti.title("About Me");
-    noti.text("Hi, I'am Ahmed Elkady :) \nMade with love by Kadysoft Ltd.");
-    noti.hideAfter(Duration.minutes(1.0D));
-    noti.graphic(imgview);
-    noti.position(Pos.CENTER);
-    noti.show();
+  
+//    Image img = new Image(getClass().getResourceAsStream("kadysoft.png"));
+//    ImageView imgview = new ImageView();
+//    imgview.setImage(img);
+//    Notifications noti = Notifications.create();
+//    noti.title("About Me");
+//    noti.text("Hi, I'am Ahmed Elkady :) \nMade with love by Kadysoft Ltd.");
+//    noti.hideAfter(Duration.minutes(1.0D));
+//    noti.graphic(imgview);
+//    noti.position(Pos.CENTER);
+//    noti.show();
+
+
+  
+// ====================== Modern About Me Notification ======================
+Image img = new Image(getClass().getResourceAsStream("kadysoft.png"));
+ImageView imgview = new ImageView(img);
+imgview.setFitWidth(85);
+imgview.setFitHeight(85);
+imgview.setPreserveRatio(true);
+showGlassmorphismNotification(imgview);
+ 
   }
+
+// ====================== الدالة (حطها في الكلاس بتاعك) ======================
+
+private void showGlassmorphismNotification(ImageView avatar) {
+    
+    VBox root = new VBox(18);
+    root.setAlignment(Pos.CENTER);
+    root.setStyle(
+        "-fx-background-color: rgba(20, 20, 35, 0.75);" +     // شفافية عالية
+        "-fx-background-radius: 26;" +
+        "-fx-padding: 32;" +
+        "-fx-border-radius: 26;" +
+        "-fx-border-color: rgba(120, 200, 255, 0.6);" +
+        "-fx-border-width: 2;"
+    );
+
+    // Avatar مع glow
+    avatar.setStyle("-fx-effect: dropshadow(gaussian, rgba(100, 220, 255, 0.8), 25, 0, 0, 0);");
+
+    Label title = new Label("Ahmed Elkady");
+    title.setStyle("-fx-text-fill: white; -fx-font-size: 23px; -fx-font-weight: bold;");
+
+    Label subtitle = new Label("Hi, I'm Ahmed Elkady :)");
+    subtitle.setStyle("-fx-text-fill: #c0c0ff; -fx-font-size: 15px;");
+
+    Label desc = new Label("Made with ❤ by Kadysoft Ltd.");
+    desc.setStyle("-fx-text-fill: #bbbbbb; -fx-font-size: 14px;");
+
+    // Links
+    Hyperlink linkedin = createModernLink("🔗 LinkedIn", "https://linkedin.com/in/ahmed-elkady-9a4529162");
+    Hyperlink github    = createModernLink("🐙 GitHub",    "https://github.com/ProgKady");
+    Hyperlink website   = createModernLink("🌐 Website",   "https://kadysoft.com/kadinioo");
+
+    HBox linksBox = new HBox(25, linkedin, github, website);
+    linksBox.setAlignment(Pos.CENTER);
+
+    root.getChildren().addAll(avatar, title, subtitle, desc, linksBox);
+
+    Scene scene = new Scene(root, 400, 360);
+    scene.setFill(Color.TRANSPARENT);
+
+    Stage stage = new Stage(StageStyle.TRANSPARENT);
+    stage.setScene(scene);
+    stage.setAlwaysOnTop(true);
+    stage.setResizable(false);
+
+    // Position: أسفل يمين الشاشة
+    Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+    stage.setX(bounds.getWidth() - 430);
+    stage.setY(bounds.getHeight() - 400);
+
+    stage.show();
+
+    // Animation
+    FadeTransition fadeIn = new FadeTransition(Duration.millis(400), root);
+    fadeIn.setFromValue(0);
+    fadeIn.setToValue(1);
+    fadeIn.play();
+
+    // Auto hide بعد 7 ثواني
+    PauseTransition pause = new PauseTransition(Duration.seconds(7));
+    pause.setOnFinished(e -> {
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(500), root);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.setOnFinished(ev -> stage.close());
+        fadeOut.play();
+    });
+    pause.play();
+}
+
+// دالة اللينكات بـ Desktop (بدون getHostServices)
+private Hyperlink createModernLink(String text, String url) {
+    Hyperlink link = new Hyperlink(text);
+    link.setStyle("-fx-text-fill: #7dd3ff; -fx-font-size: 14.5px; -fx-underline: false;");
+    
+    link.setOnAction(e -> {
+        try {
+            java.awt.Desktop.getDesktop().browse(new java.net.URI(url));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            // يمكنك إضافة Alert هنا لو حابب
+        }
+    });
+    return link;
+}
+  
+  
+  
+  
+  
+  
+  
   
   @FXML
   void editadvaction(ActionEvent event) throws FileNotFoundException, IOException {
