@@ -18,6 +18,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.effect.DropShadow?>
@@ -57,8 +58,8 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
                            </padding>
                         </HBox>
-                        <VBox alignment="CENTER">
-                           <children>
+                        <SplitPane dividerPositions="0.4293628808864266" orientation="VERTICAL" prefHeight="802.0" prefWidth="1296.0">
+                           <items>
                               <HBox alignment="CENTER" prefHeight="439.0" prefWidth="1482.0" spacing="10.0">
                                  <children>
                                     <VBox alignment="CENTER">
@@ -148,8 +149,8 @@
                                  </children>
                               </HBox>
                               <WebView fx:id="webview" prefHeight="367.0" prefWidth="1477.0" stylesheets="@primer-dark.css" />
-                           </children>
-                        </VBox>
+                           </items>
+                        </SplitPane>
                      </children>
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
@@ -161,23 +162,19 @@
               <content>
                   <VBox spacing="5.0">
                      <children>
-                        <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
-                           <content>
-                              <Accordion fx:id="accord" />
-                           </content>
-                           <effect>
-                              <DropShadow color="WHITE" />
-                           </effect>
-                        </ScrollPane>
-                        <Separator prefWidth="200.0" />
-                        <HBox alignment="CENTER" spacing="5.0">
-                           <children>
-                              <ListView fx:id="recipelistall" editable="true" onDragDropped="#recipelistalldd" onDragOver="#recipelistalldo" prefHeight="510.0" prefWidth="1482.0" />
-                           </children>
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </padding>
-                        </HBox>
+                        <SplitPane dividerPositions="0.3560490045941807" prefHeight="788.0" prefWidth="1306.0">
+                           <items>
+                              <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="475.0" prefWidth="102.0">
+                                 <content>
+                                    <Accordion fx:id="accord" />
+                                 </content>
+                                 <effect>
+                                    <DropShadow color="WHITE" />
+                                 </effect>
+                              </ScrollPane>
+                              <ListView fx:id="recipelistall" editable="true" onDragDropped="#recipelistalldd" onDragOver="#recipelistalldo" prefHeight="475.0" prefWidth="1068.0" />
+                           </items>
+                        </SplitPane>
                         <HBox alignment="CENTER" spacing="25.0">
                            <children>
                               <JFXTextField fx:id="excelfile" onMouseClicked="#excelfileaction" prefHeight="36.0" prefWidth="337.0" promptText="Click Here To Choose Patch File" style="-fx-background-radius: 15; -fx-border-radius: 15; -jfx-focus-color: transparent; -jfx-unfocus-color: transparent;" />
