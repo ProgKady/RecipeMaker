@@ -4,6 +4,12 @@ package kadysoft.kady;
 
 import com.jfoenix.controls.*;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.time.LocalDate;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -15,13 +21,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.time.LocalDate;
 
 public class ExcelSearchApp extends Application {
 
@@ -56,9 +55,9 @@ public class ExcelSearchApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         // Cupertino Light Theme Colors
-        String bgColor = "#FFFFFF";
+        String bgColor = "#000000";
         String accentColor = "#007AFF"; // iOS Blue
-        String textColor = "#000000";
+        String textColor = "#FFFFFF";
         String inputBg = "#F2F2F7"; // Cupertino background gray
 
         Label titleLabel = new Label("🔍 Excel Style Number Search");

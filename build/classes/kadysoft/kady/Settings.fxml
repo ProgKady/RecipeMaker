@@ -12,11 +12,13 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="850.0" prefWidth="1312.0" style="-fx-font-family: &quot;Cairo SemiBold&quot;;" stylesheets="@cupertino-light.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.SettingsController">
+<BorderPane prefHeight="850.0" prefWidth="1312.0" style="-fx-font-family: &quot;Cairo SemiBold&quot;;" stylesheets="@cupertino-dark.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.SettingsController">
    <center>
       <JFXTabPane BorderPane.alignment="CENTER">
          <tabs>
@@ -71,7 +73,7 @@
                                           <DropShadow height="25.0" offsetY="3.0" radius="12.0" width="25.0" />
                                        </effect>
                                        <children>
-                                          <Label text="Recipes" />
+                                          <Label style="-fx-text-fill: black;" text="Recipes" />
                                           <JFXTextField fx:id="tf1" editable="false" labelFloat="true" prefHeight="32.0" prefWidth="386.0" promptText="For Example: X:\\Recipe_System\\Recipes" style="-fx-font-weight: bold; -fx-text-fill: black; -jfx-focus-color: transparent; -jfx-unfocus-color: transparent; -fx-background-radius: 15;">
                                              <effect>
                                                 <DropShadow height="25.0" offsetY="6.0" radius="12.0" width="25.0" />
@@ -88,7 +90,7 @@
                                           <DropShadow height="25.0" offsetY="3.0" radius="12.0" width="25.0" />
                                        </effect>
                                        <children>
-                                          <Label text="Mod Recipes" />
+                                          <Label style="-fx-text-fill: black;" text="Mod Recipes" />
                                           <JFXTextField fx:id="tf2" editable="false" labelFloat="true" prefHeight="32.0" prefWidth="386.0" promptText="For Example: X:\\Models\\Recipes" style="-fx-font-weight: bold; -fx-text-fill: black; -jfx-focus-color: transparent; -jfx-unfocus-color: transparent; -fx-background-radius: 15;">
                                              <effect>
                                                 <DropShadow height="25.0" offsetY="6.0" radius="12.0" width="25.0" />
@@ -105,7 +107,7 @@
                                           <DropShadow height="25.0" offsetY="3.0" radius="12.0" width="25.0" />
                                        </effect>
                                        <children>
-                                          <Label text="Models" />
+                                          <Label style="-fx-text-fill: black;" text="Models" />
                                           <JFXTextField fx:id="tf3" editable="false" labelFloat="true" prefHeight="32.0" prefWidth="386.0" promptText="For Example: X:\\Models" style="-fx-font-weight: bold; -fx-text-fill: black; -jfx-focus-color: transparent; -jfx-unfocus-color: transparent; -fx-background-radius: 15;">
                                              <effect>
                                                 <DropShadow height="25.0" offsetY="6.0" radius="12.0" width="25.0" />
@@ -122,7 +124,7 @@
                                           <DropShadow height="25.0" offsetY="3.0" radius="12.0" width="25.0" />
                                        </effect>
                                        <children>
-                                          <Label text="Recipe System" />
+                                          <Label style="-fx-text-fill: black;" text="Recipe System" />
                                           <JFXTextField fx:id="tf4" editable="false" labelFloat="true" prefHeight="32.0" prefWidth="386.0" promptText="For Example: X:\\Recipe_System" style="-fx-font-weight: bold; -fx-text-fill: black; -jfx-focus-color: transparent; -jfx-unfocus-color: transparent; -fx-background-radius: 15;">
                                              <effect>
                                                 <DropShadow height="25.0" offsetY="6.0" radius="12.0" width="25.0" />
@@ -139,7 +141,7 @@
                                           <DropShadow height="25.0" offsetY="3.0" radius="12.0" width="25.0" />
                                        </effect>
                                        <children>
-                                          <Label text="New Recipes" />
+                                          <Label style="-fx-text-fill: black;" text="New Recipes" />
                                           <JFXTextField fx:id="tf5" editable="false" labelFloat="true" prefHeight="32.0" prefWidth="386.0" promptText="For Example: X:\\Don't_Touch" style="-fx-font-weight: bold; -fx-text-fill: black; -jfx-focus-color: transparent; -jfx-unfocus-color: transparent; -fx-background-radius: 15;">
                                              <effect>
                                                 <DropShadow height="25.0" offsetY="6.0" radius="12.0" width="25.0" />
@@ -156,7 +158,7 @@
                                           <DropShadow height="25.0" offsetY="3.0" radius="12.0" width="25.0" />
                                        </effect>
                                        <children>
-                                          <Label text="Signs" />
+                                          <Label style="-fx-text-fill: black;" text="Signs" />
                                           <JFXTextField fx:id="tf6" editable="false" labelFloat="true" prefHeight="32.0" prefWidth="386.0" promptText="For Example: Z:\\Models" style="-fx-font-weight: bold; -fx-text-fill: black; -jfx-focus-color: transparent; -jfx-unfocus-color: transparent; -fx-background-radius: 15;">
                                              <effect>
                                                 <DropShadow height="25.0" offsetY="6.0" radius="12.0" width="25.0" />
@@ -173,7 +175,7 @@
                                           <DropShadow height="25.0" offsetY="3.0" radius="12.0" width="25.0" />
                                        </effect>
                                        <children>
-                                          <Label text="Font" />
+                                          <Label style="-fx-text-fill: black;" text="Font" />
                                           <JFXTextField fx:id="tf7" editable="false" labelFloat="true" prefHeight="32.0" prefWidth="386.0" promptText="For Example: Z:\\Fonts" style="-fx-font-weight: bold; -fx-text-fill: black; -jfx-focus-color: transparent; -jfx-unfocus-color: transparent; -fx-background-radius: 15;">
                                              <effect>
                                                 <DropShadow height="25.0" offsetY="6.0" radius="12.0" width="25.0" />
@@ -190,7 +192,7 @@
                                           <DropShadow height="25.0" offsetY="3.0" radius="12.0" width="25.0" />
                                        </effect>
                                        <children>
-                                          <Label text="Themes" />
+                                          <Label style="-fx-text-fill: black;" text="Themes" />
                                           <JFXTextField fx:id="tf8" editable="false" labelFloat="true" prefHeight="32.0" prefWidth="386.0" promptText="For Example: Roaming\\Alpha_Planning\\Themes.kady" style="-fx-font-weight: bold; -fx-text-fill: black; -jfx-focus-color: transparent; -jfx-unfocus-color: transparent; -fx-background-radius: 15;">
                                              <effect>
                                                 <DropShadow height="25.0" offsetY="6.0" radius="12.0" width="25.0" />
@@ -207,7 +209,7 @@
                                           <DropShadow height="25.0" offsetY="3.0" radius="12.0" width="25.0" />
                                        </effect>
                                        <children>
-                                          <Label text="Main Editor" />
+                                          <Label style="-fx-text-fill: black;" text="Main Editor" />
                                           <JFXTextField fx:id="tf9" editable="false" labelFloat="true" prefHeight="32.0" prefWidth="386.0" promptText="For Example: D:\\Editor\\wysiwyg\\full.html" style="-fx-font-weight: bold; -fx-text-fill: black; -jfx-focus-color: transparent; -jfx-unfocus-color: transparent; -fx-background-radius: 15;">
                                              <effect>
                                                 <DropShadow height="25.0" offsetY="6.0" radius="12.0" width="25.0" />
@@ -224,7 +226,7 @@
                                           <DropShadow height="25.0" offsetY="3.0" radius="12.0" width="25.0" />
                                        </effect>
                                        <children>
-                                          <Label text="Secondry Editor" />
+                                          <Label style="-fx-text-fill: black;" text="Secondry Editor" />
                                           <JFXTextField fx:id="tf10" editable="false" labelFloat="true" prefHeight="32.0" prefWidth="386.0" promptText="For Example: D:\\Editor" style="-fx-font-weight: bold; -fx-text-fill: black; -jfx-focus-color: transparent; -jfx-unfocus-color: transparent; -fx-background-radius: 15;">
                                              <effect>
                                                 <DropShadow height="25.0" offsetY="6.0" radius="12.0" width="25.0" />
@@ -241,7 +243,7 @@
                                           <DropShadow height="25.0" offsetY="3.0" radius="12.0" width="25.0" />
                                        </effect>
                                        <children>
-                                          <Label text="Path To Orders" />
+                                          <Label style="-fx-text-fill: black;" text="Path To Orders" />
                                           <JFXTextField fx:id="tf11" editable="false" labelFloat="true" prefHeight="32.0" prefWidth="386.0" promptText="For Example: W:" style="-fx-font-weight: bold; -fx-text-fill: black; -jfx-focus-color: transparent; -jfx-unfocus-color: transparent; -fx-background-radius: 15;">
                                              <effect>
                                                 <DropShadow height="25.0" offsetY="6.0" radius="12.0" width="25.0" />
@@ -265,7 +267,14 @@
             </Tab>
             <Tab text="About">
                <content>
-                  <BorderPane prefHeight="200.0" prefWidth="200.0" />
+                  <BorderPane prefHeight="200.0" prefWidth="200.0">
+                     <center>
+                        <ImageView fitHeight="747.0" fitWidth="886.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                           <image>
+                              <Image url="@high-resolution-color-logo.png" />
+                           </image>
+                        </ImageView>
+                     </center></BorderPane>
                </content>
             </Tab>
          </tabs>

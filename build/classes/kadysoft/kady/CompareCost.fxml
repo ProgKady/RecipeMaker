@@ -14,13 +14,13 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<BorderPane stylesheets="@cupertino-light.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.CompareCostController">
+<BorderPane stylesheets="@cupertino-dark.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.CompareCostController">
    <center>
       <VBox prefHeight="914.0" prefWidth="1300.0" spacing="5.0" BorderPane.alignment="CENTER">
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
-                  <MFXButton fx:id="refresh" buttonType="RAISED" depthLevel="LEVEL5" disable="true" onAction="#refreshaction" style="-fx-background-color: #ec7063; -fx-background-radius: 3em; -fx-text-fill: white;" text="Refresh">
+                  <MFXButton fx:id="refresh" buttonType="RAISED" depthLevel="LEVEL5" disable="true" onAction="#refreshaction" style="-fx-background-color: #7543e3; -fx-background-radius: 3em; -fx-text-fill: white;" text="Refresh">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>

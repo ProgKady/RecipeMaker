@@ -112,7 +112,7 @@ public class FileSearchApp extends Application {
         Scene scene = new Scene(bp, 1700, 900);
         
         // Apply Cupertino Light theme
-        scene.getStylesheets().add(getClass().getResource("cupertino-light.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("cupertino-dark.css").toExternalForm());
         // Drag over
         scene.setOnDragOver((DragEvent event) -> {
             if (event.getGestureSource() != textArea && event.getDragboard().hasFiles()) {

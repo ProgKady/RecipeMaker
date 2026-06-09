@@ -284,7 +284,8 @@ public class Converter1Controller implements Initializable {
         
         conn = db.java_db(); 
         
-    filetype.getItems().addAll("CSV","KS","ODS","PDF","XML","XPS");
+    //filetype.getItems().addAll("CSV","KS","ODS","PDF","XML","XPS");
+    filetype.getItems().addAll("CSV","ODS","PDF","XML","XPS");
         
     Date currentDate = GregorianCalendar.getInstance().getTime();
     DateFormat df = DateFormat.getDateInstance();

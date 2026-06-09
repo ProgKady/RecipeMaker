@@ -1522,12 +1522,53 @@ new Thread(() -> {
     } finally {
         closeQuietly(rs, pst);
     }
+    
+    
 
     // =========================================================
     // مرحلة 14: حفظ التغييرات في سجل التعديلات
     // =========================================================
-    List<Map<String, Object>> changes = computeChanges(originalltextt, code.getText());
+    String batchContent = new String(Files.readAllBytes(Paths.get(System.getProperty("user.home") + "\\r.ks")), "UTF-8");        
+    List<Map<String, Object>> changes = computeChanges(originalltextt, batchContent);
+//    
+//        Alert alertu = new Alert(AlertType.INFORMATION);
+//        alertu.setTitle("Original");
+//        alertu.setHeaderText("");
+//        TextArea textArea = new TextArea(originalltextt);
+//        textArea.setEditable(false);
+//        textArea.setWrapText(true);
+//        textArea.setMaxWidth(Double.MAX_VALUE);
+//        textArea.setMaxHeight(300);
+//        GridPane.setVgrow(textArea, Priority.ALWAYS);
+//        GridPane.setHgrow(textArea, Priority.ALWAYS);
+//        GridPane expContent = new GridPane();
+//        expContent.setMaxWidth(Double.MAX_VALUE);
+//        expContent.add(textArea, 0, 0);
+//        alertu.getDialogPane().setExpandableContent(expContent);
+//        alertu.getDialogPane().setExpanded(true);
+//        alertu.showAndWait();
+//        
+//        
+//        Alert alertuu = new Alert(AlertType.INFORMATION);
+//        alertuu.setTitle("Edited");
+//        alertuu.setHeaderText("");
+//        TextArea textAreau = new TextArea(batchContent);
+//        textAreau.setEditable(false);
+//        textAreau.setWrapText(true);
+//        textAreau.setMaxWidth(Double.MAX_VALUE);
+//        textAreau.setMaxHeight(300);
+//        GridPane.setVgrow(textAreau, Priority.ALWAYS);
+//        GridPane.setHgrow(textAreau, Priority.ALWAYS);
+//        GridPane expContentu = new GridPane();
+//        expContentu.setMaxWidth(Double.MAX_VALUE);
+//        expContentu.add(textAreau, 0, 0);
+//        alertuu.getDialogPane().setExpandableContent(expContentu);
+//        alertuu.getDialogPane().setExpanded(true);
+//        alertuu.showAndWait();
+//    
+//    
     if (!changes.isEmpty()) saveToHistory(changes);
+    
     code.clear();
 
     // =========================================================
@@ -2529,7 +2570,7 @@ private void sendEmailNotification(boolean addTime) {
         String[] mailToId = {
             "muhammet.eraslan@tcgarments.com", "eyup.karakoyun@tcgarments.com",
             "hany.emeira@tcgarments.com", "rainforest.tc@tcgarments.com",
-            "yilmaz.bozkir@tcgarments.com", "mostafa.ramadan@tcgarments.com", "ahmed.elkady@tcgarments.com"
+            "yilmaz.bozkir@tcgarments.com", "mostafa.ramadan@tcgarments.com","laundry.p3@tcgarments.com", "ahmed.elkady@tcgarments.com"
         };
        
         for (String recipient : mailToId) {
@@ -9139,8 +9180,7 @@ private void generateCostReport(List<Double> qua, List<Double> dil,
         } catch (IOException ex) {
             Logger.getLogger(Helper_EditorController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
+
     }
     
     

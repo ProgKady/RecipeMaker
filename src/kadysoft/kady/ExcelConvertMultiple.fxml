@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="773.0" prefWidth="1028.0" stylesheets="@cupertino-light.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.ExcelConvertMultipleController">
+<AnchorPane id="AnchorPane" prefHeight="773.0" prefWidth="1028.0" stylesheets="@cupertino-dark.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.ExcelConvertMultipleController">
    <children>
       <Pane layoutX="11.0" layoutY="12.0" prefHeight="581.0" prefWidth="1005.0">
          <children>
@@ -21,7 +21,7 @@
          <children>
             <JFXTextField fx:id="browsee" labelFloat="true" prefHeight="36.0" prefWidth="400.0" promptText="Browse for directory ..." style="-fx-background-radius: 3em; -fx-font-weight: bold;" />
             <JFXButton buttonType="RAISED" onAction="#browseeaction" style="-fx-background-radius: 3em; -fx-font-weight: bold;" text="Browse" />
-            <JFXButton fx:id="fix" buttonType="RAISED" onAction="#fixaction" style="-fx-font-weight: bold; -fx-background-color: green; -fx-background-color: #00b4d8; -fx-text-fill: black; -fx-background-radius: 3EM;" text="Convert All" />
+            <JFXButton fx:id="fix" buttonType="RAISED" onAction="#fixaction" style="-fx-font-weight: bold; -fx-background-color: green; -fx-background-color: #7543e3; -fx-text-fill: white; -fx-background-radius: 3EM;" text="Convert All" />
          </children>
       </HBox>
    </children>

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="303.0" prefWidth="697.0" stylesheets="@cupertino-light.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.HistoryCheckerController">
+<AnchorPane id="AnchorPane" prefHeight="303.0" prefWidth="697.0" stylesheets="@cupertino-dark.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.HistoryCheckerController">
    <children>
       <Pane layoutX="11.0" layoutY="12.0" prefHeight="172.0" prefWidth="674.0">
          <children>
@@ -16,7 +16,7 @@
             <JFXTextArea fx:id="rora" editable="false" layoutX="577.0" layoutY="99.0" prefHeight="26.0" prefWidth="52.0" visible="false" />
          </children>
       </Pane>
-      <JFXButton fx:id="fix" buttonType="RAISED" layoutX="292.0" layoutY="192.0" onAction="#fixaction" style="-fx-font-weight: bold; -fx-background-color: green; -fx-background-color: #00b4d8; -fx-text-fill: black; -fx-background-radius: 3EM;" text="Show History" />
+      <JFXButton fx:id="fix" buttonType="RAISED" layoutX="292.0" layoutY="192.0" onAction="#fixaction" style="-fx-font-weight: bold; -fx-background-color: green; -fx-background-color: #7543e3; -fx-text-fill: white; -fx-background-radius: 3EM;" text="Show History" />
       <Hyperlink layoutX="27.0" layoutY="194.0" onAction="#folderaction" text="Open History Folder" />
       <Hyperlink fx:id="status" layoutX="27.0" layoutY="254.0" style="-fx-text-fill: red;" text="Status" visible="false" />
       <Hyperlink layoutX="523.0" layoutY="194.0" onAction="#folderactionrecipe" text="Open Recipes Folder" />

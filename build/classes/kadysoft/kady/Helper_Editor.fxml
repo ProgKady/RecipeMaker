@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.web.WebView?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="875.0" prefWidth="1184.0" stylesheets="@cupertino-light.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.Helper_EditorController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="875.0" prefWidth="1184.0" stylesheets="@cupertino-dark.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.Helper_EditorController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
   </columnConstraints>
@@ -39,7 +39,7 @@
                   <Label fx:id="editedby" style="-fx-font-weight: bold; -fx-text-fill: red;" text="Edited By" />
                   <JFXCheckBox fx:id="signme" selected="true" style="-fx-font-weight: bold;" text="Sign Me" underline="true" />
                   <JFXCheckBox fx:id="fixche" selected="true" style="-fx-font-weight: bold;" text="Fix Chemicals" underline="true" />
-                  <JFXButton buttonType="RAISED" onAction="#historyaction" prefHeight="36.0" prefWidth="114.0" style="-fx-background-color: #e9c46a; -fx-font-weight: bold; -fx-background-radius: 15;" text="View History" />
+                  <JFXButton buttonType="RAISED" onAction="#historyaction" prefHeight="36.0" prefWidth="114.0" style="-fx-background-color: #7543e3; -fx-font-weight: bold; -fx-background-radius: 15;" text="View History" />
                   <ImageView fitHeight="47.0" fitWidth="44.0" onMouseClicked="#trickaction" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@cool.png" />
@@ -48,8 +48,8 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </ImageView>
-                  <JFXButton buttonType="RAISED" layoutX="1101.0" layoutY="19.0" onAction="#anotheraction" prefHeight="36.0" prefWidth="116.0" style="-fx-background-color: #dad7cd; -fx-font-weight: bold; -fx-background-radius: 15;" text="Edit Another" />
-                  <JFXButton buttonType="RAISED" layoutX="945.0" layoutY="19.0" onAction="#printoutaction" prefHeight="36.0" prefWidth="116.0" style="-fx-background-color: #ffafcc; -fx-font-weight: bold; -fx-background-radius: 15;" text="Print Out" />
+                  <JFXButton buttonType="RAISED" layoutX="1101.0" layoutY="19.0" onAction="#anotheraction" prefHeight="36.0" prefWidth="116.0" style="-fx-background-color: #7543e3; -fx-font-weight: bold; -fx-background-radius: 15;" text="Edit Another" />
+                  <JFXButton buttonType="RAISED" layoutX="945.0" layoutY="19.0" onAction="#printoutaction" prefHeight="36.0" prefWidth="116.0" style="-fx-background-color: #7543e3; -fx-font-weight: bold; -fx-background-radius: 15;" text="Print Out" />
                   <JFXButton fx:id="save" buttonType="RAISED" layoutX="1101.0" layoutY="19.0" onAction="#saveaction" prefHeight="36.0" prefWidth="73.0" style="-fx-background-color: #00b4d8; -fx-font-weight: bold; -fx-background-radius: 15;" text="Save" />
                </children>
                <padding>

@@ -166,7 +166,7 @@ public class DirectoryViewer extends Application {
 
         Scene scene = new Scene(root, 1300, 800);
         primaryStage.setScene(scene);
-        scene.getStylesheets().add(getClass().getResource("cupertino-light.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("cupertino-dark.css").toExternalForm());
         primaryStage.setTitle("Pilot Viewer");
         primaryStage.setMaximized(true);
         primaryStage.show();

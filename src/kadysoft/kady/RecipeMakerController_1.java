@@ -71,6 +71,7 @@ import java.util.regex.Pattern;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -134,10 +135,10 @@ public class RecipeMakerController_1  <T extends Comparable<T>> implements Initi
   private Menu viewmenu,editrecipemenu,toolsmenu,addstepmenu,helpmenu,reports;
   
   @FXML
-  private Menu filemenu;
+  private Menu filemenu,mmm1,mmm2;
   
   @FXML
-  private MenuItem exit,emptyrecipeone,recipeproc,showrecipeproc;
+  private MenuItem exit,emptyrecipeone,recipeproc,showrecipeproc,kadinio;
   
   @FXML
   private MenuItem savetohtml,aiartool;
@@ -534,7 +535,183 @@ try {
       
   }
       
+
+@FXML
+void twofaencmenuaction(Event event) {
+
+//    String secret = "MK2TSSYZ4O3H5WM2NA5RT7YXGXP7QA6Z";
+//    TextInputDialog dialog = new TextInputDialog();
+//    dialog.setTitle("2FA Authentication");
+//    dialog.setHeaderText("Enter Authentication Code");
+//    dialog.setContentText("Code:");
+//
+//    DialogPane dialogPane = dialog.getDialogPane();
+//    dialogPane.getStylesheets().add(
+//            getClass().getResource("cupertino-dark.css").toExternalForm());
+//    dialogPane.getStyleClass().add("cupertino-dialog");
+//
+//    Stage stage = (Stage) dialogPane.getScene().getWindow();
+//    stage.getIcons().add(
+//            new Image(getClass().getResourceAsStream("kadysoft.png")));
+//
+//    Optional<String> result = dialog.showAndWait();
+//
+//    // Cancel
+//    if (!result.isPresent()) {
+//        event.consume();
+//        return;
+//    }
+//
+//    String enteredCode = result.get().trim();
+//
+//    dev.samstevens.totp.code.CodeVerifier verifier = new dev.samstevens.totp.code.DefaultCodeVerifier(
+//            new dev.samstevens.totp.code.DefaultCodeGenerator(),
+//            new dev.samstevens.totp.time.SystemTimeProvider()
+//    );
+//
+//    boolean codeValid = verifier.isValidCode(secret, enteredCode);
+//
+//    // Wrong code
+//    if (!codeValid) {
+//        event.consume();
+//        return;
+//    }
+
+}
+  
+    
+    
+  
+  @FXML
+    void twofadecmenuaction(Event event) {
+
+//String secret = "BNBBWUIV2QEISHKOCDYZAKEHOT67SNUR";
+//TextInputDialog dialog = new TextInputDialog();
+//dialog.setTitle("2FA Authentication");
+//dialog.setHeaderText("Enter Authentication Code");
+//dialog.setContentText("Code:");
+//DialogPane dialogPane = dialog.getDialogPane();
+//dialogPane.getStylesheets().add(getClass().getResource("cupertino-dark.css").toExternalForm());
+//dialogPane.getStyleClass().add("cupertino-dialog");
+//Stage stage = (Stage) dialogPane.getScene().getWindow();
+//stage.getIcons().add(new Image(getClass().getResourceAsStream( "kadysoft.png")));
+//Optional<String> result = dialog.showAndWait();
+//        if (!result.isPresent()) {
+//            return;
+//        }
+//        String enteredCode = result.get().trim();
+//        dev.samstevens.totp.code.CodeVerifier verifier =
+//                new dev.samstevens.totp.code.DefaultCodeVerifier(
+//                        new dev.samstevens.totp.code.DefaultCodeGenerator(),
+//                        new dev.samstevens.totp.time.SystemTimeProvider()
+//                );
+//        boolean codeValid =
+//                verifier.isValidCode(
+//                        secret,
+//                        enteredCode
+//                );
+//        if (!codeValid) {
+//            return;
+//        }
+//        mmm2.show();
+        
+    }
+    
+    
+    @FXML
+    void toexcelmenuaction(Event event) {
+
+        
+//String secret = "LTHRKI22TZW6EFPJHX762SQD6T467IY5";
+//TextInputDialog dialog = new TextInputDialog();
+//dialog.setTitle("2FA Authentication");
+//dialog.setHeaderText("Enter Authentication Code");
+//dialog.setContentText("Code:");
+//DialogPane dialogPane = dialog.getDialogPane();
+//dialogPane.getStylesheets().add(getClass().getResource("cupertino-dark.css").toExternalForm());
+//dialogPane.getStyleClass().add("cupertino-dialog");
+//Stage stage = (Stage) dialogPane.getScene().getWindow();
+//stage.getIcons().add(new Image(getClass().getResourceAsStream( "kadysoft.png")));
+//Optional<String> result = dialog.showAndWait();
+//        if (!result.isPresent()) {
+//            return;
+//        }
+//        String enteredCode = result.get().trim();
+//        dev.samstevens.totp.code.CodeVerifier verifier =
+//                new dev.samstevens.totp.code.DefaultCodeVerifier(
+//                        new dev.samstevens.totp.code.DefaultCodeGenerator(),
+//                        new dev.samstevens.totp.time.SystemTimeProvider()
+//                );
+//        boolean codeValid =
+//                verifier.isValidCode(
+//                        secret,
+//                        enteredCode
+//                );
+//        if (!codeValid) {
+//            return;
+//        }
+//        toexcelmenu.show();
+        
+    }
+  
+  
+  private void openKadinio() throws IOException{
       
+    Stage stg = new Stage();
+    Parent root = FXMLLoader.<Parent>load(getClass().getResource("Kadinio.fxml"));
+    Scene sce = new Scene(root);
+    stg.setTitle("KADINIO");
+    stg.centerOnScreen();
+    stg.setResizable(false);
+    stg.setScene(sce);
+    stg.centerOnScreen();
+    stg.show();
+      
+      
+  }
+          
+  
+  
+     @FXML
+  void kadinioaction(ActionEvent event) throws IOException {
+
+    //Ask Passwoed Here /
+    
+//    String storedHash = "$2a$10$P91m2faX7wKOqiA2QslQyeTHZn44u9D0U9Gh54ljISMTHdnm1Lys6";
+//    String password = "real password";
+//    boolean passwordCorrect = org.mindrot.jbcrypt.BCrypt.checkpw(password,storedHash );
+
+String secret = "ABOBPCWCSOYYK5I6E5PHKRT5Y262GLQG";
+TextInputDialog dialog = new TextInputDialog();
+dialog.setTitle("2FA Authentication");
+dialog.setHeaderText("Enter Authentication Code");
+dialog.setContentText("Code:");
+DialogPane dialogPane = dialog.getDialogPane();
+dialogPane.getStylesheets().add(getClass().getResource("cupertino-dark.css").toExternalForm());
+dialogPane.getStyleClass().add("cupertino-dialog");
+Stage stage = (Stage) dialogPane.getScene().getWindow();
+stage.getIcons().add(new Image(getClass().getResourceAsStream( "kadysoft.png")));
+Optional<String> result = dialog.showAndWait();
+        if (!result.isPresent()) {
+            return;
+        }
+        String enteredCode = result.get().trim();
+        dev.samstevens.totp.code.CodeVerifier verifier =
+                new dev.samstevens.totp.code.DefaultCodeVerifier(
+                        new dev.samstevens.totp.code.DefaultCodeGenerator(),
+                        new dev.samstevens.totp.time.SystemTimeProvider()
+                );
+        boolean codeValid =
+                verifier.isValidCode(
+                        secret,
+                        enteredCode
+                );
+        if (!codeValid) {
+            return;
+        }
+        openKadinio();
+  }
+  
   
          @FXML
   void blockuseraction(ActionEvent event) throws IOException {
@@ -557,6 +734,37 @@ try {
     @FXML
   void iloveuaction(ActionEvent event) throws IOException {
       
+      
+      
+String secret = "TEFLWEEOPQMWVFJ3VZRKYRVP64P4EINF";
+TextInputDialog dialog = new TextInputDialog();
+dialog.setTitle("2FA Authentication");
+dialog.setHeaderText("Enter Authentication Code");
+dialog.setContentText("Code:");
+DialogPane dialogPane = dialog.getDialogPane();
+dialogPane.getStylesheets().add(getClass().getResource("cupertino-dark.css").toExternalForm());
+dialogPane.getStyleClass().add("cupertino-dialog");
+Stage stage = (Stage) dialogPane.getScene().getWindow();
+stage.getIcons().add(new Image(getClass().getResourceAsStream( "kadysoft.png")));
+Optional<String> result = dialog.showAndWait();
+        if (!result.isPresent()) {
+            return;
+        }
+        String enteredCode = result.get().trim();
+        dev.samstevens.totp.code.CodeVerifier verifier =
+                new dev.samstevens.totp.code.DefaultCodeVerifier(
+                        new dev.samstevens.totp.code.DefaultCodeGenerator(),
+                        new dev.samstevens.totp.time.SystemTimeProvider()
+                );
+        boolean codeValid =
+                verifier.isValidCode(
+                        secret,
+                        enteredCode
+                );
+      
+      if (!codeValid) {
+            return;
+        }
       
     Stage stg = new Stage();
     Parent root = FXMLLoader.<Parent>load(getClass().getResource("SaveToDB.fxml"));
@@ -702,6 +910,39 @@ if (!optiono.isPresent()) { // Handles when the dialog is dismissed (e.g., click
         
     } else {
         if (passy.equals("KS")||passy.equals("نس")) {
+                
+String secret = "HRGUXNBM25SUJGJ7FJBY5F5FDOKVXFCV";
+TextInputDialog dialog = new TextInputDialog();
+dialog.setTitle("2FA Authentication");
+dialog.setHeaderText("Enter Authentication Code");
+dialog.setContentText("Code:");
+DialogPane dialogPane = dialog.getDialogPane();
+dialogPane.getStylesheets().add(getClass().getResource("cupertino-dark.css").toExternalForm());
+dialogPane.getStyleClass().add("cupertino-dialog");
+Stage stage = (Stage) dialogPane.getScene().getWindow();
+stage.getIcons().add(new Image(getClass().getResourceAsStream( "kadysoft.png")));
+Optional<String> result = dialog.showAndWait();
+        if (!result.isPresent()) {
+            hohoho.setSelected(false);
+            return;
+        }
+        String enteredCode = result.get().trim();
+        dev.samstevens.totp.code.CodeVerifier verifier =
+                new dev.samstevens.totp.code.DefaultCodeVerifier(
+                        new dev.samstevens.totp.code.DefaultCodeGenerator(),
+                        new dev.samstevens.totp.time.SystemTimeProvider()
+                );
+        boolean codeValid =
+                verifier.isValidCode(
+                        secret,
+                        enteredCode
+                ); 
+        
+        if (!codeValid) {
+            hohoho.setSelected(false);
+            return;
+        }
+                
             Notifications noti = Notifications.create();
             noti.title("Great!");
             noti.text("Admin Opened.");
@@ -977,36 +1218,132 @@ if (!optiono.isPresent()) { // Handles when the dialog is dismissed (e.g., click
           //IF  OK.///////////////////////////////////////////////////////////
              
                    if (code.getText().equals(MachineID)) {
+//                       Notifications noti = Notifications.create();
+//                       noti.title("Right Password!");
+//                       noti.text("Congratulation, Password Was Right!.");
+//                       noti.position(Pos.CENTER);
+//                       noti.showInformation();
+                       //admon.setText("Close Admin");
+                       
+                       admon.setText("Open Admin");
+                       admon.setSelected(false);
+                       
+
+                       decryptadv.setDisable(true);
+                       diso1.setDisable(true);
+                       diso2.setDisable(true);
+                       decryptrecipeall.setDisable(true);
+                       encdanger.setDisable(true);
+                       decdanger.setDisable(true);
+                       htmltohta.setDisable(true);
+                       pdftoexcel.setDisable(true);
+                       toexcelmenu.setDisable(true);
+                       editeditedit.setDisable(true);
+                       block.setDisable(true);
+                       kadinio.setDisable(true);
+                       audit.setDisable(true);
+                       histo.setDisable(true);
+                       block1.setDisable(true);
+                       unblock.setDisable(true);
+                       
+                       
+    String secret = "MK2TSSYZ4O3H5WM2NA5RT7YXGXP7QA6Z";
+    TextInputDialog dialog = new TextInputDialog();
+    dialog.setTitle("2FA Authentication");
+    dialog.setHeaderText("Enter Authentication Code");
+    dialog.setContentText("Code:");
+    DialogPane dialogPanem = dialog.getDialogPane();
+    dialogPanem.getStylesheets().add(
+    getClass().getResource("cupertino-dark.css").toExternalForm());
+    dialogPanem.getStyleClass().add("cupertino-dialog");
+    Stage stage = (Stage) dialogPanem.getScene().getWindow();
+    stage.getIcons().add(
+    new Image(getClass().getResourceAsStream("kadysoft.png")));
+    Optional<String> result = dialog.showAndWait();
+    // Cancel
+    if (!result.isPresent()) {
+        event.consume();
+                       decryptadv.setDisable(true);
+                       diso1.setDisable(true);
+                       diso2.setDisable(true);
+                       decryptrecipeall.setDisable(true);
+                       encdanger.setDisable(true);
+                       decdanger.setDisable(true);
+                       htmltohta.setDisable(true);
+                       pdftoexcel.setDisable(true);
+                       toexcelmenu.setDisable(true);
+                       editeditedit.setDisable(true);
+                       block.setDisable(true);
+                       kadinio.setDisable(true);
+                       audit.setDisable(true);
+                       histo.setDisable(true);
+                       block1.setDisable(true);
+                       unblock.setDisable(true);
+                       admon.setText("Open Admin");
+                       admon.setSelected(false);
+                       
+                       
+        return;
+    }
+
+    String enteredCode = result.get().trim();
+    dev.samstevens.totp.code.CodeVerifier verifier = new dev.samstevens.totp.code.DefaultCodeVerifier(
+            new dev.samstevens.totp.code.DefaultCodeGenerator(),
+            new dev.samstevens.totp.time.SystemTimeProvider()
+    );
+    boolean codeValid = verifier.isValidCode(secret, enteredCode);
+
+    // Wrong code
+    if (!codeValid) {
+        event.consume();
+        decryptadv.setDisable(true);
+                       diso1.setDisable(true);
+                       diso2.setDisable(true);
+                       decryptrecipeall.setDisable(true);
+                       encdanger.setDisable(true);
+                       decdanger.setDisable(true);
+                       htmltohta.setDisable(true);
+                       pdftoexcel.setDisable(true);
+                       toexcelmenu.setDisable(true);
+                       editeditedit.setDisable(true);
+                       block.setDisable(true);
+                       kadinio.setDisable(true);
+                       audit.setDisable(true);
+                       histo.setDisable(true);
+                       block1.setDisable(true);
+                       unblock.setDisable(true);
+                       admon.setText("Open Admin");
+                       admon.setSelected(false);
+        return;
+    }
+                       
+                       decryptadv.setDisable(false);
+                       diso1.setDisable(false);
+                       diso2.setDisable(false);
+                       decryptrecipeall.setDisable(false);
+                       encdanger.setDisable(false);
+                       decdanger.setDisable(false);
+                       htmltohta.setDisable(false);
+                       pdftoexcel.setDisable(false);
+                       toexcelmenu.setDisable(false);
+                       editeditedit.setDisable(false);
+                       block.setDisable(false);
+                       kadinio.setDisable(false);
+                       audit.setDisable(false);
+                       histo.setDisable(false);
+                       block1.setDisable(false);
+                       unblock.setDisable(false);
+                       
                        Notifications noti = Notifications.create();
                        noti.title("Right Password!");
                        noti.text("Congratulation, Password Was Right!.");
                        noti.position(Pos.CENTER);
                        noti.showInformation();
+                       
                        admon.setText("Close Admin");
+                       admon.setSelected(true);
                        
-                       decryptadv.setDisable(false);
                        
-                       diso1.setDisable(false);
-                       diso2.setDisable(false);
-                       
-                       decryptrecipeall.setDisable(false);
-                       
-                       encdanger.setDisable(false);
-                       decdanger.setDisable(false);
-                       
-                       htmltohta.setDisable(false);
-                       pdftoexcel.setDisable(false);
-                       toexcelmenu.setDisable(false);
-                       
-                       editeditedit.setDisable(false);
-                       
-                       block.setDisable(false);
-                       
-                       audit.setDisable(false);
-                       histo.setDisable(false);
-                       
-                       block1.setDisable(false);
-                       unblock.setDisable(false);
                        
                    }
                    
@@ -1036,6 +1373,8 @@ if (!optiono.isPresent()) { // Handles when the dialog is dismissed (e.g., click
                        editeditedit.setDisable(true);
                        
                        block.setDisable(true);
+                       
+                       kadinio.setDisable(true);
                        
                        audit.setDisable(true);
                        histo.setDisable(true);
@@ -1078,6 +1417,7 @@ if (!optiono.isPresent()) { // Handles when the dialog is dismissed (e.g., click
                        editeditedit.setDisable(true);
                        
                        block.setDisable(true);
+                       kadinio.setDisable(true);
                        block1.setDisable(true);
                        unblock.setDisable(true);
                        
@@ -1102,6 +1442,7 @@ if (!optiono.isPresent()) { // Handles when the dialog is dismissed (e.g., click
                        
                            block.setDisable(true);
                            block1.setDisable(true);
+                           kadinio.setDisable(true);
                        unblock.setDisable(true);
                        
                        audit.setDisable(true);
@@ -1127,6 +1468,7 @@ if (!optiono.isPresent()) { // Handles when the dialog is dismissed (e.g., click
                        editeditedit.setDisable(true);
                        
                            block.setDisable(true);
+                           kadinio.setDisable(true);
                            block1.setDisable(true);
                        unblock.setDisable(true);
                        
@@ -9832,6 +10174,38 @@ buf.close();
   void recetacalaction(ActionEvent event) throws IOException {
         
             try {
+                
+
+String secret = "K4JXLZ3WD3BJIUWW7SSL2JSQL2QRGLMK";
+TextInputDialog dialog = new TextInputDialog();
+dialog.setTitle("2FA Authentication");
+dialog.setHeaderText("Enter Authentication Code");
+dialog.setContentText("Code:");
+DialogPane dialogPane = dialog.getDialogPane();
+dialogPane.getStylesheets().add(getClass().getResource("cupertino-dark.css").toExternalForm());
+dialogPane.getStyleClass().add("cupertino-dialog");
+Stage stage = (Stage) dialogPane.getScene().getWindow();
+stage.getIcons().add(new Image(getClass().getResourceAsStream( "kadysoft.png")));
+Optional<String> result = dialog.showAndWait();
+        if (!result.isPresent()) {
+            return;
+        }
+        String enteredCode = result.get().trim();
+        dev.samstevens.totp.code.CodeVerifier verifier =
+                new dev.samstevens.totp.code.DefaultCodeVerifier(
+                        new dev.samstevens.totp.code.DefaultCodeGenerator(),
+                        new dev.samstevens.totp.time.SystemTimeProvider()
+                );
+        boolean codeValid =
+                verifier.isValidCode(
+                        secret,
+                        enteredCode
+                );
+
+ if (!codeValid) {
+            return;
+        }
+                
             String path = Main.class.getProtectionDomain()
             .getCodeSource().getLocation().toURI().getPath();
 
@@ -14283,8 +14657,7 @@ private Hyperlink createModernLink(String text, String url) {
   public void initialize(URL url, ResourceBundle rb) {
       
       
-      
-      
+
       
       try {
             String fontPath = getValueByKey("lib\\setto.cfg", "Fonts"); // غيّر المسار حسب مكان الخط عندك

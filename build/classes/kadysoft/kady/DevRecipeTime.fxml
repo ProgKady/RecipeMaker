@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="906.0" prefWidth="1335.0" stylesheets="@primer-dark.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.DevRecipeTimeController">
+<AnchorPane id="AnchorPane" prefHeight="906.0" prefWidth="1335.0" stylesheets="@cupertino-dark.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.DevRecipeTimeController">
    <children>
       <JFXDatePicker fx:id="datefrom" layoutX="24.0" layoutY="40.0" promptText="Select Date From ..." showWeekNumbers="true" visible="false" />
       <JFXDatePicker fx:id="dateto" layoutX="320.0" layoutY="40.0" promptText="Select Date To ..." showWeekNumbers="true" visible="false" />
@@ -27,7 +27,7 @@
          </font>
       </Label>
       <TableView fx:id="datatable" layoutX="8.0" prefHeight="837.0" prefWidth="1320.0" style="-fx-font-size: 11; -fx-font-weight: bold; -fx-text-alignment: center;" tableMenuButtonVisible="true" />
-      <JFXButton fx:id="getauditbtn" buttonType="RAISED" layoutX="14.0" layoutY="855.0" onAction="#getauditbtnaction" prefHeight="37.0" prefWidth="88.0" style="-fx-background-radius: 3em; -fx-background-color: #154c79;" text="Refresh">
+      <JFXButton fx:id="getauditbtn" buttonType="RAISED" layoutX="14.0" layoutY="855.0" onAction="#getauditbtnaction" prefHeight="37.0" prefWidth="88.0" style="-fx-background-radius: 3em; -fx-background-color: #7543e3;" text="Refresh">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
@@ -61,7 +61,7 @@
             <DropShadow />
          </effect>
       </JFXButton>
-      <JFXButton fx:id="delete" buttonType="RAISED" layoutX="130.0" layoutY="855.0" onAction="#deleteaction" prefHeight="37.0" prefWidth="88.0" style="-fx-background-radius: 3em; -fx-background-color: #063970;" text="Export">
+      <JFXButton fx:id="delete" buttonType="RAISED" layoutX="130.0" layoutY="855.0" onAction="#deleteaction" prefHeight="37.0" prefWidth="88.0" style="-fx-background-radius: 3em; -fx-background-color: #7543e3;" text="Export">
          <effect>
             <DropShadow />
          </effect>

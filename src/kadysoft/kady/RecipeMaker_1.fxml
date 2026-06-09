@@ -4,6 +4,7 @@
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import com.jfoenix.controls.JFXToggleButton?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
@@ -13,54 +14,68 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
 
-<BorderPane prefHeight="909.0" prefWidth="1311.0" stylesheets="@nord-light.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.RecipeMakerController_1">
+<BorderPane prefHeight="920.0" prefWidth="1350.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.RecipeMakerController_1">
+
    <top>
-      <MenuBar prefHeight="32.0" prefWidth="1313.0" style="-fx-font-size: 15; -fx-font-weight: bold; -fx-background-radius: 0; -fx-border-color: white;" stylesheets="@CSS.css" visible="false" BorderPane.alignment="CENTER">
+      <MenuBar prefHeight="38.0" prefWidth="1350.0" style="-fx-background-color: rgba(15, 15, 30, 0.95); -fx-font-size: 15; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 15, 0.2, 0, 4);" visible="false" BorderPane.alignment="CENTER">
         <menus>
           <Menu fx:id="filemenu" mnemonicParsing="false" text="File" />
-            <Menu fx:id="viewmenu" mnemonicParsing="false" text="View" />
-            <Menu fx:id="editrecipemenu" mnemonicParsing="false" text="Edit_Recipe" />
-            <Menu fx:id="toolsmenu" mnemonicParsing="false" text="Tools" />
-            <Menu fx:id="reports" mnemonicParsing="false" text="Reports" />
-            <Menu fx:id="addstepmenu" mnemonicParsing="false" text="Add Step" />
+          <Menu fx:id="viewmenu" mnemonicParsing="false" text="View" />
+          <Menu fx:id="editrecipemenu" mnemonicParsing="false" text="Edit_Recipe" />
+          <Menu fx:id="toolsmenu" mnemonicParsing="false" text="Tools" />
+          <Menu fx:id="reports" mnemonicParsing="false" text="Reports" />
+          <Menu fx:id="addstepmenu" mnemonicParsing="false" text="Add Step" />
           <Menu fx:id="helpmenu" mnemonicParsing="false" text="Help" />
         </menus>
       </MenuBar>
    </top>
+
    <center>
-      <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="1313.0" BorderPane.alignment="CENTER">
+      <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="1350.0" BorderPane.alignment="CENTER">
          <content>
-            <StackPane fx:id="editorPane" prefHeight="150.0" prefWidth="200.0" styleClass="main-background" stylesheets="@CSS.css">
+            <StackPane fx:id="editorPane" prefHeight="150.0" prefWidth="200.0" styleClass="main-content">
                <children>
-                  <WebView fx:id="website" prefHeight="912.0" prefWidth="1589.0" />
-               </children></StackPane>
+                  <WebView fx:id="website" prefHeight="920.0" prefWidth="1620.0" />
+               </children>
+            </StackPane>
          </content>
       </ScrollPane>
    </center>
+
    <left>
-      <VBox alignment="TOP_CENTER" prefHeight="867.0" prefWidth="307.0" spacing="15.0" styleClass="sidebar" stylesheets="@CSS.css" BorderPane.alignment="CENTER">
+      <VBox alignment="TOP_CENTER" prefHeight="920.0" prefWidth="325.0" spacing="16.0" styleClass="sidebar-modern" BorderPane.alignment="CENTER">
+         
+         <padding>
+            <Insets bottom="25.0" left="14.0" right="14.0" top="25.0" />
+         </padding>
+
          <children>
-            <HBox alignment="CENTER" prefHeight="37.0" prefWidth="150.0" spacing="10.0" styleClass="card" stylesheets="@CSS.css">
+
+            <!-- File -->
+            <HBox alignment="CENTER" prefHeight="52.0" spacing="12.0" styleClass="menu-card">
                <children>
-                  <Label styleClass="main-label" stylesheets="@CSS.css" text="File" />
-                  <MenuButton mnemonicParsing="false" prefHeight="30.0" prefWidth="118.0" styleClass="icon10" stylesheets="@CSS.css">
+                  <Label styleClass="menu-title" text="File" />
+                  <MenuButton mnemonicParsing="false" prefHeight="42.0" prefWidth="145.0" style="-fx-background-radius: 15;" styleClass="modern-menu-button" text="Operations">
                      <items>
-                        <MenuItem fx:id="createnewrecipe" disable="true" mnemonicParsing="false" onAction="#createnewrecipeaction" text="✨📑 Create a new recipe" />
-                        <MenuItem fx:id="createfastmode" mnemonicParsing="false" onAction="#createfastmodeaction" text="🚀📑 Create a recipe (Fast Mode)" />
+                        <MenuItem fx:id="createnewrecipe" disable="true" mnemonicParsing="false" onAction="#createnewrecipeaction" text="Create a new recipe" />
+                        <MenuItem fx:id="createfastmode" mnemonicParsing="false" onAction="#createfastmodeaction" text="Create a recipe (Fast Mode)" />
                         <MenuItem fx:id="emptyrecipeone" mnemonicParsing="false" onAction="#emptyrecipeoneaction" text="Create an empty recipe" visible="false" />
                         <MenuItem fx:id="openoldrecipe" mnemonicParsing="false" onAction="#openoldrecipeaction" text="Edit a recipe (Simple)" visible="false" />
                         <MenuItem fx:id="editadv" mnemonicParsing="false" onAction="#editadvaction" text="Edit old Recipe (Developer Mode)" visible="false" />
-                        <MenuItem fx:id="editorprint" mnemonicParsing="false" onAction="#editorprintaction" text="🖨 Print a ricipe in editor" />
+                        <MenuItem fx:id="editorprint" mnemonicParsing="false" onAction="#editorprintaction" text="Print a ricipe in editor" />
                         <MenuItem fx:id="openrecipesfolder" mnemonicParsing="false" onAction="#openrecipesfolderaction" text="Open Recipes Folder" visible="false" />
-                        <MenuItem fx:id="copyarecipe" mnemonicParsing="false" onAction="#copyarecipeaction" text="📋📂 Copy a Recipe in the same path" />
-                        <MenuItem fx:id="copyarecipepath" mnemonicParsing="false" onAction="#copyarecipepathaction" text="📋🔀 Copy a recipe to another path" />
-                        <Menu mnemonicParsing="false" text="🔒 Encrypt Me">
+                        <MenuItem fx:id="copyarecipe" mnemonicParsing="false" onAction="#copyarecipeaction" text="Copy a Recipe in the same path" />
+                        <MenuItem fx:id="copyarecipepath" mnemonicParsing="false" onAction="#copyarecipepathaction" text="Copy a recipe to another path" />
+                        <Menu fx:id="mmm1" mnemonicParsing="false" onShowing="#twofaencmenuaction" text="Encrypt Me">
                           <items>
                               <MenuItem fx:id="encryptarecipe" mnemonicParsing="false" onAction="#encryptarecipeaction" text="Encrypt a recipe (Basic)" />
                             <MenuItem fx:id="diso1" disable="true" mnemonicParsing="false" onAction="#encryptadvaction" text="Encrypt a recipe (One_By_One_Advanced)" />
@@ -68,7 +83,7 @@
                               <MenuItem fx:id="encdanger" disable="true" mnemonicParsing="false" onAction="#encdangeraction" style="-fx-background-color: red;" text="Encrypt recipes_Dangerous (All)" />
                           </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="🔑🔒 Decrypt Me">
+                        <Menu fx:id="mmm2" mnemonicParsing="false" onShowing="#twofadecmenuaction" text="Decrypt Me">
                           <items>
                               <MenuItem fx:id="decryptarecipe" mnemonicParsing="false" onAction="#decryptarecipeaction" text="Decrypt a recipe (Basic)" />
                             <MenuItem fx:id="decryptadv" disable="true" mnemonicParsing="false" onAction="#decryptadvaction" text="Decrypt a recipe (One_By_One_Advanced)" />
@@ -76,34 +91,38 @@
                               <MenuItem fx:id="decdanger" disable="true" mnemonicParsing="false" onAction="#decdangeraction" style="-fx-background-color: red;" text="Decrypt recipes_Dangerous (All)" />
                           </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="📤 Export ...">
+                        <Menu mnemonicParsing="false" text="Export ...">
                           <items>
                             <MenuItem mnemonicParsing="false" onAction="#xlsxtopdfaction" style="-fx-background-color: red;" text="Excel To File (Not Licensed)." />
                               <MenuItem mnemonicParsing="false" onAction="#htmltopdfaction" text="Excel To Image" />
-                              <MenuItem fx:id="htmltohta" disable="true" mnemonicParsing="false" onAction="#htmltohtaaction" text="HTML To HTA (KADINIO Method)" />
+                              <MenuItem fx:id="htmltohta" disable="true" mnemonicParsing="false" onAction="#htmltohtaaction" text="HTML To HTA (KADINIO Method)" visible="false" />
                           </items>
                         </Menu>
-                    <MenuItem fx:id="exit" mnemonicParsing="false" onAction="#exitaction" text="✖ Exit" />
+                        <MenuItem fx:id="exit" mnemonicParsing="false" onAction="#exitaction" text="Exit" />
                      </items>
                   </MenuButton>
                </children>
             </HBox>
-            <HBox alignment="CENTER" layoutX="20.0" layoutY="30.0" prefHeight="37.0" prefWidth="150.0" spacing="10.0" styleClass="card" stylesheets="@CSS.css">
+
+            <!-- View -->
+            <HBox alignment="CENTER" prefHeight="52.0" spacing="12.0" styleClass="menu-card">
                <children>
-                  <Label styleClass="main-label" stylesheets="@CSS.css" text="View" />
-                  <MenuButton mnemonicParsing="false" prefHeight="30.0" prefWidth="118.0" styleClass="icon110" stylesheets="@CSS.css">
+                  <Label styleClass="menu-title" text="View" />
+                  <MenuButton mnemonicParsing="false" prefHeight="42.0" prefWidth="145.0" style="-fx-background-radius: 15;" styleClass="modern-menu-button" text="Browse">
                      <items>
-                        <MenuItem fx:id="viewrecipes" mnemonicParsing="false" onAction="#viewrecipesaction" style="-fx-background-color: green;" text="View Production Recipes" />
+                        <MenuItem fx:id="viewrecipes" mnemonicParsing="false" onAction="#viewrecipesaction" style="-fx-text-fill: #00e5b0;" text="View Production Recipes" />
                         <MenuItem fx:id="viewpilot" mnemonicParsing="false" onAction="#viewpilotaction" text="Preview Recipes Outside" />
                         <MenuItem mnemonicParsing="false" onAction="#seepilotaction" text="View Pilots" />
                      </items>
                   </MenuButton>
                </children>
             </HBox>
-            <HBox alignment="CENTER" layoutX="20.0" layoutY="118.0" prefHeight="37.0" prefWidth="150.0" spacing="10.0" styleClass="card" stylesheets="@CSS.css">
+
+            <!-- Edit Recipe -->
+            <HBox alignment="CENTER" prefHeight="52.0" spacing="12.0" styleClass="menu-card">
                <children>
-                  <Label styleClass="main-label" stylesheets="@CSS.css" text="Edit Recipe" />
-                  <MenuButton mnemonicParsing="false" prefHeight="30.0" prefWidth="118.0" styleClass="icon1110" stylesheets="@CSS.css">
+                  <Label styleClass="menu-title" text="Edit Recipe" />
+                  <MenuButton mnemonicParsing="false" prefHeight="42.0" prefWidth="145.0" style="-fx-background-radius: 15;" styleClass="modern-menu-button" text="Edit">
                      <items>
                         <SeparatorMenuItem mnemonicParsing="false">
                            <content>
@@ -111,7 +130,7 @@
                            </content>
                         </SeparatorMenuItem>
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem fx:id="editedit" mnemonicParsing="false" onAction="#editeditaction" style="-fx-background-color: green;" text="Edit a recipe" />
+                        <MenuItem fx:id="editedit" mnemonicParsing="false" onAction="#editeditaction" style="-fx-text-fill: #00e5b0;" text="Edit a recipe" />
                         <MenuItem fx:id="editeditedit" disable="true" mnemonicParsing="false" onAction="#editediteditaction" text="Fast edit a recipe in Eagle" visible="false" />
                         <Menu mnemonicParsing="false" text="Edit a recipe" visible="false">
                           <items>
@@ -122,10 +141,12 @@
                   </MenuButton>
                </children>
             </HBox>
-            <HBox alignment="CENTER" layoutX="20.0" layoutY="236.0" prefHeight="37.0" prefWidth="150.0" spacing="10.0" styleClass="card" stylesheets="@CSS.css">
+
+            <!-- Tools -->
+            <HBox alignment="CENTER" prefHeight="52.0" spacing="12.0" styleClass="menu-card">
                <children>
-                  <Label styleClass="main-label" stylesheets="@CSS.css" text="Tools" />
-                  <MenuButton mnemonicParsing="false" prefHeight="49.0" prefWidth="118.0" styleClass="icon11110" stylesheets="@CSS.css">
+                  <Label styleClass="menu-title" text="Tools" />
+                  <MenuButton mnemonicParsing="false" prefHeight="42.0" prefWidth="145.0" style="-fx-background-radius: 15;" styleClass="modern-menu-button" text="Advanced Tools">
                      <items>
                         <Menu mnemonicParsing="false" text="Convert Excel To System Recipes">
                           <items>
@@ -143,9 +164,9 @@
                               </Menu>
                           </items>
                         </Menu>
-                        <Menu fx:id="toexcelmenu" disable="true" mnemonicParsing="false" text="Export a recipe to Excel">
+                        <Menu fx:id="toexcelmenu" disable="true" mnemonicParsing="false" onShowing="#toexcelmenuaction" text="Export a recipe to Excel">
                           <items>
-                              <MenuItem disable="true" mnemonicParsing="false" style="-fx-background-color: red;" text="IT MUST BE CLEAN HEHEHE 😂" />
+                              <MenuItem mnemonicParsing="false" style="-fx-background-color: red;" text="IT MUST BE CLEAN HEHEHE 😂" />
                               <MenuItem fx:id="exporttoexcel" mnemonicParsing="false" onAction="#exporttoexcelaction" text="Export a recipe to Excel (Method 1)" />
                             <MenuItem fx:id="myexporttoexcel" mnemonicParsing="false" onAction="#myexporttoexcelaction" text="Export a recipe to Excel (Method 2)" />
                               <MenuItem fx:id="aiartool" mnemonicParsing="false" onAction="#aiartoolaction" text="Export a recipe to Excel (Method 3)" />
@@ -174,12 +195,6 @@
                               <MenuItem fx:id="pdftoexcel" disable="true" mnemonicParsing="false" onAction="#pdftoexcelaction" text="PDF to excel" />
                           </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="Signature" visible="false">
-                          <items>
-                              <MenuItem fx:id="signout" mnemonicParsing="false" onAction="#signoutaction" text="Sign a recipe" />
-                            <MenuItem mnemonicParsing="false" onAction="#removesignaction" text="Remove Signature" />
-                          </items>
-                        </Menu>
                         <Menu mnemonicParsing="false" text="Fix Chemicals">
                           <items>
                             <MenuItem mnemonicParsing="false" onAction="#fixoneaction" text="Fix One By One" />
@@ -197,13 +212,12 @@
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#fixdifinitionaction" text="Fix Chemicals Definition" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <SeparatorMenuItem mnemonicParsing="false" visible="false" />
                         <MenuItem fx:id="mailerr" mnemonicParsing="false" onAction="#mailerraction" text="Create a Kadysoft Mailer" visible="false" />
                         <SeparatorMenuItem mnemonicParsing="false" visible="false" />
                         <MenuItem fx:id="calculatetime" mnemonicParsing="false" onAction="#calculatetimeaction" text="Calculate Time" />
                         <MenuItem fx:id="calcpilot" mnemonicParsing="false" onAction="#calcpilotaction" text="Calculate Time Pilots" />
                         <MenuItem mnemonicParsing="false" onAction="#cal3shoots" text="Calculate Time 3 or 4 or 5 or 6 shots" />
-                      <MenuItem mnemonicParsing="false" onAction="#addtimeraction" text="Show Time" visible="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#addtimeraction" text="Show Time" visible="false" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#caltimemultiply" style="-fx-background-color: green;" text="Calculate Time (Multiple)" visible="false" />
                         <Menu mnemonicParsing="false" text="Development Time" visible="false">
@@ -263,25 +277,29 @@
                   </MenuButton>
                </children>
             </HBox>
-            <HBox alignment="CENTER" layoutX="20.0" layoutY="339.0" prefHeight="37.0" prefWidth="150.0" spacing="10.0" styleClass="card" stylesheets="@CSS.css">
+
+            <!-- Reports -->
+            <HBox alignment="CENTER" prefHeight="52.0" spacing="12.0" styleClass="menu-card">
                <children>
-                  <Label styleClass="main-label" stylesheets="@CSS.css" text="Reports" />
-                  <MenuButton mnemonicParsing="false" prefHeight="30.0" prefWidth="118.0" styleClass="icon111110" stylesheets="@CSS.css">
+                  <Label styleClass="menu-title" text="Reports" />
+                  <MenuButton mnemonicParsing="false" prefHeight="42.0" prefWidth="145.0" style="-fx-background-radius: 15;" styleClass="modern-menu-button" text="Generate">
                      <items>
                         <MenuItem mnemonicParsing="false" style="-fx-background-color: red;" text="There are many reports here" />
                         <MenuItem mnemonicParsing="false" style="-fx-background-color: red;" text="Every item has its method for reporting" />
                         <MenuItem mnemonicParsing="false" style="-fx-background-color: red;" text="But here you can create full report for time, cost, processes, types and all." />
-                      <MenuItem fx:id="createrepo" mnemonicParsing="false" onAction="#createrepoaction" text="Create Report" />
+                        <MenuItem fx:id="createrepo" mnemonicParsing="false" onAction="#createrepoaction" text="Create Report" />
                      </items>
                   </MenuButton>
                </children>
             </HBox>
-            <HBox alignment="CENTER" layoutX="20.0" layoutY="442.0" prefHeight="37.0" prefWidth="150.0" spacing="10.0" styleClass="card" stylesheets="@CSS.css">
+
+            <!-- Add Step -->
+            <HBox alignment="CENTER" prefHeight="52.0" spacing="12.0" styleClass="menu-card">
                <children>
-                  <Label styleClass="main-label" stylesheets="@CSS.css" text="Add Step" />
-                  <MenuButton mnemonicParsing="false" prefHeight="30.0" prefWidth="118.0" styleClass="icon1111110" stylesheets="@CSS.css">
+                  <Label styleClass="menu-title" text="Add Step" />
+                  <MenuButton mnemonicParsing="false" prefHeight="42.0" prefWidth="145.0" style="-fx-background-radius: 15;" styleClass="modern-menu-button" text="Components">
                      <items>
-                      <MenuItem mnemonicParsing="false" text="Add Stage">
+                        <MenuItem mnemonicParsing="false" text="Add Stage">
                            <graphic>
                               <HBox alignment="CENTER_LEFT" focusTraversable="true" prefHeight="100.0" prefWidth="200.0" spacing="25.0" stylesheets="@dracula_1.css">
                                  <children>
@@ -324,11 +342,6 @@
                               </HBox>
                            </graphic>
                         </MenuItem>
-                        <MenuItem mnemonicParsing="false" text="Unspecified Action" visible="false">
-                           <graphic>
-                              <JFXTextArea fx:id="myarea" />
-                           </graphic>
-                        </MenuItem>
                         <MenuItem mnemonicParsing="false" text="Add User">
                            <graphic>
                               <HBox alignment="CENTER_LEFT" focusTraversable="true" prefHeight="100.0" prefWidth="200.0" spacing="25.0" stylesheets="@dracula_1.css">
@@ -359,12 +372,14 @@
                   </MenuButton>
                </children>
             </HBox>
-            <HBox alignment="CENTER" layoutX="20.0" layoutY="545.0" prefHeight="37.0" prefWidth="150.0" spacing="10.0" styleClass="card" stylesheets="@CSS.css">
+
+            <!-- Help -->
+            <HBox alignment="CENTER" prefHeight="52.0" spacing="12.0" styleClass="menu-card">
                <children>
-                  <Label styleClass="main-label" stylesheets="@CSS.css" text="Help" />
-                  <MenuButton mnemonicParsing="false" prefHeight="30.0" prefWidth="118.0" styleClass="icon11111110" stylesheets="@CSS.css">
+                  <Label styleClass="menu-title" text="Help" />
+                  <MenuButton mnemonicParsing="false" prefHeight="42.0" prefWidth="145.0" style="-fx-background-radius: 15;" styleClass="modern-menu-button" text="Support">
                      <items>
-                    <MenuItem fx:id="about" mnemonicParsing="false" onAction="#aboutaction" text="About" />
+                        <MenuItem fx:id="about" mnemonicParsing="false" onAction="#aboutaction" text="About" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <SeparatorMenuItem mnemonicParsing="false">
                            <content>
@@ -376,6 +391,8 @@
                         <MenuItem fx:id="unblock" disable="true" mnemonicParsing="false" onAction="#unblockuseraction" text="Unblock User" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="block1" disable="true" mnemonicParsing="false" onAction="#iloveuaction" text="I LOVE U ❤" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="kadinio" disable="true" mnemonicParsing="false" onAction="#kadinioaction" text="KADINIO" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="audit" disable="true" mnemonicParsing="false" onAction="#auditaction" text="Show Audit" />
                         <Menu fx:id="histo" disable="true" mnemonicParsing="false" text="Recipe Editing History">
@@ -390,12 +407,24 @@
                   </MenuButton>
                </children>
             </HBox>
+
             <JFXTextArea fx:id="lili" prefHeight="526.0" prefWidth="657.0" visible="false" />
+            <Label prefHeight="27.0" prefWidth="102.0" styleClass="menu-title2" text="Powered By" />
+            <ImageView fitHeight="197.0" fitWidth="198.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@high-resolution-color-logo.png" />
+               </image>
+               <effect>
+                  <DropShadow color="WHITE" height="25.0" radius="12.0" spread="1.0" width="25.0" />
+               </effect></ImageView>
+            <Label prefHeight="27.0" prefWidth="170.0" styleClass="menu-title2" text="All Rights Reserved." />
             <JFXTextArea fx:id="myarea" prefHeight="526.0" prefWidth="657.0" visible="false" />
+
          </children>
-         <padding>
-            <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
-         </padding>
       </VBox>
    </left>
+   <stylesheets>
+      <URL value="@modern-flutter.css" />
+      <URL value="@primer-dark.css" />
+   </stylesheets>
 </BorderPane>

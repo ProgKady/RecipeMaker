@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="537.0" prefWidth="870.0" stylesheets="@cupertino-dark.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.KadinioController">
+   <children>
+      <JFXTextField fx:id="path" editable="false" layoutX="25.0" layoutY="83.0" prefHeight="32.0" prefWidth="413.0" promptText="Path To RECETA_VIEWER ..." style="-fx-background-radius: 15; -fx-font-weight: bold; -jfx-focus-color: transparent; -jfx-unfocus-color: transparent;" />
+      <JFXListView fx:id="list" layoutX="232.0" layoutY="180.0" prefHeight="127.0" prefWidth="99.0" />
+      <JFXCheckBox fx:id="addall" layoutX="348.0" layoutY="233.0" style="-fx-font-weight: bold;" text="Add All" />
+      <JFXTextField fx:id="command" layoutX="25.0" layoutY="422.0" prefHeight="32.0" prefWidth="413.0" promptText="Command To Execute ..." style="-fx-background-radius: 15; -fx-font-weight: bold; -jfx-focus-color: transparent; -jfx-unfocus-color: transparent;" />
+      <JFXButton fx:id="execute" layoutX="194.0" layoutY="476.0" onAction="#executeaction" style="-fx-background-color: #7543e3; -fx-font-weight: bold; -fx-background-radius: 15;" text="Execute" />
+      <JFXListView fx:id="list1" layoutX="115.0" layoutY="180.0" prefHeight="127.0" prefWidth="99.0" />
+      <JFXButton fx:id="delete" layoutX="28.0" layoutY="227.0" onAction="#deleteaction" style="-fx-background-color: #7543e3; -fx-font-weight: bold; -fx-background-radius: 15;" text="Delete" />
+      <JFXTextField fx:id="fullpath" layoutX="25.0" layoutY="356.0" prefHeight="32.0" prefWidth="413.0" promptText="Write Full Path Here ..." style="-fx-background-radius: 15; -fx-font-weight: bold; -jfx-focus-color: transparent; -jfx-unfocus-color: transparent;" />
+      <JFXButton fx:id="browse" layoutX="365.0" layoutY="83.0" onAction="#browseaction" style="-fx-background-color: #7543e3; -fx-font-weight: bold; -fx-background-radius: 15;" text="Browse" />
+      <JFXTextArea fx:id="batch" layoutX="442.0" layoutY="6.0" prefHeight="524.0" prefWidth="480.0" style="-jfx-focus-color: transparent; -jfx-unfocus-color: transparent;" />
+   </children>
+</AnchorPane>

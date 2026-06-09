@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="773.0" prefWidth="1028.0" stylesheets="@cupertino-light.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.FixMultipleController">
+<AnchorPane id="AnchorPane" prefHeight="773.0" prefWidth="1028.0" stylesheets="@cupertino-dark.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kadysoft.kady.FixMultipleController">
    <children>
       <Pane layoutX="11.0" layoutY="12.0" prefHeight="581.0" prefWidth="1005.0">
          <children>
@@ -18,7 +18,7 @@
       </Pane>
       <HBox alignment="CENTER" layoutX="9.0" layoutY="655.0" prefHeight="108.0" prefWidth="1005.0" spacing="15.0">
          <children>
-            <JFXButton fx:id="fix" buttonType="RAISED" onAction="#fixaction" style="-fx-font-weight: bold; -fx-background-color: green; -fx-background-color: #00b4d8; -fx-text-fill: BLACK; -fx-background-radius: 3EM;" text="Fix All" />
+            <JFXButton fx:id="fix" buttonType="RAISED" onAction="#fixaction" style="-fx-font-weight: bold; -fx-background-color: green; -fx-background-color: #7543e3; -fx-text-fill: white; -fx-background-radius: 3EM;" text="Fix All" />
          </children>
       </HBox>
    </children>

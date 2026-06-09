@@ -3,11 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/ahmed.elkady/Documents/NetBeansProjects/RecipeMaker/src/kadysoft/kady/Kadinio.fxml</file>
             <file>file:/C:/Users/ahmed.elkady/Documents/NetBeansProjects/RecipeMaker/src/kadysoft/kady/RecipeMakerController_1.java</file>
-            <file>file:/C:/Users/ahmed.elkady/Documents/NetBeansProjects/RecipeMaker/src/kadysoft/kady/DirectoryViewer.java</file>
+            <file>file:/C:/Users/ahmed.elkady/Documents/NetBeansProjects/RecipeMaker/src/kadysoft/kady/LogIn_GUI_Controller.java</file>
+            <file>file:/C:/Users/ahmed.elkady/Documents/NetBeansProjects/RecipeMaker/src/kadysoft/kady/SaveToDBController.java</file>
+            <file>file:/C:/Users/ahmed.elkady/Documents/NetBeansProjects/RecipeMaker/src/kadysoft/kady/KadinioController.java</file>
             <file>file:/C:/Users/ahmed.elkady/Documents/NetBeansProjects/RecipeMaker/src/kadysoft/kady/Helper_EditorController.java</file>
-            <file>file:/C:/Users/ahmed.elkady/Documents/NetBeansProjects/RecipeMaker/src/kadysoft/kady/FixMultipleDefinitionController.java</file>
-            <file>file:/C:/Users/ahmed.elkady/Documents/NetBeansProjects/RecipeMaker/src/kadysoft/kady/ConverterController.java</file>
         </group>
     </open-files>
 </project-private>

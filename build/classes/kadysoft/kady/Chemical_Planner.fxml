@@ -41,15 +41,15 @@
                               <ComboBox fx:id="recipe" editable="true" onHidden="#readoutrecipeaction" onShowing="#readrecipeaction" prefHeight="36.0" prefWidth="332.0" promptText="Recipe ..." style="-fx-font-weight: bold; -fx-background-radius: 3em;" />
                               <Label prefHeight="20.0" prefWidth="29.0" text="Or" textAlignment="CENTER" />
                               <Hyperlink fx:id="browselink" onAction="#browselinkaction" text="Browse" textAlignment="RIGHT" />
-                              <JFXTextField fx:id="quantityyy" alignment="CENTER" labelFloat="true" onKeyReleased="#quantityyyrel" prefHeight="36.0" prefWidth="106.0" promptText="Quantity" style="-fx-font-weight: bold; -fx-background-radius: 3em;" text="600" />
-                              <JFXTextField fx:id="pcsss" alignment="CENTER" labelFloat="true" onKeyReleased="#pcsssrel" prefHeight="36.0" prefWidth="76.0" promptText="PCS" style="-fx-font-weight: bold; -fx-background-radius: 3em;" text="120" />
+                              <JFXTextField fx:id="quantityyy" alignment="CENTER" labelFloat="true" onKeyReleased="#quantityyyrel" prefHeight="36.0" prefWidth="106.0" promptText="Quantity" style="-fx-font-weight: bold; -fx-background-radius: 3em;" />
+                              <JFXTextField fx:id="pcsss" alignment="CENTER" labelFloat="true" onKeyReleased="#pcsssrel" prefHeight="36.0" prefWidth="76.0" promptText="PCS" style="-fx-font-weight: bold; -fx-background-radius: 3em;" />
                               <JFXTextField fx:id="patch" alignment="CENTER" labelFloat="true" prefHeight="36.0" prefWidth="127.0" promptText="Machines" style="-fx-font-weight: bold; -fx-background-radius: 3em;" text="5" />
                               <JFXTextField fx:id="date" alignment="CENTER" labelFloat="true" prefHeight="36.0" prefWidth="164.0" promptText="Date" style="-fx-font-weight: bold; -fx-background-radius: 3em;" visible="false" />
                               <JFXTextArea fx:id="lili" prefHeight="31.0" prefWidth="44.0" visible="false" />
-                              <JFXButton fx:id="get" buttonType="RAISED" onAction="#getaction" prefHeight="36.0" prefWidth="89.0" style="-fx-font-weight: bold; -fx-background-radius: 3em; -fx-background-color: #358f80; -fx-text-fill: black;" text="Plan" />
-                              <JFXButton fx:id="clearal" buttonType="RAISED" onAction="#clearalaction" prefHeight="36.0" prefWidth="81.0" style="-fx-font-weight: bold; -fx-background-radius: 3em; -fx-background-color: #358f80; -fx-text-fill: black;" text="Clear" />
-                              <JFXButton fx:id="fixchemic" buttonType="RAISED" onAction="#fixchemicaction" style="-fx-background-color: #358f80; -fx-font-weight: bold; -fx-background-radius: 3em;" text="Fix Chemicals" />
-                              <JFXButton fx:id="adddbtn" buttonType="RAISED" onAction="#adddbtnaction" prefHeight="36.0" prefWidth="72.0" style="-fx-background-color: #aacc00; -fx-background-radius: 3em; -fx-font-weight: bold;" text="Add" />
+                              <JFXButton fx:id="get" buttonType="RAISED" onAction="#getaction" prefHeight="36.0" prefWidth="89.0" style="-fx-font-weight: bold; -fx-background-radius: 3em; -fx-background-color: #7543e3; -fx-text-fill: white;" text="Plan" />
+                              <JFXButton fx:id="clearal" buttonType="RAISED" onAction="#clearalaction" prefHeight="36.0" prefWidth="81.0" style="-fx-font-weight: bold; -fx-background-radius: 3em; -fx-background-color: #7543e3; -fx-text-fill: white;" text="Clear" />
+                              <JFXButton fx:id="fixchemic" buttonType="RAISED" onAction="#fixchemicaction" style="-fx-background-color: #7543e3; -fx-font-weight: bold; -fx-background-radius: 3em;" text="Fix Chemicals" />
+                              <JFXButton fx:id="adddbtn" buttonType="RAISED" onAction="#adddbtnaction" prefHeight="36.0" prefWidth="72.0" style="-fx-background-color: #7543e3; -fx-background-radius: 3em; -fx-font-weight: bold;" text="Add" />
                               <JFXTextField fx:id="mno" alignment="CENTER" labelFloat="true" prefHeight="36.0" prefWidth="79.0" promptText="M. No" style="-fx-font-weight: bold; -fx-background-radius: 3em;" text="120" visible="false" />
                               <JFXTextField fx:id="quantity" alignment="CENTER" labelFloat="true" onKeyReleased="#qurel" prefHeight="36.0" prefWidth="108.0" promptText="Quantity" style="-fx-font-weight: bold; -fx-background-radius: 3em;" visible="false" />
                            </children>
@@ -73,6 +73,18 @@
                                           <ListView fx:id="l2" prefHeight="758.0" prefWidth="130.0" styleClass="modern-list" />
                                        </children>
                                     </VBox>
+                                    <VBox alignment="CENTER" layoutX="1207.0" layoutY="10.0">
+                                       <children>
+                                          <Label prefHeight="40.0" prefWidth="69.0" text="Total Quantity" />
+                                          <ListView fx:id="l13" prefHeight="439.0" prefWidth="130.0" styleClass="modern-list" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER" layoutX="1215.0" layoutY="10.0">
+                                       <children>
+                                          <Label alignment="CENTER" prefHeight="40.0" prefWidth="69.0" text="PCS" />
+                                          <ListView fx:id="l14" prefHeight="439.0" prefWidth="130.0" styleClass="modern-list" />
+                                       </children>
+                                    </VBox>
                                     <VBox alignment="CENTER">
                                        <children>
                                           <Label text="Patch" />
@@ -82,55 +94,55 @@
                                     <VBox alignment="CENTER">
                                        <children>
                                           <Label text="Quantity" />
-                                          <ListView fx:id="l4" prefHeight="755.0" prefWidth="130.0" />
+                                          <ListView fx:id="l4" prefHeight="755.0" prefWidth="130.0" styleClass="modern-list" />
                                        </children>
                                     </VBox>
                                     <VBox alignment="CENTER">
                                        <children>
                                           <Label text="Units" />
-                                          <ListView fx:id="l5" prefHeight="756.0" prefWidth="130.0" />
+                                          <ListView fx:id="l5" prefHeight="756.0" prefWidth="130.0" styleClass="modern-list" />
                                        </children>
                                     </VBox>
                                     <VBox alignment="CENTER">
                                        <children>
                                           <Label text="Chemicals" />
-                                          <ListView fx:id="l6" prefHeight="758.0" prefWidth="130.0" />
+                                          <ListView fx:id="l6" prefHeight="758.0" prefWidth="130.0" styleClass="modern-list" />
                                        </children>
                                     </VBox>
                                     <VBox alignment="CENTER">
                                        <children>
                                           <Label text="Chemical&#10;Name" textAlignment="CENTER" />
-                                          <ListView fx:id="l7" prefHeight="758.0" prefWidth="130.0" />
+                                          <ListView fx:id="l7" prefHeight="758.0" prefWidth="130.0" styleClass="modern-list" />
                                        </children>
                                     </VBox>
                                     <VBox alignment="CENTER">
                                        <children>
                                           <Label text="Total&#10;Quantities" textAlignment="CENTER" />
-                                          <ListView fx:id="l8" prefHeight="756.0" prefWidth="130.0" />
+                                          <ListView fx:id="l8" prefHeight="756.0" prefWidth="130.0" styleClass="modern-list" />
                                        </children>
                                     </VBox>
                                     <VBox alignment="CENTER">
                                        <children>
                                           <Label text="Dilution" />
-                                          <ListView fx:id="l9" onKeyReleased="#totrel" prefHeight="755.0" prefWidth="130.0" />
+                                          <ListView fx:id="l9" onKeyReleased="#totrel" prefHeight="755.0" prefWidth="130.0" styleClass="modern-list" />
                                        </children>
                                     </VBox>
                                     <VBox alignment="CENTER">
                                        <children>
                                           <Label text="Price" />
-                                          <ListView fx:id="l10" prefHeight="439.0" prefWidth="130.0" />
+                                          <ListView fx:id="l10" prefHeight="439.0" prefWidth="130.0" styleClass="modern-list" />
                                        </children>
                                     </VBox>
                                     <VBox alignment="CENTER">
                                        <children>
                                           <Label text="Unit Price" />
-                                          <ListView fx:id="l11" prefHeight="439.0" prefWidth="130.0" />
+                                          <ListView fx:id="l11" prefHeight="439.0" prefWidth="130.0" styleClass="modern-list" />
                                        </children>
                                     </VBox>
                                     <VBox alignment="CENTER">
                                        <children>
                                           <Label prefHeight="40.0" prefWidth="69.0" text="Total Price" />
-                                          <ListView fx:id="l12" prefHeight="439.0" prefWidth="130.0" />
+                                          <ListView fx:id="l12" prefHeight="439.0" prefWidth="130.0" styleClass="modern-list" />
                                        </children>
                                     </VBox>
                                  </children>
@@ -250,7 +262,7 @@
       </MenuBar>
    </top>
    <stylesheets>
-      <URL value="@cupertino-light.css" />
+      <URL value="@cupertino-dark.css" />
       <URL value="@../../../../RecipeMaker_Viewer_All/src/kadysoft/kady/styles.css" />
    </stylesheets>
 </BorderPane>
